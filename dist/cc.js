@@ -4351,15 +4351,25 @@ sofa.define('sofa.util.CategoryMap', function () {
 } (sofa));
 
 /**
+ * sofa-coupon-service - v0.1.0 - 2014-03-28
+ * http://www.sofa.io
+ *
+ * Copyright (c) 2013 CouchCommerce GmbH (http://www.couchcommerce.org) and other contributors
+ * THIS SOFTWARE CONTAINS COMPONENTS OF THE SOFA SDK (SOFA.IO).
+ * IT IS PROVIDED UNDER THE LICENSE TERMS OF THE ATTACHED LICENSE.TXT.
+ */
+;(function (sofa, undefined) {
+
+'use strict';
+/* global sofa */
+/**
  * @name CouponService
- * @namespace cc.CouponService
+ * @namespace sofa.CouponService
  *
  * @description
  * A service that allows you to validate coupon codes against the backend.
  */
-cc.define('cc.CouponService', function($http, $q, basketService, checkoutService, loggingService, configService) {
-
-    'use strict';
+sofa.define('sofa.CouponService', function ($http, $q, basketService, checkoutService, loggingService, configService) {
 
     var self = {};
 
@@ -4369,7 +4379,7 @@ cc.define('cc.CouponService', function($http, $q, basketService, checkoutService
 
     /**
      * @method submitCode
-     * @memberof cc.CouponService
+     * @memberof sofa.CouponService
      *
      * @description
      * Validates a coupon code against the backend.
@@ -4379,9 +4389,9 @@ cc.define('cc.CouponService', function($http, $q, basketService, checkoutService
      *
      * @param {object} couponCode The code of the coupon to validate
      */
-    self.submitCode = function(couponCode) {
+    self.submitCode = function (couponCode) {
 
-        if ( !couponCode ) {
+        if (!couponCode) {
             return $q.reject(new Error('No couponCode given!'));
         }
 
@@ -4395,16 +4405,15 @@ cc.define('cc.CouponService', function($http, $q, basketService, checkoutService
             method: 'POST',
             url: FULL_CHECKOUT_URL,
             headers: FORM_DATA_HEADERS,
-            transformRequest: cc.Util.toFormData,
+            transformRequest: sofa.Util.toFormData,
             data: couponModel
-        })
-        .then(function(response){
-            if ( response.data.error ) {
+        }).then(function (response) {
+            if (response.data.error) {
                 return $q.reject(response.data.error);
             }
             basketService.addCoupon(response.data);
             return response.data;
-        }, function(fail){
+        }, function (fail) {
             loggingService.error([
                 '[CouponService: submitCode]',
                 '[Request Data]',
@@ -4421,13 +4430,13 @@ cc.define('cc.CouponService', function($http, $q, basketService, checkoutService
     var updateCoupons = function () {
         var activeCoupons = basketService.getActiveCoupons();
 
-        var oldCouponCodes = activeCoupons.map(function(activeCoupon) {
+        var oldCouponCodes = activeCoupons.map(function (activeCoupon) {
             return activeCoupon.code;
         });
 
         basketService.clearCoupons();
 
-        oldCouponCodes.forEach(function(couponCode) {
+        oldCouponCodes.forEach(function (couponCode) {
             self.submitCode(couponCode);
         });
     };
@@ -4439,6 +4448,8 @@ cc.define('cc.CouponService', function($http, $q, basketService, checkoutService
 
     return self;
 });
+
+} (sofa));
 
 /**
  * @preserve FastClick: polyfill to remove click delays on browsers with touch UIs.

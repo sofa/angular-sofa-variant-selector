@@ -22,6 +22,7 @@ module.exports = function(grunt) {
               'node_modules/sofa-pages-service/dist/sofa.pagesService.js',
               'node_modules/sofa-checkout-service/dist/sofa.checkoutService.js',
               'node_modules/sofa-couch-service/dist/sofa.couchService.js',
+              'node_modules/sofa-coupon-service/dist/sofa.couponService.js',
               'src/core/**/*.js'
             ],
             ccTests: ['test/**/*.js','!test/karma/**/*'],
@@ -87,9 +88,6 @@ module.exports = function(grunt) {
                 dest:'<%= distdir %>/<%= ccAngularName %>.js'
             }
         },
-        qunit: {
-            all: ['test/**/*.html']
-        },
         karma: {
             options: {
                 files:  [
@@ -111,6 +109,7 @@ module.exports = function(grunt) {
                             'node_modules/sofa-pages-service/dist/sofa.pagesService.js',
                             'node_modules/sofa-checkout-service/dist/sofa.checkoutService.js',
                             'node_modules/sofa-couch-service/dist/sofa.couchService.js',
+                            'node_modules/sofa-coupon-service/dist/sofa.couponService.js',
                             'test/cc.config.js',
                             'src/core/**/*.js',
                             //how could we just link to src.ccAngular here?
@@ -154,7 +153,6 @@ module.exports = function(grunt) {
     });
 
     grunt.loadNpmTasks('grunt-shell');
-    grunt.loadNpmTasks('grunt-contrib-qunit');
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-uglify');
@@ -188,6 +186,6 @@ module.exports = function(grunt) {
 
     // Default task(s).
     grunt.registerTask('default', ['jshint', 'build', 'watch']);
-    grunt.registerTask('build', ['clean', 'html2js', 'concat', 'script', 'index-template-tests', 'qunit', 'karma:build']);
+    grunt.registerTask('build', ['clean', 'html2js', 'concat', 'script', 'karma:build']);
 
 };
