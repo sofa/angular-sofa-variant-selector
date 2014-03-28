@@ -3959,40 +3959,30 @@ sofa.define('sofa.CheckoutService', function ($http, $q, basketService, loggingS
 } (sofa));
 
 /**
- * @name ProductComparer
- * @namespace cc.comparer.ProductComparer
+ * sofa-couch-service - v0.1.0 - 2014-03-26
+ * 
  *
- * @description
- *
+ * Copyright (c) 2013 CouchCommerce GmbH (http://www.couchcommerce.org) and other contributors
+ * THIS SOFTWARE CONTAINS COMPONENTS OF THE SOFA SDK (SOFA.IO).
+ * IT IS PROVIDED UNDER THE LICENSE TERMS OF THE ATTACHED LICENSE.TXT.
  */
-cc.define('cc.comparer.ProductComparer', function(tree, childNodeProperty){
+;(function (sofa, undefined) {
 
-    'use strict';
-
-    return function(a, b){
-
-        //either compare products by object identity, urlKey identity or id identity
-        return  a === b || 
-                a.urlKey && b.urlKey && a.urlKey === b.urlKey ||
-                a.id && b.id && a.id === b.id;
-    };
-});
-
+'use strict';
+/* global sofa */
 /**
  * @name CouchService
- * @namespace cc.CouchService
+ * @namespace sofa.CouchService
  *
  * @description
  * `CouchService` let's you interact with the CouchCommerce API. It provides methods
  * to get products, get preview data or handling with categories.
  */
-cc.define('cc.CouchService', function($http, $q, configService){
-
-    'use strict';
+sofa.define('sofa.CouchService', function ($http, $q, configService) {
 
     var self = {},
         products = {},
-        productComparer = new cc.comparer.ProductComparer(),
+        productComparer = new sofa.comparer.ProductComparer(),
         categoryMap = null,
         inFlightCategories = null;
 
@@ -4006,107 +3996,103 @@ cc.define('cc.CouchService', function($http, $q, configService){
 
     /**
      * @method isAChildAliasOfB
-     * @memberof cc.CouchService
+     * @memberof sofa.CouchService
      *
      * @description
      * Checks whether a given category a exists as an child
      * on another category b. Taking only direct childs into account.
-     * 
+     *
      * @param {object} a Category a.
      * @param {object} b Category b.
      *
      * @return {boolean}
      */
-    self.isAChildAliasOfB = function(categoryA, categoryB){
-        if (!categoryB.children || categoryB.children.length === 0){
+    self.isAChildAliasOfB = function (categoryA, categoryB) {
+        if (!categoryB.children || categoryB.children.length === 0) {
             return false;
         }
 
-        var alias = cc.Util.find(categoryB.children, function(child){
+        var alias = sofa.Util.find(categoryB.children, function (child) {
             return child.urlId === categoryA.urlId;
         });
 
-        return !cc.Util.isUndefined(alias);
+        return !sofa.Util.isUndefined(alias);
     };
 
     /**
      * @method isAParentOfB
-     * @memberof cc.CouchService
+     * @memberof sofa.CouchService
      *
      * @description
-     * Checks whether a given category is the parent of another category taking 
+     * Checks whether a given category is the parent of another category taking
      * n hops into account.
-     * 
+     *
      * @param {object} a Category a.
      * @param {object} b Category b.
      *
      * @return {boolean}
      */
-    self.isAParentOfB = function(categoryA, categoryB){
+    self.isAParentOfB = function (categoryA, categoryB) {
         //short circuit if it's a direct parent, if not recursively check
-        return categoryB.parent === categoryA || 
+        return categoryB.parent === categoryA ||
                (categoryB.parent && self.isAParentOfB(categoryA, categoryB.parent)) === true;
     };
 
     /**
      * @method isAChildOfB
-     * @memberof cc.CouchService
+     * @memberof sofa.CouchService
      *
      * @description
      * Checks whether a given category is the child
      * of another category taking n hops into account.
-     * 
+     *
      * @param {object} a Category a.
      * @param {object} b Category b.
      *
      * @return {boolean}
      */
-    self.isAChildOfB = function(categoryA, categoryB){
+    self.isAChildOfB = function (categoryA, categoryB) {
         return self.isAParentOfB(categoryB, categoryA);
     };
 
     /**
      * @method getCategory
-     * @memberof cc.CouchService
+     * @memberof sofa.CouchService
      *
      * @description
-     * Fetches the category with the given `categoryUrlId` If no category is 
+     * Fetches the category with the given `categoryUrlId` If no category is
      * specified, the method defaults to the root category.
-     * 
+     *
      * @param {object} categoryUrlId The category to be fetched.
      * @return {Promise} A promise.
      */
-    self.getCategory = function(category){
-        if (!category && !categoryMap){
+    self.getCategory = function (category) {
+        if (!category && !categoryMap) {
             return fetchAllCategories();
-        }
-        else if(!category && categoryMap){
+        } else if (!category && categoryMap) {
             return $q.when(categoryMap.rootCategory);
-        }
-        else if(category && category.length > 0 && !categoryMap){
-            return fetchAllCategories()
-                    .then(function(data){
-                        return categoryMap.getCategory(category);
-                    });
-        }
-        else if(category && category.length > 0 && categoryMap){
+        } else if (category && category.length > 0 && !categoryMap) {
+            return fetchAllCategories().then(function () {
+                return categoryMap.getCategory(category);
+            });
+        } else if (category && category.length > 0 && categoryMap) {
             return $q.when(categoryMap.getCategory(category));
         }
     };
 
     /**
      * @method getProducts
-     * @memberof cc.CouchService
+     * @memberof sofa.CouchService
      *
      * @description
      * Fetches all products of a given category.
-     * 
+     *
      * @param {int} categoryUrlId The urlId of the category to fetch the products from.
      * @preturn {Promise} A promise that gets resolved with products.
      */
-    self.getProducts = function(categoryUrlId){
+    self.getProducts = function (categoryUrlId) {
 
-        if(!products[categoryUrlId]){
+        if (!products[categoryUrlId]) {
             return $http({
                 method: API_HTTP_METHOD,
                 url: API_URL +
@@ -4114,8 +4100,7 @@ cc.define('cc.CouchService', function($http, $q, configService){
                 STORE_CODE +
                 '&cat=' + categoryUrlId +
                 '&callback=JSON_CALLBACK'
-            })
-            .then(function(data){
+            }).then(function (data) {
                 var tempProducts = augmentProducts(data.data.products, categoryUrlId);
                 //FixMe we are effectively creating a memory leak here by caching all
                 //seen products forever. This needs to be more sophisticated
@@ -4123,37 +4108,36 @@ cc.define('cc.CouchService', function($http, $q, configService){
                 return tempProducts;
             });
         }
-
         return $q.when(products[categoryUrlId]);
     };
 
     //it's a bit akward that we need to do that. It should be adressed
     //directly on our server API so that this extra processing can be removed.
-    var augmentProducts = function(products, categoryUrlId){
-        return products.map(function(product){
+    var augmentProducts = function (products, categoryUrlId) {
+        return products.map(function (product) {
             product.categoryUrlId = categoryUrlId;
             // the backend is sending us prices as strings.
             // we need to fix that up for sorting and other things to work
             product.price = parseFloat(product.price, 10);
-            return cc.Util.extend(new cc.models.Product(), product);
+            return sofa.Util.extend(new sofa.models.Product(), product);
         });
     };
 
     /**
      * @method getNextProduct
-     * @memberof cc.CouchService
+     * @memberof sofa.CouchService
      *
      * @description
      * Fetches the next product within the product's category.
-     * 
+     *
      * @param {object} product The product to find the neighbour of.
      * @return {object} Next product.
      */
-    self.getNextProduct = function(product, circle){
-        
-        var getTargetProduct = function(categoryProducts){
+    self.getNextProduct = function (product, circle) {
+
+        var getTargetProduct = function (categoryProducts) {
             var index = getIndexOfProduct(categoryProducts, product);
-            if (index > -1){
+            if (index > -1) {
                 var nextProduct = categoryProducts[index + 1];
                 var targetProduct = !nextProduct && circle ?
                                     categoryProducts[0] : nextProduct || null;
@@ -4167,22 +4151,22 @@ cc.define('cc.CouchService', function($http, $q, configService){
 
     /**
      * @method getPreviousProduct
-     * @memberof cc.CouchService
+     * @memberof sofa.CouchService
      *
      * @description
      * Fetches the previous product within the product's category.
-     * 
+     *
      * @param {object} product The product to find the neighbour of.
      * @return {object} Previous product.
      */
-    self.getPreviousProduct = function(product, circle){
+    self.getPreviousProduct = function (product, circle) {
 
-        var getTargetProduct = function(categoryProducts, baseProduct){
+        var getTargetProduct = function (categoryProducts, baseProduct) {
             var index = getIndexOfProduct(categoryProducts, baseProduct);
-            if (index > -1){
+            if (index > -1) {
                 var previousProduct = categoryProducts[index - 1];
-                var targetProduct = !previousProduct && circle ? 
-                                    categoryProducts[categoryProducts.length - 1] : 
+                var targetProduct = !previousProduct && circle ?
+                                    categoryProducts[categoryProducts.length - 1] :
                                     previousProduct || null;
 
                 return targetProduct;
@@ -4192,81 +4176,74 @@ cc.define('cc.CouchService', function($http, $q, configService){
         return getPreviousOrNextProduct(product, circle, getTargetProduct);
     };
 
-    var getPreviousOrNextProduct = function(product, circle, productFindFn){
+    var getPreviousOrNextProduct = function (product, circle, productFindFn) {
         var cachedProducts = products[product.categoryUrlId];
 
-        if (cachedProducts){
+        if (cachedProducts) {
             return $q.when(productFindFn(cachedProducts, product));
-        }
-        else {
-            return  self.getProducts(product.categoryUrlId)
-                        .then(function(catProducts){
-                            return productFindFn(catProducts, product);
-                        });
+        } else {
+            return  self.getProducts(product.categoryUrlId).then(function (catProducts) {
+                return productFindFn(catProducts, product);
+            });
         }
     };
 
-    var getIndexOfProduct = function(productTable, product){
+    var getIndexOfProduct = function (productTable, product) {
         for (var i = 0; i < productTable.length; i++) {
-            if (productComparer(productTable[i], product)){
+            if (productComparer(productTable[i], product)) {
                 return i;
             }
         }
-
         return -1;
     };
 
 
     /**
      * @method getProduct
-     * @memberof cc.CouchService
+     * @memberof sofa.CouchService
      *
      * @description
      * Fetches a single product. Notice that both the `categoryUrlId`
      * and the `productUrlId` need to be specified in order to get the product.
-     * 
+     *
      * @param {int} categoryUrlId The urlId of the category the product belongs to.
      * @param {int} productUrlId The urlId of the product itself.
      *
      * @return {object} product
      */
-    self.getProduct = function(categoryUrlId, productUrlId){
-        if(!products[categoryUrlId]){
-            return  self.getProducts(categoryUrlId)
-                        .then(function(data){
-                            return getProduct(data, productUrlId);
-                        });
+    self.getProduct = function (categoryUrlId, productUrlId) {
+        if (!products[categoryUrlId]) {
+            return  self.getProducts(categoryUrlId).then(function (data) {
+                return getProduct(data, productUrlId);
+            });
         }
-
         return $q.when(getProduct(products[categoryUrlId], productUrlId));
     };
 
-    var getProduct = function(products, productUrlId){
+    var getProduct = function (products, productUrlId) {
         for (var i = 0; i < products.length; i++) {
             var product = products[i];
-            if (product.urlKey === productUrlId){
+            if (product.urlKey === productUrlId) {
                 return product;
             }
         }
-
         return null;
     };
 
-    var fetchAllCategories = function(){
+    var fetchAllCategories = function () {
         //if multiple parties cause fetching all categories at startup
         //we need to make sure they actually only cause loading the categories
         //ONCE! Otherwise we end up with multiple instances of our category tree
         //and hell breaks loose.
         //TODO: at tests for this!
 
-        if (!inFlightCategories){
+        if (!inFlightCategories) {
             inFlightCategories = $http({
                 method: 'get',
                 url: CATEGORY_JSON
-            })  
-            .then(function(data){
+            }).then(function (data) {
                 var rootCategory = data.data;
-                categoryMap = new cc.util.CategoryMap();
+                categoryMap = new sofa.util.CategoryMap();
                 categoryMap.rootCategory = rootCategory;
                 augmentCategories(rootCategory);
                 return rootCategory;
@@ -4276,15 +4253,15 @@ cc.define('cc.CouchService', function($http, $q, configService){
         return inFlightCategories;
     };
 
-    var augmentCategories = function(categories){
+    var augmentCategories = function (categories) {
         //we need to fix the urlId for the rootCategory to be empty
         categories.urlId = '';
         categories.isRoot = true;
-        var iterator = new cc.util.TreeIterator(categories, 'children');
-        iterator.iterateChildren(function(category, parent){
+        var iterator = new sofa.util.TreeIterator(categories, 'children');
+        iterator.iterateChildren(function (category, parent) {
             category.isRoot = category.isRoot || false;
             category.parent = parent;
-            category.image = MEDIA_FOLDER + category.urlId + "." + MEDIA_IMG_EXTENSION;
+            category.image = MEDIA_FOLDER + category.urlId + '.' + MEDIA_IMG_EXTENSION;
             category.hasChildren = category.children && category.children.length > 0;
             categoryMap.addCategory(category);
         });
@@ -4292,6 +4269,86 @@ cc.define('cc.CouchService', function($http, $q, configService){
 
     return self;
 });
+
+'use strict';
+/* global sofa */
+/**
+ * @name ProductComparer
+ * @namespace cc.comparer.ProductComparer
+ *
+ * @description
+ *
+ */
+sofa.define('sofa.comparer.ProductComparer', function () {
+    return function (a, b) {
+
+        //either compare products by object identity, urlKey identity or id identity
+        return  a === b ||
+                a.urlKey && b.urlKey && a.urlKey === b.urlKey ||
+                a.id && b.id && a.id === b.id;
+    };
+});
+
+'use strict';
+/* global sofa */
+/**
+ * @name CategoryMap
+ * @namespace sofa.helper.CategoryMap
+ *
+ * @description
+ * Category mapping service that sets up mappings between category urls and category
+ * objects.
+ */
+sofa.define('sofa.util.CategoryMap', function () {
+
+
+    var self = {};
+
+    var map = {};
+
+    /**
+     * @method addCategory
+     * @memberof sofa.helper.CategoryMap
+     *
+     * @description
+     * Adds a new category to the map.
+     *
+     * @param {object} category A category object
+     */
+    self.addCategory = function (category) {
+        if (!map[category.urlId]) {
+            map[category.urlId] = category;
+        } else {
+            //if we had this category before but now have another one aliased with the same id
+            //we have to look if this one has children. If it has children, than it should have
+            //precedence
+
+            if (category.children && category.children.length > 0) {
+                map[category.urlId] = category;
+            }
+        }
+    };
+
+    /**
+     * @method getCategory
+     * @memberof sofa.CategoryMap
+     *
+     * @description
+     * Returns a category by a given `urlId` from the map.
+     *
+     * @param {int} urlId Category url id.
+     *
+     * @return {object} Category object.
+     */
+    self.getCategory = function (urlId) {
+        return map[urlId];
+    };
+
+    return self;
+
+});
+
+} (sofa));
 
 /**
  * @name CouponService
@@ -4381,65 +4438,6 @@ cc.define('cc.CouponService', function($http, $q, basketService, checkoutService
         .on('clear', updateCoupons);
 
     return self;
-});
-
-/**
- * @name CategoryMap
- * @namespace cc.helper.CategoryMap
- *
- * @description
- * Category mapping service that sets up mappings between category urls and category
- * objects.
- */
-cc.define('cc.util.CategoryMap', function(){
-
-    'use strict';
-
-    var self = {};
-
-    var map = {};
-
-    /**
-     * @method addCategory
-     * @memberof cc.helper.CategoryMap
-     *
-     * @description
-     * Adds a new category to the map.
-     *
-     * @param {object} category A category object
-     */
-    self.addCategory = function(category){
-        if (!map[category.urlId]){
-            map[category.urlId] = category;
-        }
-        else{
-            //if we had this category before but now have another one aliased with the same id
-            //we have to look if this one has children. If it has children, than it should have
-            //precedence
-
-            if(category.children && category.children.length > 0){
-                map[category.urlId] = category;
-            }
-        }
-    };
-
-    /**
-     * @method getCategory
-     * @memberof cc.CategoryMap
-     *
-     * @description
-     * Returns a category by a given `urlId` from the map.
-     *
-     * @param {int} urlId Category url id.
-     *
-     * @return {object} Category object.
-     */
-    self.getCategory = function(urlId){
-        return map[urlId];
-    };
-
-    return self;
-
 });
 
 /**

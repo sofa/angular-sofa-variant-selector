@@ -21,6 +21,7 @@ module.exports = function(grunt) {
               'node_modules/sofa-basket-service/dist/sofa.basketService.js',
               'node_modules/sofa-pages-service/dist/sofa.pagesService.js',
               'node_modules/sofa-checkout-service/dist/sofa.checkoutService.js',
+              'node_modules/sofa-couch-service/dist/sofa.couchService.js',
               'src/core/**/*.js'
             ],
             ccTests: ['test/**/*.js','!test/karma/**/*'],
@@ -109,6 +110,7 @@ module.exports = function(grunt) {
                             'node_modules/sofa-basket-service/dist/sofa.basketService.js',
                             'node_modules/sofa-pages-service/dist/sofa.pagesService.js',
                             'node_modules/sofa-checkout-service/dist/sofa.checkoutService.js',
+                            'node_modules/sofa-couch-service/dist/sofa.couchService.js',
                             'test/cc.config.js',
                             'src/core/**/*.js',
                             //how could we just link to src.ccAngular here?
