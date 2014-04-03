@@ -51,7 +51,7 @@ angular.module("src/directives/ccCheckBox/cc-checkbox.tpl.html", []).run(["$temp
   $templateCache.put("src/directives/ccCheckBox/cc-checkbox.tpl.html",
     "<div class=\"cc-checkbox\">\n" +
     "    <input type=\"checkbox\" ng-model=\"value\" id=\"cc-check-box-{{id}}\" class=\"cc-checkbox__input\">\n" +
-    "    <label for=\"cc-check-box-{{id}}\" class=\"cc-checkbox__label\" ng-bind=\"label\"></label>\n" +
+    "    <label for=\"cc-check-box-{{id}}\" class=\"cc-checkbox__label\" ng-bind-html=\"label\"></label>\n" +
     "</div>\n" +
     "");
 }]);
