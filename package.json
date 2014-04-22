@@ -23,7 +23,8 @@
     "sofa-pages-service": "~0.1.0",
     "sofa-checkout-service": "~0.1.0",
     "sofa-couch-service": "~0.1.0",
-    "sofa-coupon-service": "~0.1.0"
+    "sofa-coupon-service": "~0.1.0",
+    "sofa-wishlist-service": "~0.1.1"
   },
   "devDependencies": {
     "grunt": "~0.4.3",
