@@ -1,16 +1,4 @@
-
-<span class="cc-price" ng-class="{ 'cc-price--is-special': product.hasOldPrice() }">
-
-    <span ng-if="product.hasOldPrice()">
-
-        <span class="cc-price__price--old" ng-bind="priceOld | currency"></span>
-
-        <span class="cc-price__price--special" ng-bind="price | currency"></span>
-
-    </span>
-
-    <span ng-if="!product.hasOldPrice()">
-        <span class="cc-price__price" ng-bind="price | currency"></span>
-    </span>
-
+<span class="cc-price" ng-class="product.hasOldPrice() ? 'cc-price--special' : 'cc-price--basic'">
+    <span class="cc-price__price--old" ng-if="product.hasOldPrice()" ng-bind="priceOld | currency"></span>
+    <span class="cc-price__price" ng-bind="price | currency"></span>
 </span>
