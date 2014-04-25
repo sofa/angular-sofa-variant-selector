@@ -1474,6 +1474,14 @@ sofa.define('sofa.util.TreeIterator', function (tree, childNodeProperty) {
 
 }(window));
 
+/**
+ * sofa-storages - v0.2.3 - 2014-04-16
+ * http://www.sofa.io
+ *
+ * Copyright (c) 2014 CouchCommerce GmbH (http://www.couchcommerce.com / http://www.sofa.io) and other contributors
+ * THIS SOFTWARE CONTAINS COMPONENTS OF THE SOFA.IO COUCHCOMMERCE SDK (WWW.SOFA.IO).
+ * IT IS PROVIDED UNDER THE LICENSE TERMS OF THE ATTACHED LICENSE.TXT.
+ */
 ;(function(){
     var store = {},
         win = window,
@@ -1720,6 +1728,14 @@ sofa.define('sofa.MemoryStorageService', function () {
 
 }(sofa));
 
+/**
+ * sofa-logging-service - v0.1.4 - 2014-04-16
+ * http://www.sofa.io
+ *
+ * Copyright (c) 2014 CouchCommerce GmbH (http://www.couchcommerce.com / http://www.sofa.io) and other contributors
+ * THIS SOFTWARE CONTAINS COMPONENTS OF THE SOFA.IO COUCHCOMMERCE SDK (WWW.SOFA.IO).
+ * IT IS PROVIDED UNDER THE LICENSE TERMS OF THE ATTACHED LICENSE.TXT.
+ */
 ;(function (sofa, console, undefined) {
 
 'use strict';
@@ -1844,6 +1860,14 @@ sofa.define('sofa.LoggingService', function (configService) {
 
 } (sofa, console));
 
+/**
+ * sofa-device-service - v0.1.5 - 2014-04-16
+ * http://www.sofa.io
+ *
+ * Copyright (c) 2014 CouchCommerce GmbH (http://www.couchcommerce.com / http://www.sofa.io) and other contributors
+ * THIS SOFTWARE CONTAINS COMPONENTS OF THE SOFA.IO COUCHCOMMERCE SDK (WWW.SOFA.IO).
+ * IT IS PROVIDED UNDER THE LICENSE TERMS OF THE ATTACHED LICENSE.TXT.
+ */
 ;(function (sofa, document, undefined) {
 
 'use strict';
@@ -2189,6 +2213,14 @@ sofa.define('sofa.DeviceService', function ($window) {
 
 }(sofa, document));
 
+/**
+ * sofa-url-parser-service - v0.1.3 - 2014-04-22
+ * http://www.sofa.io
+ *
+ * Copyright (c) 2014 CouchCommerce GmbH (http://www.couchcommerce.com / http://www.sofa.io) and other contributors
+ * THIS SOFTWARE CONTAINS COMPONENTS OF THE SOFA.IO COUCHCOMMERCE SDK (WWW.SOFA.IO).
+ * IT IS PROVIDED UNDER THE LICENSE TERMS OF THE ATTACHED LICENSE.TXT.
+ */
 ;(function (sofa, undefined) {
 
 'use strict';
@@ -2213,7 +2245,7 @@ sofa.define('sofa.UrlParserService', function ($location) {
     var utilityRegex = {
         urlBeforeCategory: /.*cat\//,
         urlBeforeProduct: /.*\/product\//,
-        urlRightFromSlash: /\/.*/
+        urlRightFromSlash: /(\/|\?).*/
     };
 
     /**
@@ -2253,7 +2285,7 @@ sofa.define('sofa.UrlParserService', function ($location) {
     /**
      * @method getCategoryUrlId
      * @memberof sofa.UrlParserService
-     * 
+     *
      * @description
      * Extracts a category url id from a URL for you and returns it.
      *
@@ -2436,6 +2468,14 @@ sofa.define('sofa.UrlConstructionService', function (configService) {
 
 } (sofa));
 
+/**
+ * sofa-search-service - v0.1.3 - 2014-04-16
+ * http://www.sofa.io
+ *
+ * Copyright (c) 2014 CouchCommerce GmbH (http://www.couchcommerce.com / http://www.sofa.io) and other contributors
+ * THIS SOFTWARE CONTAINS COMPONENTS OF THE SOFA.IO COUCHCOMMERCE SDK (WWW.SOFA.IO).
+ * IT IS PROVIDED UNDER THE LICENSE TERMS OF THE ATTACHED LICENSE.TXT.
+ */
 ;(function (sofa, undefined) {
 
 'use strict';
@@ -2780,6 +2820,14 @@ sofa.define('sofa.tracking.TrackingService', function ($window, $http, configSer
 
 }(sofa));
 
+/**
+ * sofa-user-service - v0.1.3 - 2014-04-16
+ * http://www.sofa.io
+ *
+ * Copyright (c) 2014 CouchCommerce GmbH (http://www.couchcommerce.com / http://www.sofa.io) and other contributors
+ * THIS SOFTWARE CONTAINS COMPONENTS OF THE SOFA.IO COUCHCOMMERCE SDK (WWW.SOFA.IO).
+ * IT IS PROVIDED UNDER THE LICENSE TERMS OF THE ATTACHED LICENSE.TXT.
+ */
 ;(function (sofa, undefined) {
 
 'use strict';
@@ -3409,11 +3457,11 @@ sofa.define('sofa.BasketService', function (storageService, configService, optio
 }(sofa));
 
 /**
- * sofa-pages-service - v0.1.0 - 2014-03-24
+ * sofa-pages-service - v0.1.1 - 2014-04-16
  * 
  *
- * Copyright (c) 2013 CouchCommerce GmbH (http://www.couchcommerce.org) and other contributors
- * THIS SOFTWARE CONTAINS COMPONENTS OF THE SOFA SDK (SOFA.IO).
+ * Copyright (c) 2014 CouchCommerce GmbH (http://www.couchcommerce.com / http://www.sofa.io) and other contributors
+ * THIS SOFTWARE CONTAINS COMPONENTS OF THE SOFA.IO COUCHCOMMERCE SDK (WWW.SOFA.IO).
  * IT IS PROVIDED UNDER THE LICENSE TERMS OF THE ATTACHED LICENSE.TXT.
  */
 ;(function (sofa, undefined) {
@@ -3967,11 +4015,11 @@ sofa.define('sofa.CheckoutService', function ($http, $q, basketService, loggingS
 } (sofa));
 
 /**
- * sofa-couch-service - v0.1.0 - 2014-03-26
+ * sofa-couch-service - v0.1.1 - 2014-04-16
  * 
  *
- * Copyright (c) 2013 CouchCommerce GmbH (http://www.couchcommerce.org) and other contributors
- * THIS SOFTWARE CONTAINS COMPONENTS OF THE SOFA SDK (SOFA.IO).
+ * Copyright (c) 2014 CouchCommerce GmbH (http://www.couchcommerce.com / http://www.sofa.io) and other contributors
+ * THIS SOFTWARE CONTAINS COMPONENTS OF THE SOFA.IO COUCHCOMMERCE SDK (WWW.SOFA.IO).
  * IT IS PROVIDED UNDER THE LICENSE TERMS OF THE ATTACHED LICENSE.TXT.
  */
 ;(function (sofa, undefined) {
@@ -4359,11 +4407,11 @@ sofa.define('sofa.util.CategoryMap', function () {
 } (sofa));
 
 /**
- * sofa-coupon-service - v0.1.0 - 2014-03-28
+ * sofa-coupon-service - v0.1.1 - 2014-04-16
  * http://www.sofa.io
  *
- * Copyright (c) 2013 CouchCommerce GmbH (http://www.couchcommerce.org) and other contributors
- * THIS SOFTWARE CONTAINS COMPONENTS OF THE SOFA SDK (SOFA.IO).
+ * Copyright (c) 2014 CouchCommerce GmbH (http://www.couchcommerce.com / http://www.sofa.io) and other contributors
+ * THIS SOFTWARE CONTAINS COMPONENTS OF THE SOFA.IO COUCHCOMMERCE SDK (WWW.SOFA.IO).
  * IT IS PROVIDED UNDER THE LICENSE TERMS OF THE ATTACHED LICENSE.TXT.
  */
 ;(function (sofa, undefined) {
