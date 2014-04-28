@@ -1,11 +1,11 @@
 <div class="cc-category-tree-view">
-    <ul ng-class="{ 'cc-category-tree-view__list--open': item._categoryTreeView.isVisible, 
+    <ul ng-class="{ 'cc-category-tree-view__list--open': item._categoryTreeView.isVisible,
                     'cc-category-tree-view__list--closed': !item._categoryTreeView.isVisible,
                     'cc-category-tree-view__list--root': isRoot,
                     'cc-category-tree-view__list--child': !isRoot }" cc-template-code>
        <li class="cc-category-tree-view__list-item"
            cc-nested-category-item ng-repeat="item in items">
-           <a href="/cat/{{item.urlId}}" ng-click="doAction($event, item)"
+           <a href="{{item.getOriginFullUrl()}}" ng-click="doAction($event, item)"
                  ng-class="item._categoryTreeView.isActive ? 'cc-category-tree-view__category-entry--active' : 'cc-category-tree-view__category-entry'">
                  {{item.label}}
                 <i ng-class="item._categoryTreeView.isVisible ? 'fa-chevron-up' : 'fa-chevron-down'"

@@ -19,7 +19,7 @@ angular.module('sdk.directives.ccCategoryTreeView')
                     $event.preventDefault();
                     if (!item.hasChildren){
                         categoryTreeViewRemote.setActive(item);
-                        navigationService.navigateToProducts(item.urlId);
+                        navigationService.navigateToUrl(item.getOriginFullUrl());
                     } else {
                         categoryTreeViewRemote.toggleVisibility(item);
                     }

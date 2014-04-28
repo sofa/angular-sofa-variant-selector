@@ -28,13 +28,13 @@ angular.module("src/directives/ccBreadcrumbs/cc-breadcrumbs.tpl.html", []).run([
 angular.module("src/directives/ccCategoryTreeView/cc-category-tree-view.tpl.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("src/directives/ccCategoryTreeView/cc-category-tree-view.tpl.html",
     "<div class=\"cc-category-tree-view\">\n" +
-    "    <ul ng-class=\"{ 'cc-category-tree-view__list--open': item._categoryTreeView.isVisible, \n" +
+    "    <ul ng-class=\"{ 'cc-category-tree-view__list--open': item._categoryTreeView.isVisible,\n" +
     "                    'cc-category-tree-view__list--closed': !item._categoryTreeView.isVisible,\n" +
     "                    'cc-category-tree-view__list--root': isRoot,\n" +
     "                    'cc-category-tree-view__list--child': !isRoot }\" cc-template-code>\n" +
     "       <li class=\"cc-category-tree-view__list-item\"\n" +
     "           cc-nested-category-item ng-repeat=\"item in items\">\n" +
-    "           <a href=\"/cat/{{item.urlId}}\" ng-click=\"doAction($event, item)\"\n" +
+    "           <a href=\"{{item.getOriginFullUrl()}}\" ng-click=\"doAction($event, item)\"\n" +
     "                 ng-class=\"item._categoryTreeView.isActive ? 'cc-category-tree-view__category-entry--active' : 'cc-category-tree-view__category-entry'\">\n" +
     "                 {{item.label}}\n" +
     "                <i ng-class=\"item._categoryTreeView.isVisible ? 'fa-chevron-up' : 'fa-chevron-down'\"\n" +
@@ -343,14 +343,14 @@ angular.module('sdk.services.navigationService', [
 
 angular
     .module('sdk.services.navigationService')
-    .factory('navigationService', ['$location', '$window', 'couchService', 'trackingService', 'urlConstructionService', 'urlParserService',
-        function($location, $window, couchService, trackingService, urlConstructionService, urlParserService){
+    .factory('navigationService', ['$location', '$window', 'couchService', 'trackingService', 'urlConstructionService', 'urlParserService', 'stateResolverService',
+        function($location, $window, couchService, trackingService, urlConstructionService, urlParserService, stateResolverService){
 
         'use strict';
 
         var self = {};
 
-        var navigateToUrl = function(url) {
+        self.navigateToUrl = function(url) {
             trackingService.trackEvent({
                 category: 'pageView',
                 label: url
@@ -358,32 +358,21 @@ angular
             $location.path(url);
         };
 
+
         self.navigateToContentPage = function (pageId) {
-            navigateToUrl(urlConstructionService.createUrlForContentPage(pageId));
-        };
-
-        self.navigateToProducts = function(categoryUrlId){
-            navigateToUrl(urlConstructionService.createUrlForProducts(categoryUrlId));
-        };
-
-        self.navigateToProduct = function(product){
-            navigateToUrl(urlConstructionService.createUrlForProduct(product));
-        };
-
-        self.navigateToCategory = function(categoryUrlId){
-            navigateToUrl(urlConstructionService.createUrlForCategory(categoryUrlId));
+            self.navigateToUrl(urlConstructionService.createUrlForContentPage(pageId));
         };
 
         self.navigateToRootCategory = function(){
-            navigateToUrl(urlConstructionService.createUrlForRootCategory());
+            self.navigateToUrl(urlConstructionService.createUrlForRootCategory());
         };
 
         self.navigateToCart = function(){
-            navigateToUrl(urlConstructionService.createUrlForCart());
+            self.navigateToUrl(urlConstructionService.createUrlForCart());
         };
 
         self.navigateToCheckout = function(){
-            navigateToUrl(urlConstructionService.createUrlForCheckout());
+            self.navigateToUrl(urlConstructionService.createUrlForCheckout());
         };
 
         self.navigateToSummary = function(token){
@@ -396,15 +385,14 @@ angular
         };
 
         self.navigateToShippingCostsPage = function(){
-            navigateToUrl(urlConstructionService.createUrlForShippingCostsPage());
+            self.navigateToUrl(urlConstructionService.createUrlForShippingCostsPage());
         };
 
-        var navigateToParentCategory = function(){
-            var currentCategoryUrlId = urlParserService.getCategoryUrlId();
+        var navigateToParentCategory = function(currentCategoryUrlId){
             couchService.getCategory(currentCategoryUrlId)
                 .then(function(category){
                     if (category.parent && category.parent.parent){
-                        self.navigateToCategory(category.parent.urlId);
+                        self.navigateToUrl(category.parent.getOriginFullUrl());
                     }
                     else{
                         self.navigateToRootCategory();
@@ -412,31 +400,40 @@ angular
                 });
         };
 
+
         self.goUp = function(){
-            var currentCategoryUrlId,
-                currentCategory;
 
-            if(urlParserService.isView('product')){
-                currentCategoryUrlId = urlParserService.getCategoryUrlId();
-                self.navigateToProducts(currentCategoryUrlId);
-            }
-            else if (urlParserService.isView('products')){
-                navigateToParentCategory();
-            }
-            else if(urlParserService.isView('categories')){
-                navigateToParentCategory();
-            }
-            else{
-                //TODO: The method is actually designed to go up in the tree
-                //structure of a category/product tree. However, this is as a
-                //here as a fallback so that e.g. when the user is on the
-                //shopping cart the back button works as a history back.
-                //We should overthink our whole approach here. And almost
-                //cetainly we should move the whole service out of the SDK
-                //as it's not generic enough to be useful for others.
-                $window.history.back();
-            }
-
+            // This code is a bit unfortunate as it introduces a logical dependency
+            // against a possible service consumer. It assumes that the `stateResolverService`
+            // is fed up with `state` objects in a very certain way. It assumes hardcoded
+            // `stateName`s and `stateParams`.
+            stateResolverService
+                .resolveState($location.path())
+                .then(function (state) {
+                    if (state.stateName === 'product') {
+                        couchService
+                            .getCategory(state.stateParams.category)
+                            .then(function(category){
+                                self.navigateToUrl(category.getOriginFullUrl());
+                            });
+                    }
+                    else if (state.stateName === 'products') {
+                        navigateToParentCategory(state.stateParams.category);
+                    }
+                    else if (state.stateName === 'categories') {
+                        navigateToParentCategory(state.stateParams.category);
+                    }
+                    else {
+                        //TODO: The method is actually designed to go up in the tree
+                        //structure of a category/product tree. However, this is as a
+                        //here as a fallback so that e.g. when the user is on the
+                        //shopping cart the back button works as a history back.
+                        //We should overthink our whole approach here. And almost
+                        //cetainly we should move the whole service out of the SDK
+                        //as it's not generic enough to be useful for others.
+                        $window.history.back();
+                    }
+                });
         };
 
         trackingService.trackEvent({
@@ -446,8 +443,6 @@ angular
 
         return self;
 }]);
-
-
 
 angular.module('sdk.services.pagesService', ['sdk.services.configService']);
 
@@ -503,6 +498,14 @@ angular
 }]);
 
 
+
+angular.module('sdk.services.stateResolverService', []);
+
+angular
+    .module('sdk.services.stateResolverService')
+    .factory('stateResolverService', ['$q', '$http', 'configService', function($q, $http, configService){
+        return new sofa.StateResolverService($q, $http, configService);
+}]);
 
 angular.module('sdk.services.trackingService', []);
 
@@ -627,7 +630,7 @@ angular.module('sdk.directives.ccBreadcrumbs')
                         if(currentCategory.parent){
                             list.unshift({
                                 title: currentCategory.label,
-                                link: urlConstructionService.createUrlForCategory(currentCategory.urlId)
+                                link: currentCategory.getOriginFullUrl()
                             });
 
                             doIt(currentCategory.parent);
@@ -680,6 +683,7 @@ angular.module('sdk.directives.ccBreadcrumbs')
             }
         };
     }]);
+
 angular.module('sdk.directives.ccCategoryTreeView', [
         'sdk.directives.ccTemplateCode',
         'src/directives/ccCategoryTreeView/cc-category-tree-view.tpl.html'
@@ -780,7 +784,7 @@ angular.module('sdk.directives.ccCategoryTreeView')
                     $event.preventDefault();
                     if (!item.hasChildren){
                         categoryTreeViewRemote.setActive(item);
-                        navigationService.navigateToProducts(item.urlId);
+                        navigationService.navigateToUrl(item.getOriginFullUrl());
                     } else {
                         categoryTreeViewRemote.toggleVisibility(item);
                     }

@@ -27,7 +27,7 @@ angular.module('sdk.directives.ccBreadcrumbs')
                         if(currentCategory.parent){
                             list.unshift({
                                 title: currentCategory.label,
-                                link: urlConstructionService.createUrlForCategory(currentCategory.urlId)
+                                link: currentCategory.getOriginFullUrl()
                             });
 
                             doIt(currentCategory.parent);

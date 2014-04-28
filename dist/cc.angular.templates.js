@@ -26,13 +26,13 @@ angular.module("src/directives/ccBreadcrumbs/cc-breadcrumbs.tpl.html", []).run([
 angular.module("src/directives/ccCategoryTreeView/cc-category-tree-view.tpl.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("src/directives/ccCategoryTreeView/cc-category-tree-view.tpl.html",
     "<div class=\"cc-category-tree-view\">\n" +
-    "    <ul ng-class=\"{ 'cc-category-tree-view__list--open': item._categoryTreeView.isVisible, \n" +
+    "    <ul ng-class=\"{ 'cc-category-tree-view__list--open': item._categoryTreeView.isVisible,\n" +
     "                    'cc-category-tree-view__list--closed': !item._categoryTreeView.isVisible,\n" +
     "                    'cc-category-tree-view__list--root': isRoot,\n" +
     "                    'cc-category-tree-view__list--child': !isRoot }\" cc-template-code>\n" +
     "       <li class=\"cc-category-tree-view__list-item\"\n" +
     "           cc-nested-category-item ng-repeat=\"item in items\">\n" +
-    "           <a href=\"/cat/{{item.urlId}}\" ng-click=\"doAction($event, item)\"\n" +
+    "           <a href=\"{{item.getOriginFullUrl()}}\" ng-click=\"doAction($event, item)\"\n" +
     "                 ng-class=\"item._categoryTreeView.isActive ? 'cc-category-tree-view__category-entry--active' : 'cc-category-tree-view__category-entry'\">\n" +
     "                 {{item.label}}\n" +
     "                <i ng-class=\"item._categoryTreeView.isVisible ? 'fa-chevron-up' : 'fa-chevron-down'\"\n" +
