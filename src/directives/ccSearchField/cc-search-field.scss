@@ -5,7 +5,7 @@
 }
 
 .cc-search-field__input {
-    @extend .cc-text-box;
+    @extend %sofa-text-field;
 
     width:100%;
     padding-left: 1.75rem;

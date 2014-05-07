@@ -1,4 +1,4 @@
-angular.module('sdk.directives.ccSelectBox', ['src/directives/ccSelectBox/ccselectbox.tpl.html']);
+angular.module('sdk.directives.ccSelectBox', ['src/directives/ccSelectBox/cc-select-box.tpl.html']);
 
 /**
 * Creates a mobile friendly select box that delegates to the native picker
@@ -21,12 +21,11 @@ angular.module('sdk.directives.ccSelectBox')
                 data: '=',
                 propertyName: '=',
                 chooseText: '=?',
-                failMessage: '=?',
                 displayValueExp: '&',
                 _selectedValue: '=ngModel'
             },
             require: '?ngModel',
-            templateUrl: 'src/directives/ccSelectBox/ccselectbox.tpl.html',
+            templateUrl: 'src/directives/ccSelectBox/cc-select-box.tpl.html',
             link: function(scope, element, attrs, ngModelController){
 
                 if (!attrs.ngModel){

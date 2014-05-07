@@ -37,7 +37,7 @@ describe('Testing the cc-select-box directive with null value support', function
         $scope.$digest();
 
         element = $element[0];
-        var displayValues = element.querySelectorAll('.cc-select-box__display-value');
+        var displayValues = element.querySelectorAll('.cc-select-box__value');
         valueElement = displayValues[0];
         pleaseChooseElement = displayValues[1];
         select = element.querySelector('select');
@@ -142,7 +142,7 @@ describe('Testing the cc-select-box directive without null value support', funct
         $scope.$digest();
 
         element = $element[0];
-        var displayValues = element.querySelectorAll('.cc-select-box__display-value');
+        var displayValues = element.querySelectorAll('.cc-select-box__value');
         valueElement = displayValues[0];
         pleaseChooseElement = displayValues[1];
         select = element.querySelector('select');
@@ -249,7 +249,7 @@ describe('Testing the cc-select-box directive with complex objects and without n
         $scope.$digest();
 
         element = $element[0];
-        var displayValues = element.querySelectorAll('.cc-select-box__display-value');
+        var displayValues = element.querySelectorAll('.cc-select-box__value');
         valueElement = displayValues[0];
         pleaseChooseElement = displayValues[1];
         select = element.querySelector('select');

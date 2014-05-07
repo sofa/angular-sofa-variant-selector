@@ -1,11 +1,10 @@
-.cc-link{
-    text-decoration: underline;
-}
-
-.cc-clearfix, %cc-clearfix{
-    content: "";
-    display: table;
-    clear: both;
+html,
+body {
+    font-family: "Helvetica Neue", HelveticaNeue, "Helvetica-Neue", Helvetica, "BBAlpha Sans", sans-serif;
+    font-size:16px;
+    word-wrap: break-word;
+    -webkit-text-size-adjust: none;
+    width:100%;
 }
 
 //some generic helper classes
@@ -25,46 +24,7 @@
     }
 }
 
-
-.cc-full-width-height, %cc-full-width-height{
-    width: 100%;
-    height: 100%;
-    position:relative;
-}
-
-.cc-scrollable-vertical, %cc-scrollable-vertical {
-    overflow-y: auto;
-    overflow-x: hidden;
-    -webkit-overflow-scrolling: touch;
-}
-
-.cc-container,
-%cc-container {
-    @extend %flexbox;
-}
-
-.cc-body{
-    @extend %cc-container;
-
-    @include flex(1);
-
-    overflow: hidden;
-    min-width: 100%;
-    min-height: 100%;
-    position: relative;
-}
-
-.cc-docking-vertical {
-    @extend %flexbox;
-
-    @include flex(1);
-    @include flex-direction(column);
-
-    min-width: 100%;
-    min-height: 100%;
-}
-
-// TODO change after upgrade to angular 1.2
+// TODO: build a component for key/value blocks
 // some of these could be replaced by dl, dt and dd
 
 %cc-properties-key-value-base {
