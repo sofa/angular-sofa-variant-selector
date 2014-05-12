@@ -19,8 +19,11 @@ angular.module('sdk.directives.ccLazyValidation')
                 var notifyElement = attributes.ccLazyValidation === 'parent' ? element.parent() : element;
 
 
-                var validate = function(){
-                    return controller.$valid ? setValid() : setInvalid();
+                var validate = function () {
+                    if (controller.$dirty) {
+                        return controller.$valid ? setValid() : setInvalid();
+                    }
+                    return false;
                 };
 
                 var debouncedKeyUp = cc.Util.debounce(function(){
