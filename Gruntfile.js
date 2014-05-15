@@ -7,8 +7,8 @@ module.exports = function(grunt) {
         ccTestsName: 'cc.tests',
         ccAngularName: 'cc.angular',
         distdir: 'dist',
-        src: {
-            cc: [
+        vendor: {
+            sofa: [
               'node_modules/sofa-core/dist/sofa.core.js',
               'node_modules/sofa-storages/dist/sofa.storages.js',
               'node_modules/sofa-logging-service/dist/sofa.loggingService.js',
@@ -23,8 +23,10 @@ module.exports = function(grunt) {
               'node_modules/sofa-checkout-service/dist/sofa.checkoutService.js',
               'node_modules/sofa-couch-service/dist/sofa.couchService.js',
               'node_modules/sofa-coupon-service/dist/sofa.couponService.js',
-              'src/core/**/*.js'
-            ],
+            ]
+        },
+        src: {
+            cc: ['src/core/**/*.js'],
             ccTests: ['test/**/*.js','!test/karma/**/*'],
             ccAngular:  [
                             'src/services/**/*.js',
@@ -66,14 +68,6 @@ module.exports = function(grunt) {
             }
         },
         concat:{
-            dist:{
-                src:[
-                        'build.cc.intro.js',
-                        '<%= src.cc %>',
-                        'build.cc.outro.js'
-                    ],
-                dest:'<%= distdir %>/<%= ccName %>.js'
-            },
             ccTests:{
                 src:['<%= src.ccTests %>'],
                 dest:'<%= distdir %>/<%= ccTestsName %>.js'
@@ -146,7 +140,7 @@ module.exports = function(grunt) {
         },
         script:{
             cc:{
-                src: ['<%= src.cc %>', '<%= src.ccTests %>'],
+                src: ['<%= vendor.sofa %>', '<%= src.cc %>', '<%= src.ccTests %>'],
                 relativeTo: 'test/unit/'
             }
         }
