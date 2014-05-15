@@ -27,7 +27,7 @@ angular
         };
 
         var assureUrl = function(url){
-            return url || $location.url();
+            return url || $location.path();
         };
 
         self.hasInject = function(injectionPoint, url){
