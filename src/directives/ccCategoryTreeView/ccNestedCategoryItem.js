@@ -15,12 +15,12 @@ angular.module('sdk.directives.ccCategoryTreeView')
                 }
                 $scope.remoteControl = categoryTreeViewRemote;
 
-                $scope.doAction = function(item){
+                $scope.doAction = function($event, item){
+                    $event.preventDefault();
                     if (!item.hasChildren){
                         categoryTreeViewRemote.setActive(item);
                         navigationService.navigateToProducts(item.urlId);
-                    }
-                    else{
+                    } else {
                         categoryTreeViewRemote.toggleVisibility(item);
                     }
                 };
