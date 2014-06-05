@@ -1,4 +1,5 @@
 angular.module('sdk.directives', [
+    'sdk.directives.sofaName',
     'sdk.directives.ccFixedToolbarsView',
     'sdk.directives.ccZippy',
     'sdk.directives.ccFooterLinks',
