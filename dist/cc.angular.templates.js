@@ -5,7 +5,8 @@ angular.module("src/directives/ccAddress/ccaddress.tpl.html", []).run(["$templat
     "<div>\n" +
     "    <div>{{data.company}}</div>\n" +
     "    <div>{{data.name}} {{data.surname}}</div>\n" +
-    "    <div>{{data.street}}</div>\n" +
+    "    <div>{{data.street}} {{data.streetnumber}}</div>\n" +
+    "    <div ng-if=\"data.streetextra\">{{data.streetextra}}</div>\n" +
     "    <div>{{data.zip}} {{data.city}}</div>\n" +
     "    <div>{{data.country.label}}</div>\n" +
     "</div>\n" +
