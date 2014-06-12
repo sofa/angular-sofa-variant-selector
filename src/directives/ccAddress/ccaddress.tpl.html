@@ -1,7 +1,8 @@
 <div>
     <div>{{data.company}}</div>
     <div>{{data.name}} {{data.surname}}</div>
-    <div>{{data.street}}</div>
+    <div>{{data.street}} {{data.streetnumber}}</div>
+    <div ng-if="data.streetextra">{{data.streetextra}}</div>
     <div>{{data.zip}} {{data.city}}</div>
     <div>{{data.country.label}}</div>
 </div>
