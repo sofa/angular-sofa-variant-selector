@@ -160,20 +160,22 @@ angular.module("src/directives/ccThumbnailBar/cc-thumbnail-bar.tpl.html", []).ru
 
 angular.module("src/directives/ccVariantSelector/ccvariantselector.tpl.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("src/directives/ccVariantSelector/ccvariantselector.tpl.html",
-    "<div class=\"cc-variant-selector\" ng-if=\"variants.length\">\n" +
-    "    <div class=\"cc-select-box\"\n" +
-    "         ng-repeat=\"property in properties\">\n" +
-    "         <span class=\"cc-select-box__display-value\" ng-bind=\"selectedProperties[property]\"></span>\n" +
-    "         <span class=\"cc-select-box__display-value\" ng-hide=\"selectedProperties[property]\">{{chooseText}} {{property}}</span>\n" +
-    "         <i class=\"cc-select-box__select-icon fa fa-chevron-down\"></i>\n" +
-    "        <select name=\"{{property}}\"\n" +
-    "                class=\"cc-select-box__native-select\" \n" +
-    "                ng-model=\"selectedProperties[property]\" \n" +
-    "                ng-options=\"val for val in variants|ccVariantFilter:selectedProperties:property\">\n" +
-    "            <option value=\"\">-- {{chooseText}} {{property}} --</option>\n" +
-    "        </select>\n" +
-    "    </div>\n" +
-    "</div>\n" +
+    "<ul class=\"cc-variant-selector\" ng-if=\"variants.length\">\n" +
+    "    <li class=\"cc-variant-selector__item\" ng-repeat=\"property in properties\">\n" +
+    "        <label class=\"cc-variant-selector__label\" ng-bind=\"property\"></label>\n" +
+    "        <div class=\"cc-select-box\">\n" +
+    "            <span class=\"cc-select-box__value\" ng-bind=\"selectedProperties[property]\"></span>\n" +
+    "            <span class=\"cc-select-box__value\" ng-hide=\"selectedProperties[property]\">{{chooseText}} {{property}}</span>\n" +
+    "            <i class=\"cc-select-box__icon\"></i>\n" +
+    "            <select name=\"{{propertyName}}\"\n" +
+    "                    class=\"cc-select-box__native\"\n" +
+    "                    ng-model=\"selectedProperties[property]\"\n" +
+    "                    ng-options=\"val for val in variants|ccVariantFilter:selectedProperties:property\">\n" +
+    "                <option value=\"\">-- {{chooseText}} {{property}} --</option>\n" +
+    "            </select>\n" +
+    "        </div>\n" +
+    "    </li>\n" +
+    "</ul>\n" +
     "");
 }]);
 
