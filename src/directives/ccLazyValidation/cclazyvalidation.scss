@@ -1,25 +1,27 @@
-
+// TODO: we should differentiate between lazy-validation and basic validation
+// naming it cc-validation is probably to generic...
 .cc-validation {
     position: relative;
-}
 
-.cc-validation__message--success {
-    display: none;
-    position: absolute;
-    right: .5rem;
-    //set line-height to the height of the text-box
-    line-height: 2.75rem;
-    font-family: FontAwesome;
-    color: #468847;
+    .cc-validation__message--success {
+        display: none;
+        position: absolute;
+        right: 5px;
+        //set line-height to the height of the text-box
+        line-height: 46px;
+        color: #468847;
+    }
 
-    &:before {
-        font-style: normal;
-        content: '\f14a';
+    .cc-validation__message--fail {
+        display: none;
+    }
+
+    .cc-validation__message--fail--show {
+        display: block;
     }
 }
 
 .cc-validation__message--fail {
-    display: none;
     background: #F2DEDE;
     padding: .5rem;
     border-radius: .25rem;
@@ -53,6 +55,7 @@
 }
 
 //This deals with all different forms of how validations can mess up the grouping :)
+// TODO: check if we still need those styles
 .cc-grouped .cc-validation + .cc-text-box,
 cc-grouped .cc-validation + .cc-text-box,
 .cc-grouped .cc-validation + .cc-validation .cc-text-box,

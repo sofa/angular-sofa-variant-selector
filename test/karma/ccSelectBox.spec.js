@@ -1,359 +1,666 @@
-describe('Testing the cc-select-box directive with null value support', function() {
+
+describe('Unit: sofa-select-box', function () {
+
     var $scope,
         vm,
         $element,
         element,
         select,
-        valueElement,
-        pleaseChooseElement;
+        chooseOption,
+        valueElement;
 
+    var getValueElement = function (element) {
+        return element.querySelector('.cc-select-box__value');
+    };
+    
     beforeEach(module('sdk.directives.ccSelectBox'));
 
-    beforeEach(inject(function($rootScope, $compile) {
-        $scope = $rootScope.$new();
+    describe('with model value of null and chooseText defined', function () {
 
-        vm = $scope.vm = {};
+        beforeEach(inject(function ($rootScope, $compile) {
+            $scope = $rootScope.$new();
 
-        vm.data =   [
-                        'test',
-                        'foo'
+            vm = $scope.vm = {};
+
+            vm.model = null;
+            vm.data = ['test', 'foo'];
+            vm.propertyName = 'test_property';
+            vm.chooseText = 'choose';
+
+            $element = angular.element(
+                '<div>' +
+                    '<cc-select-box' +
+                    ' model="vm.model" ' +
+                    ' data="vm.data" ' +
+                    ' property-name="{{vm.propertyName}}" ' +
+                    ' choose-text="vm.chooseText">' +
+                    ' </cc-select-box> ' +
+                '</div>');
+
+            $compile($element)($scope);
+            $scope.$digest();
+
+            element = $element[0];
+            valueElement = getValueElement(element);
+            select = element.querySelector('select');
+            chooseOption = select.querySelector('option[ng-if]');
+        }));
+
+        it('should have an empty select value', function () {
+            expect(select.value).toBe('');
+        });
+
+        it('should display the chooseText', function () {
+            expect(valueElement.innerHTML).toBe(vm.chooseText);
+        });
+
+        it('should display an option with the choose text', function () {
+            expect(chooseOption).toBeDefined();
+            expect(chooseOption.value).toBe('');
+            expect(angular.element(chooseOption).css('display')).toBe('');
+            expect(chooseOption.innerHTML.search(/choose/) > -1).toBe(true);
+        });
+
+        it('should set the choose value if the selected value disappears', function() {
+            expect(valueElement.innerHTML).toBe('choose');
+
+            $scope.$apply(function () {
+                $scope.vm.model = 'test';
+            });
+
+            expect(valueElement.innerHTML).toBe('test');
+
+            $scope.$apply(function () {
+                $scope.vm.data.splice(0, 1);
+            });
+
+            expect(valueElement.innerHTML).toBe('choose');
+        });
+
+    });
+
+    describe('with model value of null and no chooseText given', function () {
+
+        beforeEach(inject(function ($rootScope, $compile) {
+            $scope = $rootScope.$new();
+
+            vm = $scope.vm = {};
+
+            vm.model = null;
+            vm.data = ['test', 'foo'];
+            vm.propertyName = 'test_property';
+
+            $element = angular.element(
+                '<div>' +
+                    '<cc-select-box' +
+                    ' model="vm.model" ' +
+                    ' data="vm.data" ' +
+                    ' property-name="{{vm.propertyName}}">' +
+                    ' </cc-select-box> ' +
+                '</div>');
+
+            $compile($element)($scope);
+            $scope.$digest();
+
+            element = $element[0];
+            valueElement = getValueElement(element);
+            select = element.querySelector('select');
+            chooseOption = select.querySelector('option[ng-if]');
+        }));
+
+        it('should have a select value of "0"', function () {
+            expect(select.value).toBe('0');
+        });
+
+        it('should have an empty display value', function () {
+            expect(valueElement.innerHTML).toBe('');
+        });
+
+        it('should not display a choose option', function () {
+            expect(chooseOption).toBe(null);
+        });
+
+    });
+
+    describe('with a model value provided', function () {
+
+        describe('(string)', function () {
+            beforeEach(inject(function ($rootScope, $compile) {
+                $scope = $rootScope.$new();
+
+                vm = $scope.vm = {};
+
+                vm.model = 'preselected_value';
+                vm.data = ['preselected_value', 'test', 'foo'];
+                vm.propertyName = 'test_property';
+
+                $element = angular.element(
+                    '<div>' +
+                        '<cc-select-box' +
+                        ' model="vm.model" ' +
+                        ' data="vm.data" ' +
+                        ' property-name="{{vm.propertyName}}">' +
+                        ' </cc-select-box> ' +
+                    '</div>');
+
+                $compile($element)($scope);
+                $scope.$digest();
+
+                element = $element[0];
+                valueElement = getValueElement(element);
+                select = element.querySelector('select');
+            }));
+
+            it('should display the selected value', function () {
+                expect(valueElement.innerHTML).toBe('preselected_value');
+            });
+
+            it('should have a select value that equals the model value', function () {
+                var value = select.querySelector('option[value="' + select.value + '"]').innerHTML;
+                expect(value).toEqual(vm.model);
+            });
+
+            it('should select the right value according to model change', function() {
+                expect(valueElement.innerHTML).toBe('preselected_value');
+
+                $scope.$apply(function () {
+                    $scope.vm.model = 'test';
+                });
+
+                expect(valueElement.innerHTML).toBe('test');
+            });
+
+            it('should select the null value if the selected one disappears', function() {
+                expect(valueElement.innerHTML).toBe('preselected_value');
+
+                $scope.$apply(function () {
+                    $scope.vm.data.splice(0, 1);
+                });
+
+                expect(valueElement.innerHTML).toBe('');
+            });
+
+            it('it should update model on change', function() {
+                expect(select.value).toBe('0');
+                expect(valueElement.innerHTML).toBe('preselected_value');
+
+                select.value = '1';
+                browserTrigger(select, 'change');
+
+                expect(select.value).toBe('1');
+                expect(valueElement.innerHTML).toBe('test');
+            });
+
+        });
+
+        describe('(object)', function () {
+            beforeEach(inject(function ($rootScope, $compile) {
+                $scope = $rootScope.$new();
+
+                vm = $scope.vm = {};
+
+                vm.model = {
+                    title: 'test_title',
+                    value: 'test_value'
+                };
+                vm.data = [
+                    {
+                        title: 'test_title',
+                        value: 'test_value'
+                    }
+                ];
+                vm.propertyName = 'test_property';
+                vm.displayValueExp = 'title';
+
+                $element = angular.element(
+                    '<div>' +
+                        '<cc-select-box' +
+                        ' model="vm.model" ' +
+                        ' data="vm.data" ' +
+                        ' display-value-exp="vm.displayValueExp" ' +
+                        ' property-name="{{vm.propertyName}}">' +
+                        ' </cc-select-box> ' +
+                    '</div>');
+
+                $compile($element)($scope);
+                $scope.$digest();
+
+                element = $element[0];
+                valueElement = getValueElement(element);
+                select = element.querySelector('select');
+            }));
+
+            it('should display the selected value', function () {
+                expect(valueElement.innerHTML).toBe('test_title');
+            });
+
+            it('should have a select value that equals the model value', function () {
+                var value = select.querySelector('option[value="' + select.value + '"]').innerHTML;
+                expect(value).toEqual(vm.model.title);
+            });
+
+            it('it should restore the selected value if the dataset is updated with equal values', function() {
+
+                $scope.$apply(function () {
+                    $scope.vm.data = [
+                        {
+                            title: 'test_title',
+                            value: 'test_value'
+                        }
                     ];
+                });
 
-        vm.selectedValue = null;
-        vm.chooseText = 'choose';
-        vm.propertyName = 'test property';
+                expect(select.value).toBe('0');
+                expect(valueElement.innerHTML).toBe('test_title');
+            });
 
-        $element = angular.element(
-            '<div>' +
-                '<cc-select-box' +
-                    ' ng-model="vm.selectedValue" ' +
-                    ' choose-text="vm.chooseText" ' +
-                    ' property-name="vm.propertyName" ' +
-                    ' data="vm.data"> ' +
-                ' </cc-select-box> ' +
-            '</div>');
-
-        $compile($element)($scope);
-        $scope.$digest();
-
-        element = $element[0];
-        var displayValues = element.querySelectorAll('.cc-select-box__value');
-        valueElement = displayValues[0];
-        pleaseChooseElement = displayValues[1];
-        select = element.querySelector('select');
-    }));
-
-    it('it should have the null value preselected', function() {
-        expect(select.value).toBe('');
-        expect(vm.selectedValue).toBe(null);
-        expect(valueElement.innerHTML).toBe('');
-        expect(angular.element(pleaseChooseElement).css('display')).toBe('');
+        });
     });
 
-    it('it should select the second according to model change', function() {
-        expect(select.value).toBe('');
-        expect(vm.selectedValue).toBe(null);
-        expect(valueElement.innerHTML).toBe('');
-        expect(angular.element(pleaseChooseElement).css('display')).toBe('');
+    describe('within a form directive', function () {
 
-        $scope.$apply(function(){
-            $scope.vm.selectedValue = 'foo';
+        var count = 1;
+
+        var getFormName = function (counter) {
+            return 'test_form_' + counter;
+        };
+
+        describe('(property-name as string)', function () {
+
+            var i = count++;
+
+            beforeEach(inject(function ($rootScope, $compile) {
+                $scope = $rootScope.$new();
+
+                vm = $scope.vm = {};
+
+                vm.model = null;
+                vm.data = ['test', 'foo'];
+                vm.required = true;
+                vm.propertyName = 'test_property';
+
+                $element = angular.element(
+                    '<form name="' + getFormName(i) + '">' +
+                        '<cc-select-box' +
+                        ' model="vm.model" ' +
+                        ' data="vm.data" ' +
+                        ' property-name="{{vm.propertyName}}">' +
+                        ' </cc-select-box> ' +
+                    '</form>');
+
+                $compile($element)($scope);
+                $scope.$digest();
+            }));
+
+            it('should have the form property on its scope', function () {
+                expect($scope[getFormName(i)]).toBeDefined();
+            });
+
+            it('should have the field name bound to the form object', function () {
+                expect($scope[getFormName(i)].test_property).toBeDefined();
+            });
+
         });
 
-        expect(select.value).toBe('1');
-        expect(valueElement.innerHTML).toBe('foo');
-        expect(vm.selectedValue).toBe('foo');
-        expect(angular.element(pleaseChooseElement).css('display')).toBe('none');
-    });
+        describe('(property-name as expression)', function () {
 
-    it('it should select the null value if the selected one disappears', function() {
-        $scope.$apply(function(){
-            $scope.vm.selectedValue = 'test';
+            var i = count++;
+
+            beforeEach(inject(function ($rootScope, $compile) {
+                $scope = $rootScope.$new();
+
+                vm = $scope.vm = {};
+
+                vm.model = null;
+                vm.data = ['test', 'foo'];
+                vm.required = true;
+                vm.suffix = 'suffix';
+
+                $element = angular.element(
+                    '<form name="' + getFormName(i) + '">' +
+                        '<cc-select-box' +
+                        ' model="vm.model" ' +
+                        ' data="vm.data" ' +
+                        ' property-name="test_property_{{vm.suffix}}">' +
+                        ' </cc-select-box> ' +
+                    '</form>');
+
+                $compile($element)($scope);
+                $scope.$digest();
+            }));
+
+            it('should have a field name that equals the given expression', function () {
+                expect($scope[getFormName(i)].test_property_suffix).toBeDefined();
+            });
+
         });
 
-        expect(select.value).toBe('0');
-        expect(valueElement.innerHTML).toBe('test');
-        expect(vm.selectedValue).toBe('test');
-        expect(angular.element(pleaseChooseElement).css('display')).toBe('none');
+        describe('(required, no preselected model value)', function () {
 
-        $scope.$apply(function(){
-            $scope.vm.data.splice(0,1);
+            var i = count++;
+
+            beforeEach(inject(function ($rootScope, $compile) {
+                $scope = $rootScope.$new();
+
+                vm = $scope.vm = {};
+
+                vm.model = null;
+                vm.data = ['test', 'foo'];
+                vm.required = true;
+                vm.propertyName = 'test_property';
+
+                $element = angular.element(
+                    '<form name="' + getFormName(i) + '">' +
+                        '<cc-select-box' +
+                        ' model="vm.model" ' +
+                        ' data="vm.data" ' +
+                        ' required="vm.required" ' +
+                        ' property-name="{{vm.propertyName}}">' +
+                        ' </cc-select-box> ' +
+                    '</form>');
+
+                $compile($element)($scope);
+                $scope.$digest();
+
+                element = $element[0];
+                valueElement = getValueElement(element);
+                select = element.querySelector('select');
+            }));
+
+            it('should set the corresponding form controller error', function () {
+                expect($scope[getFormName(i)].$error.required.length).toBe(1);
+            });
+
+            it('should initially be invalid', function () {
+                expect($scope[getFormName(i)].test_property.$invalid).toBe(true);
+            });
         });
 
-        expect(select.value).toBe('');
-        expect(valueElement.innerHTML).toBe('');
-        expect(vm.selectedValue).toBe(null);
-        expect(angular.element(pleaseChooseElement).css('display')).toBe('');
-    });
+        describe('(not required, no preselected model value)', function () {
 
-    it('it should update model on change', function() {
-        expect(select.value).toBe('');
-        expect(vm.selectedValue).toBe(null);
-        expect(valueElement.innerHTML).toBe('');
-        expect(angular.element(pleaseChooseElement).css('display')).toBe('');
+            var i = count++;
 
-        select.value = '1';
-        browserTrigger(select, 'change');
+            beforeEach(inject(function ($rootScope, $compile) {
+                $scope = $rootScope.$new();
 
-        expect(select.value).toBe('1');
-        expect(valueElement.innerHTML).toBe('foo');
-        expect(vm.selectedValue).toBe('foo');
-        expect(angular.element(pleaseChooseElement).css('display')).toBe('none');
-    });
-});
+                vm = $scope.vm = {};
 
-describe('Testing the cc-select-box directive without null value support', function() {
-    var $scope,
-        vm,
-        $element,
-        element,
-        select,
-        valueElement,
-        pleaseChooseElement;
+                vm.model = null;
+                vm.data = ['test', 'foo'];
+                vm.propertyName = 'test_property';
 
-    beforeEach(module('sdk.directives.ccSelectBox'));
+                $element = angular.element(
+                    '<form name="' + getFormName(i) + '">' +
+                        '<cc-select-box' +
+                        ' model="vm.model" ' +
+                        ' data="vm.data" ' +
+                        ' property-name="{{vm.propertyName}}">' +
+                        ' </cc-select-box> ' +
+                    '</form>');
 
-    beforeEach(inject(function($rootScope, $compile) {
-        $scope = $rootScope.$new();
+                $compile($element)($scope);
+                $scope.$digest();
 
-        vm = $scope.vm = {};
+                element = $element[0];
+                valueElement = getValueElement(element);
+                select = element.querySelector('select');
+            }));
 
-        vm.data =   [
-                        'test',
-                        'foo'
-                    ];
+            it('should not set the corresponding form controller error', function () {
+                expect($scope[getFormName(i)].$error.required).toBe(false);
+            });
 
-        vm.selectedValue = null;
-        vm.chooseText = 'choose';
-        vm.propertyName = 'test property';
-
-        $element = angular.element(
-            '<div>' +
-                '<cc-select-box' +
-                    ' ng-model="vm.selectedValue" ' +
-                    ' choose-text="vm.chooseText" ' +
-                    ' property-name="vm.propertyName" ' +
-                    ' omit-null ' +
-                    ' data="vm.data"> ' +
-                ' </cc-select-box> ' +
-            '</div>');
-
-        $compile($element)($scope);
-        $scope.$digest();
-
-        element = $element[0];
-        var displayValues = element.querySelectorAll('.cc-select-box__value');
-        valueElement = displayValues[0];
-        pleaseChooseElement = displayValues[1];
-        select = element.querySelector('select');
-    }));
-
-    it('it should have the first one preselected', function() {
-        expect(select.value).toBe('0');
-        expect(vm.selectedValue).toBe('test');
-        expect(valueElement.innerHTML).toBe('test');
-        expect(angular.element(pleaseChooseElement).css('display')).toBe('none');
-    });
-
-    it('it should select the second according to model change', function() {
-        expect(select.value).toBe('0');
-        expect(vm.selectedValue).toBe('test');
-        expect(valueElement.innerHTML).toBe('test');
-        expect(angular.element(pleaseChooseElement).css('display')).toBe('none');
-
-        $scope.$apply(function(){
-            $scope.vm.selectedValue = 'foo';
+            it('should initially be invalid', function () {
+                expect($scope[getFormName(i)].test_property.$valid).toBe(true);
+            });
         });
 
-        expect(select.value).toBe('1');
-        expect(valueElement.innerHTML).toBe('foo');
-        expect(vm.selectedValue).toBe('foo');
-        expect(angular.element(pleaseChooseElement).css('display')).toBe('none');
-    });
+        describe('(required, with a preselected model value)', function () {
 
-    //what should happen if none exist anymore and we don't have null value support?
-    it('it should select the first value if the selected one disappears', function() {
-        $scope.$apply(function(){
-            $scope.vm.selectedValue = 'test';
+            var i = count++;
+
+            beforeEach(inject(function ($rootScope, $compile) {
+                $scope = $rootScope.$new();
+
+                vm = $scope.vm = {};
+
+                vm.model = 'test_value';
+                vm.data = ['test_value', 'test', 'foo'];
+                vm.required = true;
+                vm.propertyName = 'test_property';
+
+                $element = angular.element(
+                    '<form name="' + getFormName(i) + '">' +
+                        '<cc-select-box' +
+                        ' model="vm.model" ' +
+                        ' data="vm.data" ' +
+                        ' required="vm.required" ' +
+                        ' property-name="{{vm.propertyName}}">' +
+                        ' </cc-select-box> ' +
+                    '</form>');
+
+                $compile($element)($scope);
+                $scope.$digest();
+
+                element = $element[0];
+                valueElement = getValueElement(element);
+                select = element.querySelector('select');
+            }));
+
+            it('should not set the corresponding form controller error', function () {
+                expect($scope[getFormName(i)].$error.required).toBe(false);
+            });
+
+            it('should initially be valid', function () {
+                expect($scope[getFormName(i)].test_property.$valid).toBe(true);
+            });
         });
 
-        expect(select.value).toBe('0');
-        expect(valueElement.innerHTML).toBe('test');
-        expect(vm.selectedValue).toBe('test');
-        expect(angular.element(pleaseChooseElement).css('display')).toBe('none');
+        describe('(two select boxes)', function () {
 
-        $scope.$apply(function(){
-            $scope.vm.data.splice(0,1);
+            var i = count++;
+            var vm2, valueElements, selects;
+
+            beforeEach(inject(function ($rootScope, $compile) {
+                $scope = $rootScope.$new();
+
+                vm = $scope.vm = {};
+                vm2 = $scope.vm2 = {};
+
+                vm.model = 'test_value';
+                vm.data = ['test_value', 'test', 'foo'];
+                vm.required = true;
+                vm.propertyName = 'test_property_1';
+
+                vm2.model = null;
+                vm2.data = ['test', 'foo'];
+                vm2.required = true;
+                vm2.propertyName = 'test_property_2';
+
+                $element = angular.element(
+                    '<form name="' + getFormName(i) + '">' +
+                        '<cc-select-box' +
+                            ' model="vm.model" ' +
+                            ' data="vm.data" ' +
+                            ' property-name="{{vm.propertyName}}">' +
+                        ' </cc-select-box> ' +
+                        '<cc-select-box' +
+                            ' model="vm2.model" ' +
+                            ' data="vm2.data" ' +
+                            ' property-name="{{vm2.propertyName}}">' +
+                        ' </cc-select-box> ' +
+                    '</form>');
+
+                $compile($element)($scope);
+                $scope.$digest();
+
+                element = $element[0];
+                valueElements = element.querySelectorAll('.cc-select-box .cc-select-box__display-value');
+                selects = element.querySelectorAll('select');
+            }));
+
+            it('should have both form fields defined in the form object', function () {
+                expect($scope[getFormName(i)].test_property_1).toBeDefined();
+                expect($scope[getFormName(i)].test_property_2).toBeDefined();
+            });
         });
 
-        expect(select.value).toBe('0');
-        expect(valueElement.innerHTML).toBe('foo');
-        expect(vm.selectedValue).toBe('foo');
-        expect(angular.element(pleaseChooseElement).css('display')).toBe('none');
     });
 
-    it('it should update model on change', function() {
-        expect(select.value).toBe('0');
-        expect(vm.selectedValue).toBe('test');
-        expect(valueElement.innerHTML).toBe('test');
-        expect(angular.element(pleaseChooseElement).css('display')).toBe('none');
+    describe('with display value expression', function () {
+       
+        describe('not provided (default)', function () {
+            
+            beforeEach(inject(function ($rootScope, $compile) {
+                $scope = $rootScope.$new();
 
-        select.value = '1';
-        browserTrigger(select, 'change');
+                vm = $scope.vm = {};
 
-        expect(select.value).toBe('1');
-        expect(valueElement.innerHTML).toBe('foo');
-        expect(vm.selectedValue).toBe('foo');
-        expect(angular.element(pleaseChooseElement).css('display')).toBe('none');
-    });
-});
+                vm.model = 'test_value';
+                vm.data = ['test_value', 'test', 'foo'];
+                vm.propertyName = 'test_property';
+                vm.chooseText = 'choose';
 
-describe('Testing the cc-select-box directive with complex objects and without null support', function() {
-    var $scope,
-        vm,
-        $element,
-        element,
-        select,
-        valueElement,
-        pleaseChooseElement;
+                $element = angular.element(
+                    '<div>' +
+                        '<cc-select-box' +
+                        ' model="vm.model" ' +
+                        ' data="vm.data" ' +
+                        ' property-name="{{vm.propertyName}}" ' +
+                        ' choose-text="vm.chooseText">' +
+                        ' </cc-select-box> ' +
+                    '</div>');
 
-    beforeEach(module('sdk.directives.ccSelectBox'));
+                $compile($element)($scope);
+                $scope.$digest();
 
-    beforeEach(inject(function($rootScope, $compile) {
-        $scope = $rootScope.$new();
+                element = $element[0];
+                valueElement = getValueElement(element);
+                select = element.querySelector('select');
+                chooseOption = select.querySelector('option[ng-if]');
+            }));
 
-        vm = $scope.vm = {};
+            it('should display the preselected model\'s value', function () {
+                expect(valueElement.innerHTML).toBe('test_value');
+            });
 
-        vm.data =   [
-                        { title: 'test' },
-                        { title: 'foo' }
-                    ];
-
-        vm.selectedValue = null;
-        vm.chooseText = 'choose';
-        vm.propertyName = 'test property';
-
-        $element = angular.element(
-            '<div>' +
-                '<cc-select-box' +
-                    ' ng-model="vm.selectedValue" ' +
-                    ' choose-text="vm.chooseText" ' +
-                    ' property-name="vm.propertyName" ' +
-                    ' omit-null ' +
-                    ' display-value-exp="\'title\'" ' +
-                    ' data="vm.data"> ' +
-                ' </cc-select-box> ' +
-            '</div>');
-
-        $compile($element)($scope);
-        $scope.$digest();
-
-        element = $element[0];
-        var displayValues = element.querySelectorAll('.cc-select-box__value');
-        valueElement = displayValues[0];
-        pleaseChooseElement = displayValues[1];
-        select = element.querySelector('select');
-    }));
-
-    it('it should have the first one preselected', function() {
-        expect(select.value).toBe('0');
-        expect(vm.selectedValue).toBe(vm.data[0]);
-        expect(valueElement.innerHTML).toBe('test');
-        expect(angular.element(pleaseChooseElement).css('display')).toBe('none');
-    });
-
-    it('it should select the second according to model change', function() {
-        expect(select.value).toBe('0');
-        expect(vm.selectedValue).toBe(vm.data[0]);
-        expect(valueElement.innerHTML).toBe('test');
-        expect(angular.element(pleaseChooseElement).css('display')).toBe('none');
-
-        $scope.$apply(function(){
-            $scope.vm.selectedValue = vm.data[1];
         });
 
-        expect(select.value).toBe('1');
-        expect(vm.selectedValue).toBe(vm.data[1]);
-        expect(valueElement.innerHTML).toBe('foo');
-        expect(angular.element(pleaseChooseElement).css('display')).toBe('none');
-    });
+        describe('being a string', function () {
 
-    //what should happen if none exist anymore and we don't have null value support?
-    it('it should select the first value if the selected one disappears', function() {
-        expect(select.value).toBe('0');
-        expect(valueElement.innerHTML).toBe('test');
-        expect(vm.selectedValue).toBe(vm.data[0]);
-        expect(angular.element(pleaseChooseElement).css('display')).toBe('none');
+            beforeEach(inject(function ($rootScope, $compile) {
+                $scope = $rootScope.$new();
 
-        $scope.$apply(function(){
-            $scope.vm.data.splice(0,1);
+                vm = $scope.vm = {};
+
+                vm.model = {
+                    title: 'test_title',
+                    value: 'test_value'
+                };
+                vm.data = [
+                    {
+                        title: 'test_title',
+                        value: 'test_value'
+                    }
+                ];
+                vm.propertyName = 'test_property';
+                vm.chooseText = 'choose';
+                vm.displayValueExp = 'title';
+
+                $element = angular.element(
+                    '<div>' +
+                        '<cc-select-box' +
+                        ' model="vm.model" ' +
+                        ' data="vm.data" ' +
+                        ' property-name="{{vm.propertyName}}" ' +
+                        ' choose-text="vm.chooseText" ' +
+                        ' display-value-exp="vm.displayValueExp">' +
+                        ' </cc-select-box> ' +
+                    '</div>');
+
+                $compile($element)($scope);
+                $scope.$digest();
+
+                element = $element[0];
+                valueElement = getValueElement(element);
+                select = element.querySelector('select');
+                chooseOption = select.querySelector('option[ng-if]');
+            }));
+
+            it('should display the preselected model\'s value expression (from string)', function () {
+                expect(valueElement.innerHTML).toBe('test_title');
+            });
+
         });
 
-        expect(select.value).toBe('0');
-        expect(valueElement.innerHTML).toBe('foo');
-        expect(vm.selectedValue).toBe(vm.data[0]);
-        expect(angular.element(pleaseChooseElement).css('display')).toBe('none');
-    });
+        describe('being a function', function () {
 
+            var options;
 
-    // it('it should set itself to the first value of a new dataset if dataset is changed', function() {
-    //     expect(select.value).toBe('0');
-    //     expect(valueElement.innerHTML).toBe('test');
-    //     expect(vm.selectedValue).toBe(vm.data[0]);
-    //     expect(angular.element(pleaseChooseElement).css('display')).toBe('none');
+            beforeEach(inject(function ($rootScope, $compile) {
+                $scope = $rootScope.$new();
 
-    //     $scope.$apply(function(){
-    //         $scope.vm.data = [];
-    //     });
+                vm = $scope.vm = {};
 
-    //     $scope.$apply(function(){
-    //         $scope.vm.data =    [
-    //                                 { title: 'a' },
-    //                                 { title: 'b' }
-    //                             ];
-    //     });
+                vm.model = {
+                    title: 'test_title',
+                    value: 'test_value',
+                    titleSuffix: 'some suffix'
+                };
+                vm.data = [
+                    {
+                        title: 'test_title',
+                        value: 'test_value',
+                        titleSuffix: 'some suffix'
+                    },
+                    {
+                        title: 'other_test_title',
+                        value: 'other_test_value',
+                        titleSuffix: 'some suffix'
+                    }
+                ];
+                vm.propertyName = 'test_property';
+                vm.chooseText = 'choose';
+                vm.displayFunction = function (data) {
+                    return data.title + ' ' + data.titleSuffix;
+                };
 
-    //     expect(select.value).toBe('0');
-    //     expect(valueElement.innerHTML).toBe('a');
-    //     expect(vm.selectedValue).toBe($scope.vm.data[0]);
-    //     expect(angular.element(pleaseChooseElement).css('display')).toBe('none');
-    // });
+                $element = angular.element(
+                    '<div>' +
+                        '<cc-select-box' +
+                        ' model="vm.model" ' +
+                        ' data="vm.data" ' +
+                        ' property-name="{{vm.propertyName}}" ' +
+                        ' choose-text="vm.chooseText" ' +
+                        ' display-value-exp="vm.displayFunction">' +
+                        ' </cc-select-box> ' +
+                    '</div>');
 
-    it('it should restore the selected value if the dataset is updated with equal values', function() {
-        $scope.$apply(function(){
-            $scope.vm.selectedValue = vm.data[1];
+                $compile($element)($scope);
+                $scope.$digest();
+
+                element = $element[0];
+                valueElement = getValueElement(element);
+                select = element.querySelector('select');
+                options = select.querySelectorAll('option');
+                chooseOption = select.querySelector('option[ng-if]');
+            }));
+
+            it('should display the display function\'s return value', function () {
+                expect(valueElement.innerHTML).toBe('test_title some suffix');
+                expect(options[0].innerHTML.search(/choose/) > -1).toBe(true);
+                expect(options[1].innerHTML).toBe('test_title some suffix');
+                expect(options[2].innerHTML).toBe('other_test_title some suffix');
+            });
+
+            it('should set the correct option to selected', function () {
+                var selectedOption = select.querySelector('option[selected]');
+                expect(selectedOption).toBeDefined();
+                expect(selectedOption.innerHTML).toBe('test_title some suffix');
+            });
+
         });
 
-        expect(select.value).toBe('1');
-        expect(vm.selectedValue).toBe(vm.data[1]);
-        expect(valueElement.innerHTML).toBe('foo');
-        expect(angular.element(pleaseChooseElement).css('display')).toBe('none');
-
-        $scope.$apply(function(){
-            $scope.vm.data =    [
-                                    { title: 'test' },
-                                    { title: 'foo' }
-                                ];
-        });
-
-        expect(select.value).toBe('1');
-        expect(vm.selectedValue).toBe(vm.data[1]);
-        expect(valueElement.innerHTML).toBe('foo');
-        expect(angular.element(pleaseChooseElement).css('display')).toBe('none');
     });
 
-    it('it should update model on change', function() {
-        expect(select.value).toBe('0');
-        expect(valueElement.innerHTML).toBe('test');
-        expect(vm.selectedValue).toBe(vm.data[0]);
-        expect(angular.element(pleaseChooseElement).css('display')).toBe('none');
-
-        select.value = '1';
-        browserTrigger(select, 'change');
-
-        expect(select.value).toBe('1');
-        expect(valueElement.innerHTML).toBe('foo');
-        expect(vm.selectedValue).toBe(vm.data[1]);
-        expect(angular.element(pleaseChooseElement).css('display')).toBe('none');
-    });
 });

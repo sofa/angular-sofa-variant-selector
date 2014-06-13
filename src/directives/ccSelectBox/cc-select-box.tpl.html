@@ -1,11 +1,11 @@
 <div class="cc-select-box">
-    <span class="cc-select-box__value" ng-bind="displayFn(_selectedValue)"></span>
-    <span class="cc-select-box__value" ng-hide="_selectedValue">{{chooseText}} {{propertyName}}</span>
+    <span class="cc-select-box__value" ng-class="{'cc-select-box__value--choose': !model && chooseText}" ng-bind="displayFn(model) || chooseText"></span>
     <i class="cc-select-box__icon"></i>
-    <select name="{{propertyName}}"
+    <select sofa-name="propertyName"
+            ng-required="{{required}}"
             class="cc-select-box__native"
-            ng-model="_selectedValue"
+            ng-model="model"
             ng-options="displayFn(val) for val in data">
-        <option ng-if="!_omitNull" value="">-- {{chooseText}} {{propertyName}} --</option>
+        <option ng-if="chooseText" value="">-- {{chooseText}} --</option>
     </select>
 </div>

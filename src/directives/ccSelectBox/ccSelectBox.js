@@ -1,4 +1,4 @@
-angular.module('sdk.directives.ccSelectBox', ['src/directives/ccSelectBox/cc-select-box.tpl.html']);
+angular.module('sdk.directives.ccSelectBox', ['src/directives/ccSelectBox/cc-select-box.tpl.html', 'sdk.directives.sofaName']);
 
 /**
 * Creates a mobile friendly select box that delegates to the native picker
@@ -14,128 +14,72 @@ angular.module('sdk.directives.ccSelectBox')
 
         'use strict';
 
+        // a) "ngModel compares by reference, not value. This is important when binding to an array of objects."
+        // b) Regardless of data type also check whether the given model exists within the options-data
+        var mapModelToData = function (scope) {
+            if (scope.model) {
+                var modelInData = false;
+
+                for(var i = 0; i < scope.data.length; i++) {
+                    if (angular.equals(scope.data[i], scope.model)) {
+                        scope.model = scope.data[i];
+                        modelInData = true;
+                        break;
+                    }
+                }
+
+                if (!modelInData) {
+                    scope.model = null;
+                }
+            }
+        };
+
         return {
             restrict: 'E',
             replace: true,
             scope: {
+                model: '=',
                 data: '=',
-                propertyName: '=',
+                propertyName: '@',
+                required: '=?',
                 chooseText: '=?',
-                displayValueExp: '&',
-                _selectedValue: '=ngModel'
+                displayValueExp: '&'
             },
-            require: '?ngModel',
             templateUrl: 'src/directives/ccSelectBox/cc-select-box.tpl.html',
-            link: function(scope, element, attrs, ngModelController){
+            link: function (scope) {
 
-                if (!attrs.ngModel){
-                    return;
-                }
+                // Initial run to map any preselected model values
+                mapModelToData(scope);
 
-                var allowNull = attrs.allowNull !== undefined;
-
-                //defines if an empty value should be omitted
-                scope._omitNull = attrs.omitNull !== undefined;
-
-
-                //Not sure, if we are doing the right thing here concerning ngModel.
-                //However, it seems to work quite well for now and it's not that much work.
-
-                //What we do is:
-
-                //1. we set up a bi directional binding between the expression provided to ngMode
-                //and a isolated scope property called _selectedValue. This way we don't have to
-                //use $parent in our template.
-
-                //2. we listen on scope._selectedValue manually and control the ngModelController
-                //accordingly
-
-                var unwatch = scope.$watchCollection('data', function(data){
-                    
-                    //this is the case where we need to set the selectedValue to the first value because it 
-                    //previously was null and now we are getting data values and omitNull forces us to set
-                    //a non null value
-                    if (data.length > 0 && scope._selectedValue === null && scope._omitNull){
-                        scope._selectedValue = data[0];
-                    }
-                    //this is the case where we had a value but it's been removed from the datasource
-                    //in that case we either need to set it to null or the first value from the datasource
-                    //depending on whether omitNull is true or not
-                    else if(data.length > 0){
-                        var tempValue = cc.Util.find(data, function(item){
-                            return angular.equals(item, scope._selectedValue);
-                        });
-
-                        //this is the case where we had a value but it's been removed from the datasource
-                        //in that case we either need to set it to null or the first value from the datasource
-                        //depending on whether omitNull is true or not
-                        if (!tempValue){
-                            scope._selectedValue = scope._omitNull ? data[0] : null;
-                        }
-                        //this is the case where the datasource was changed and an equal value to the previous
-                        //selected exists but it's not the same reference
-                        else if(tempValue && tempValue !== scope._selectedValue){
-                            scope._selectedValue = tempValue;
-                        }
+                // If by any reason the data object has changed, we have to map any existing model data to the new data
+                scope.$watchCollection('data', function (newData, oldData) {
+                    if (newData !== oldData) {
+                        mapModelToData(scope);
                     }
                 });
 
-                //we would move this to cc.Util but first it needs to be decoupled from angular.equals()
-                var contains = function(arr, obj){
-                    for (var i = 0; i < arr.length; i++) {
-                        var element = arr[i];
-                        if (angular.equals(obj, element)){
-                            return true;
-                        }
-                    }
-
-                    return false;
-                };
-
                 var displayValueFormatter = scope.displayValueExp();
 
-                var firstRun = true;
-                if (ngModelController){
-                    scope.$watch('_selectedValue', function(newValue){
-                        ngModelController.$setViewValue(newValue);
+                //default display function that will be used if no displayValueExp is given
+                scope.displayFn = function (value) {
+                    return value;
+                };
 
-                        if (!allowNull && newValue === null){
-                            ngModelController.$setValidity('value', false);
-                        }
-                        else{
-                            ngModelController.$setValidity('value', true);
-                        }
-
-                        if(firstRun){
-                            ngModelController.$setPristine();
-                        }
-
-                        firstRun = false;
-                    });
-                }
-
-
-                //default display function that will be used if no
-                //displayValueExp is given
-                scope.displayFn = function(value){ return value; };
-
-                if (angular.isFunction(displayValueFormatter)){
+                if (angular.isFunction(displayValueFormatter)) {
                     scope.displayFn = displayValueFormatter;
-                }
-                else if (angular.isString(displayValueFormatter)){
+                } else if (angular.isString(displayValueFormatter)) {
 
                     var properties = displayValueFormatter.split('.');
 
-                    scope.displayFn = function(value){
+                    scope.displayFn = function (value) {
 
-                        if (!value){
+                        if (!value) {
                             return value;
                         }
                         var tempValue = value;
-                        properties.forEach(function(node){
+                        properties.forEach(function (node) {
                             tempValue = tempValue[node];
                         });
-
                         return tempValue;
                     };
                 }
