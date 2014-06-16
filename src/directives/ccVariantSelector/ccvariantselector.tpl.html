@@ -1,16 +1,11 @@
 <ul class="cc-variant-selector" ng-if="variants.length">
     <li class="cc-variant-selector__item" ng-repeat="property in properties">
         <label class="cc-variant-selector__label" ng-bind="property"></label>
-        <div class="cc-select-box">
-            <span class="cc-select-box__value" ng-bind="selectedProperties[property]"></span>
-            <span class="cc-select-box__value" ng-hide="selectedProperties[property]">{{chooseText}} {{property}}</span>
-            <i class="cc-select-box__icon"></i>
-            <select name="{{propertyName}}"
-                    class="cc-select-box__native"
-                    ng-model="selectedProperties[property]"
-                    ng-options="val for val in variants|ccVariantFilter:selectedProperties:property">
-                <option value="">-- {{chooseText}} {{property}} --</option>
-            </select>
-        </div>
+        <cc-select-box
+                model="selectedProperties[property]"
+                data="data[property]"
+                choose-text="property"
+                property-name="variant_{{property}}">
+        </cc-select-box>
     </li>
 </ul>
