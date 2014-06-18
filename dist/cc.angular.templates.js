@@ -134,14 +134,14 @@ angular.module("src/directives/ccSearchField/cc-search-field.tpl.html", []).run(
 angular.module("src/directives/ccSelectBox/cc-select-box.tpl.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("src/directives/ccSelectBox/cc-select-box.tpl.html",
     "<div class=\"cc-select-box\">\n" +
-    "    <span class=\"cc-select-box__value\" ng-bind=\"displayFn(_selectedValue)\"></span>\n" +
-    "    <span class=\"cc-select-box__value\" ng-hide=\"_selectedValue\">{{chooseText}} {{propertyName}}</span>\n" +
+    "    <span class=\"cc-select-box__value\" ng-class=\"{'cc-select-box__value--choose': !model && chooseText}\" ng-bind=\"displayFn(model) || chooseText\"></span>\n" +
     "    <i class=\"cc-select-box__icon\"></i>\n" +
-    "    <select name=\"{{propertyName}}\"\n" +
+    "    <select sofa-name=\"propertyName\"\n" +
+    "            ng-required=\"{{required}}\"\n" +
     "            class=\"cc-select-box__native\"\n" +
-    "            ng-model=\"_selectedValue\"\n" +
+    "            ng-model=\"model\"\n" +
     "            ng-options=\"displayFn(val) for val in data\">\n" +
-    "        <option ng-if=\"!_omitNull\" value=\"\">-- {{chooseText}} {{propertyName}} --</option>\n" +
+    "        <option ng-if=\"chooseText\" value=\"\">-- {{chooseText}} --</option>\n" +
     "    </select>\n" +
     "</div>");
 }]);
@@ -162,20 +162,14 @@ angular.module("src/directives/ccVariantSelector/ccvariantselector.tpl.html", []
     "<ul class=\"cc-variant-selector\" ng-if=\"variants.length\">\n" +
     "    <li class=\"cc-variant-selector__item\" ng-repeat=\"property in properties\">\n" +
     "        <label class=\"cc-variant-selector__label\" ng-bind=\"property\"></label>\n" +
-    "        <div class=\"cc-select-box\">\n" +
-    "            <span class=\"cc-select-box__value\" ng-bind=\"selectedProperties[property]\"></span>\n" +
-    "            <span class=\"cc-select-box__value\" ng-hide=\"selectedProperties[property]\">{{chooseText}} {{property}}</span>\n" +
-    "            <i class=\"cc-select-box__icon\"></i>\n" +
-    "            <select name=\"{{propertyName}}\"\n" +
-    "                    class=\"cc-select-box__native\"\n" +
-    "                    ng-model=\"selectedProperties[property]\"\n" +
-    "                    ng-options=\"val for val in variants|ccVariantFilter:selectedProperties:property\">\n" +
-    "                <option value=\"\">-- {{chooseText}} {{property}} --</option>\n" +
-    "            </select>\n" +
-    "        </div>\n" +
+    "        <cc-select-box\n" +
+    "                model=\"selectedProperties[property]\"\n" +
+    "                data=\"data[property]\"\n" +
+    "                choose-text=\"property\"\n" +
+    "                property-name=\"variant_{{property}}\">\n" +
+    "        </cc-select-box>\n" +
     "    </li>\n" +
-    "</ul>\n" +
-    "");
+    "</ul>");
 }]);
 
 angular.module("src/directives/ccZippy/cc-zippy.tpl.html", []).run(["$templateCache", function($templateCache) {

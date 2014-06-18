@@ -136,14 +136,14 @@ angular.module("src/directives/ccSearchField/cc-search-field.tpl.html", []).run(
 angular.module("src/directives/ccSelectBox/cc-select-box.tpl.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("src/directives/ccSelectBox/cc-select-box.tpl.html",
     "<div class=\"cc-select-box\">\n" +
-    "    <span class=\"cc-select-box__value\" ng-bind=\"displayFn(_selectedValue)\"></span>\n" +
-    "    <span class=\"cc-select-box__value\" ng-hide=\"_selectedValue\">{{chooseText}} {{propertyName}}</span>\n" +
+    "    <span class=\"cc-select-box__value\" ng-class=\"{'cc-select-box__value--choose': !model && chooseText}\" ng-bind=\"displayFn(model) || chooseText\"></span>\n" +
     "    <i class=\"cc-select-box__icon\"></i>\n" +
-    "    <select name=\"{{propertyName}}\"\n" +
+    "    <select sofa-name=\"propertyName\"\n" +
+    "            ng-required=\"{{required}}\"\n" +
     "            class=\"cc-select-box__native\"\n" +
-    "            ng-model=\"_selectedValue\"\n" +
+    "            ng-model=\"model\"\n" +
     "            ng-options=\"displayFn(val) for val in data\">\n" +
-    "        <option ng-if=\"!_omitNull\" value=\"\">-- {{chooseText}} {{propertyName}} --</option>\n" +
+    "        <option ng-if=\"chooseText\" value=\"\">-- {{chooseText}} --</option>\n" +
     "    </select>\n" +
     "</div>");
 }]);
@@ -164,20 +164,14 @@ angular.module("src/directives/ccVariantSelector/ccvariantselector.tpl.html", []
     "<ul class=\"cc-variant-selector\" ng-if=\"variants.length\">\n" +
     "    <li class=\"cc-variant-selector__item\" ng-repeat=\"property in properties\">\n" +
     "        <label class=\"cc-variant-selector__label\" ng-bind=\"property\"></label>\n" +
-    "        <div class=\"cc-select-box\">\n" +
-    "            <span class=\"cc-select-box__value\" ng-bind=\"selectedProperties[property]\"></span>\n" +
-    "            <span class=\"cc-select-box__value\" ng-hide=\"selectedProperties[property]\">{{chooseText}} {{property}}</span>\n" +
-    "            <i class=\"cc-select-box__icon\"></i>\n" +
-    "            <select name=\"{{propertyName}}\"\n" +
-    "                    class=\"cc-select-box__native\"\n" +
-    "                    ng-model=\"selectedProperties[property]\"\n" +
-    "                    ng-options=\"val for val in variants|ccVariantFilter:selectedProperties:property\">\n" +
-    "                <option value=\"\">-- {{chooseText}} {{property}} --</option>\n" +
-    "            </select>\n" +
-    "        </div>\n" +
+    "        <cc-select-box\n" +
+    "                model=\"selectedProperties[property]\"\n" +
+    "                data=\"data[property]\"\n" +
+    "                choose-text=\"property\"\n" +
+    "                property-name=\"variant_{{property}}\">\n" +
+    "        </cc-select-box>\n" +
     "    </li>\n" +
-    "</ul>\n" +
-    "");
+    "</ul>");
 }]);
 
 angular.module("src/directives/ccZippy/cc-zippy.tpl.html", []).run(["$templateCache", function($templateCache) {
@@ -4117,7 +4111,7 @@ angular.module('sdk.directives.ccSearchField')
         };
     });
 
-angular.module('sdk.directives.ccSelectBox', ['src/directives/ccSelectBox/cc-select-box.tpl.html']);
+angular.module('sdk.directives.ccSelectBox', ['src/directives/ccSelectBox/cc-select-box.tpl.html', 'sdk.directives.sofaName']);
 
 /**
 * Creates a mobile friendly select box that delegates to the native picker
@@ -4133,128 +4127,72 @@ angular.module('sdk.directives.ccSelectBox')
 
         'use strict';
 
+        // a) "ngModel compares by reference, not value. This is important when binding to an array of objects."
+        // b) Regardless of data type also check whether the given model exists within the options-data
+        var mapModelToData = function (scope) {
+            if (scope.model) {
+                var modelInData = false;
+
+                for(var i = 0; i < scope.data.length; i++) {
+                    if (angular.equals(scope.data[i], scope.model)) {
+                        scope.model = scope.data[i];
+                        modelInData = true;
+                        break;
+                    }
+                }
+
+                if (!modelInData) {
+                    scope.model = null;
+                }
+            }
+        };
+
         return {
             restrict: 'E',
             replace: true,
             scope: {
+                model: '=',
                 data: '=',
-                propertyName: '=',
+                propertyName: '@',
+                required: '=?',
                 chooseText: '=?',
-                displayValueExp: '&',
-                _selectedValue: '=ngModel'
+                displayValueExp: '&'
             },
-            require: '?ngModel',
             templateUrl: 'src/directives/ccSelectBox/cc-select-box.tpl.html',
-            link: function(scope, element, attrs, ngModelController){
+            link: function (scope) {
 
-                if (!attrs.ngModel){
-                    return;
-                }
+                // Initial run to map any preselected model values
+                mapModelToData(scope);
 
-                var allowNull = attrs.allowNull !== undefined;
-
-                //defines if an empty value should be omitted
-                scope._omitNull = attrs.omitNull !== undefined;
-
-
-                //Not sure, if we are doing the right thing here concerning ngModel.
-                //However, it seems to work quite well for now and it's not that much work.
-
-                //What we do is:
-
-                //1. we set up a bi directional binding between the expression provided to ngMode
-                //and a isolated scope property called _selectedValue. This way we don't have to
-                //use $parent in our template.
-
-                //2. we listen on scope._selectedValue manually and control the ngModelController
-                //accordingly
-
-                var unwatch = scope.$watchCollection('data', function(data){
-                    
-                    //this is the case where we need to set the selectedValue to the first value because it 
-                    //previously was null and now we are getting data values and omitNull forces us to set
-                    //a non null value
-                    if (data.length > 0 && scope._selectedValue === null && scope._omitNull){
-                        scope._selectedValue = data[0];
-                    }
-                    //this is the case where we had a value but it's been removed from the datasource
-                    //in that case we either need to set it to null or the first value from the datasource
-                    //depending on whether omitNull is true or not
-                    else if(data.length > 0){
-                        var tempValue = cc.Util.find(data, function(item){
-                            return angular.equals(item, scope._selectedValue);
-                        });
-
-                        //this is the case where we had a value but it's been removed from the datasource
-                        //in that case we either need to set it to null or the first value from the datasource
-                        //depending on whether omitNull is true or not
-                        if (!tempValue){
-                            scope._selectedValue = scope._omitNull ? data[0] : null;
-                        }
-                        //this is the case where the datasource was changed and an equal value to the previous
-                        //selected exists but it's not the same reference
-                        else if(tempValue && tempValue !== scope._selectedValue){
-                            scope._selectedValue = tempValue;
-                        }
+                // If by any reason the data object has changed, we have to map any existing model data to the new data
+                scope.$watchCollection('data', function (newData, oldData) {
+                    if (newData !== oldData) {
+                        mapModelToData(scope);
                     }
                 });
 
-                //we would move this to cc.Util but first it needs to be decoupled from angular.equals()
-                var contains = function(arr, obj){
-                    for (var i = 0; i < arr.length; i++) {
-                        var element = arr[i];
-                        if (angular.equals(obj, element)){
-                            return true;
-                        }
-                    }
-
-                    return false;
-                };
-
                 var displayValueFormatter = scope.displayValueExp();
 
-                var firstRun = true;
-                if (ngModelController){
-                    scope.$watch('_selectedValue', function(newValue){
-                        ngModelController.$setViewValue(newValue);
+                //default display function that will be used if no displayValueExp is given
+                scope.displayFn = function (value) {
+                    return value;
+                };
 
-                        if (!allowNull && newValue === null){
-                            ngModelController.$setValidity('value', false);
-                        }
-                        else{
-                            ngModelController.$setValidity('value', true);
-                        }
-
-                        if(firstRun){
-                            ngModelController.$setPristine();
-                        }
-
-                        firstRun = false;
-                    });
-                }
-
-
-                //default display function that will be used if no
-                //displayValueExp is given
-                scope.displayFn = function(value){ return value; };
-
-                if (angular.isFunction(displayValueFormatter)){
+                if (angular.isFunction(displayValueFormatter)) {
                     scope.displayFn = displayValueFormatter;
-                }
-                else if (angular.isString(displayValueFormatter)){
+                } else if (angular.isString(displayValueFormatter)) {
 
                     var properties = displayValueFormatter.split('.');
 
-                    scope.displayFn = function(value){
+                    scope.displayFn = function (value) {
 
-                        if (!value){
+                        if (!value) {
                             return value;
                         }
                         var tempValue = value;
-                        properties.forEach(function(node){
+                        properties.forEach(function (node) {
                             tempValue = tempValue[node];
                         });
-
                         return tempValue;
                     };
                 }
@@ -4324,22 +4262,23 @@ angular.module('sdk.directives.ccThumbnailBar')
         };
     });
 
-angular.module('sdk.directives.ccVariantSelector', ['src/directives/ccVariantSelector/ccvariantselector.tpl.html']);
+angular.module('sdk.directives.ccVariantSelector', ['src/directives/ccVariantSelector/ccvariantselector.tpl.html', 'sdk.directives.ccSelectBox']);
 
 angular.module('sdk.directives.ccVariantSelector')
-    .filter('ccVariantFilter', ['$filter', function($filter) {
+    .filter('ccVariantFilter', ['$filter', function ($filter) {
 
         'use strict';
 
-        return function(values, selectedValues, key) {
+        // variants, selectedProperties, propertyKey
+        return function (values, selectedValues, key) {
             var selected = {},
                 applyFilters = false;
 
             // reformat for built in filter and exclude current property
-            for (var property in selectedValues){
-                if (key!==property && selectedValues[property]!==null && selectedValues[property]!==undefined) {
-                   selected['properties.' + property] = selectedValues[property];
-                   applyFilters = true;
+            for (var property in selectedValues) {
+                if (key !== property && selectedValues[property] !== null && selectedValues[property] !== undefined) {
+                    selected['properties.' + property] = selectedValues[property];
+                    applyFilters = true;
                 }
             }
 
@@ -4348,16 +4287,17 @@ angular.module('sdk.directives.ccVariantSelector')
 
             // extract flat values for the curent property
             var result = [];
-            variants.forEach(function(variant){
-                if (result.indexOf(variant.properties[key]) === -1 && variant.stock > 0){
+            variants.forEach(function (variant) {
+                if (result.indexOf(variant.properties[key]) === -1 && variant.stock > 0) {
                     result.push(variant.properties[key]);
                 }
             });
+
             return result;
         };
     }])
 
-    .directive('ccVariantSelector', function() {
+    .directive('ccVariantSelector', function ($filter) {
 
         'use strict';
 
@@ -4366,35 +4306,33 @@ angular.module('sdk.directives.ccVariantSelector')
             replace: true,
             scope: {
                 variants: '=',
-                variant : '=?',
+                variant: '=?',
                 selectedProperties: '=?',
                 chooseText: '=?'
             },
             templateUrl: 'src/directives/ccVariantSelector/ccvariantselector.tpl.html',
-            link: function(scope, element, attrs){
+            link: function (scope) {
 
                 // extract flat list of available properties
                 // maybe iterating on the first variant is enough ?
                 scope.properties = [];
-                scope.selectedProperties = {};
+                scope.selectedProperties = scope.selectedProperties || {};
+                scope.data = {};
 
-                scope.variants.forEach(function(variant){
-                    for (var property in variant.properties){
-                        //create a placeholder value on the selectedProperties hash
-                        //for each available property. So we can later figure out
-                        //which are missing.
-                        scope.selectedProperties[property] = null;
-                        if (scope.properties.indexOf(property) === -1){
-                            scope.properties.push(property);
-                        }
-                    }
-                });
-                
+                var getDataByProperty = function (property) {
+                    return $filter('ccVariantFilter')(scope.variants, scope.selectedProperties, property);
+                };
 
-                var findVariant = function(variants, selectedProperties){
-                    var filteredVariants = variants.filter(function(variant){
-                        for (var property in variant.properties){
-                            if (variant.properties[property] !== selectedProperties[property]){
+                var setData = function () {
+                    scope.properties.forEach(function (property) {
+                        scope.data[property] = getDataByProperty(property);
+                    });
+                };
+
+                var findVariant = function (variants, selectedProperties) {
+                    var filteredVariants = variants.filter(function (variant) {
+                        for (var property in variant.properties) {
+                            if (variant.properties[property] !== selectedProperties[property]) {
                                 return false;
                             }
                         }
@@ -4405,9 +4343,21 @@ angular.module('sdk.directives.ccVariantSelector')
                     return filteredVariants.length > 0 ? filteredVariants[0] : null;
                 };
 
-                scope.$watch('selectedProperties', function(val){
-                    var variant = findVariant(scope.variants, val);
-                    scope.variant = variant;
+                scope.variants.forEach(function (variant) {
+                    for (var property in variant.properties) {
+                        //create a placeholder value on the selectedProperties hash
+                        //for each available property. So we can later figure out
+                        //which are missing.
+                        scope.selectedProperties[property] = null;
+                        if (scope.properties.indexOf(property) === -1) {
+                            scope.properties.push(property);
+                        }
+                    }
+                });
+
+                scope.$watch('selectedProperties', function (newVal) {
+                    scope.variant = findVariant(scope.variants, newVal);
+                    setData();
                 }, true);
             }
         };
@@ -4466,6 +4416,7 @@ angular.module('sdk.directives.ccZippy')
         };
     });
 angular.module('sdk.directives', [
+    'sdk.directives.sofaName',
     'sdk.directives.ccFixedToolbarsView',
     'sdk.directives.ccZippy',
     'sdk.directives.ccFooterLinks',
@@ -4494,6 +4445,26 @@ angular.module('sdk.directives', [
     'sdk.directives.ccSearchField',
     'sdk.directives.sofaRadioButton'
 ]);
+// Taken from https://github.com/angular/angular.js/pull/6569
+// Credits to https://github.com/sjbarker
+angular.module('sdk.directives.sofaName', [])
+    .directive('sofaName', function () {
+
+        'use strict';
+
+        return {
+            priority: 100,
+            restrict: 'A',
+            require: 'ngModel',
+            link: {
+                pre: function sofaNameLinkFn(scope, elem, attrs, ctrl) {
+                    ctrl.$name = scope.$eval(attrs.sofaName);
+                    attrs.$set('name', ctrl.$name);
+                }
+            }
+        };
+    });
+
 angular.module('sdk.directives.sofaRadioButton', ['src/directives/sofaRadioButton/sofa-radio-button.tpl.html']);
 
 angular.module('sdk.directives.sofaRadioButton')
