@@ -33,7 +33,7 @@ angular.module('sdk.directives.ccVariantSelector')
         };
     }])
 
-    .directive('ccVariantSelector', function ($filter) {
+    .directive('ccVariantSelector', ['$filter', function ($filter) {
 
         'use strict';
 
@@ -97,4 +97,4 @@ angular.module('sdk.directives.ccVariantSelector')
                 }, true);
             }
         };
-    });
+    }]);
