@@ -13,7 +13,8 @@ angular.module('sdk.directives.sofaRadioButton')
             scope: {
                 model: '=',
                 label: '=',
-                value: '='
+                value: '=',
+                disabled: '='
             },
             templateUrl: 'src/directives/sofaRadioButton/sofa-radio-button.tpl.html',
             link: function (scope, $element, attrs) {

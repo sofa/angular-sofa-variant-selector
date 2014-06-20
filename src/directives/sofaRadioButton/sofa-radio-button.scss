@@ -51,6 +51,9 @@
     left:0;
 }
 
+.sofa-radio-button--disabled .sofa-radio-button__label {
+    opacity: 0.5;
+}
 .sofa-radio-button__input:focus + .sofa-radio-button__label:before {
     background-color:#fff;
     border-color: lightblue;

@@ -188,10 +188,11 @@ angular.module("src/directives/ccZippy/cc-zippy.tpl.html", []).run(["$templateCa
 
 angular.module("src/directives/sofaRadioButton/sofa-radio-button.tpl.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("src/directives/sofaRadioButton/sofa-radio-button.tpl.html",
-    "<div class=\"sofa-radio-button\">\n" +
-    "    <input type=\"radio\" ng-model=\"model\" id=\"sofa-radio-{{id}}\" value=\"{{value}}\" class=\"sofa-radio-button__input\">\n" +
+    "<div class=\"sofa-radio-button\" ng-class=\"{ 'sofa-radio-button--disabled': disabled }\">\n" +
+    "    <input ng-disabled=\"disabled\" type=\"radio\" ng-model=\"model\" id=\"sofa-radio-{{id}}\" value=\"{{value}}\" class=\"sofa-radio-button__input\">\n" +
     "    <label for=\"sofa-radio-{{id}}\" class=\"sofa-radio-button__label\" bindonce bo-text=\"label\"></label>\n" +
-    "</div>");
+    "</div>\n" +
+    "");
 }]);
 
 angular.module('sdk.services.basketService', [
@@ -4480,7 +4481,8 @@ angular.module('sdk.directives.sofaRadioButton')
             scope: {
                 model: '=',
                 label: '=',
-                value: '='
+                value: '=',
+                disabled: '='
             },
             templateUrl: 'src/directives/sofaRadioButton/sofa-radio-button.tpl.html',
             link: function (scope, $element, attrs) {
@@ -4489,6 +4491,7 @@ angular.module('sdk.directives.sofaRadioButton')
             }
         };
     });
+
 angular.module('sdk.decorators.$rootScope', []);
 
     angular
