@@ -4,14 +4,14 @@ angular.module('cc.angular.templates', ['src/directives/ccAddress/ccaddress.tpl.
 
 angular.module("src/directives/ccAddress/ccaddress.tpl.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("src/directives/ccAddress/ccaddress.tpl.html",
-    "<div>\n" +
-    "    <div>{{data.company}}</div>\n" +
-    "    <div>{{data.name}} {{data.surname}}</div>\n" +
-    "    <div>{{data.street}} {{data.streetnumber}}</div>\n" +
-    "    <div ng-if=\"data.streetextra\">{{data.streetextra}}</div>\n" +
-    "    <div>{{data.zip}} {{data.city}}</div>\n" +
-    "    <div>{{data.country.label}}</div>\n" +
-    "</div>\n" +
+    "<address>\n" +
+    "  {{data.company}}<br>\n" +
+    "  {{data.name}} {{data.surname}}<br>\n" +
+    "  {{data.street}} {{data.streetnumber}}<br>\n" +
+    "  <span ng-if=\"data.streetextra\">{{data.streetextra}}</span><br>\n" +
+    "  {{data.zip}} {{data.city}}<br>\n" +
+    "  {{data.country.label}}\n" +
+    "</address>\n" +
     "");
 }]);
 
