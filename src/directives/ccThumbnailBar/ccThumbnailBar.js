@@ -1,7 +1,7 @@
 angular.module('sdk.directives.ccThumbnailBar', ['src/directives/ccThumbnailBar/cc-thumbnail-bar.tpl.html']);
 
 angular.module('sdk.directives.ccThumbnailBar')
-    .directive('ccThumbnailBar', function() {
+    .directive('ccThumbnailBar', function () {
 
         'use strict';
 
@@ -13,23 +13,18 @@ angular.module('sdk.directives.ccThumbnailBar')
                 onChange: '&'
             },
             templateUrl: 'src/directives/ccThumbnailBar/cc-thumbnail-bar.tpl.html',
-            controller: ['$scope', function($scope){
-                $scope.setSelectedImageIndex = function(index){
+            controller: ['$scope', function ($scope) {
 
+                $scope.setSelectedImage = function (index) {
                     $scope.selectedImageIndex = index;
 
-                    var image = {
-                        index: index,
-                        url: $scope.images[index].url
-                    };
-
-                    $scope.onChange({ image: image });
+                    $scope.onChange({imageUrl: $scope.images[index].image});
                 };
 
-                $scope.$watch('images', function(newValue, oldValue) {
+                $scope.$watch('images', function (newValue) {
                     // reset the image index when images ref changes
                     if (angular.isArray(newValue)) {
-                        $scope.setSelectedImageIndex(0);
+                        $scope.setSelectedImage(0);
                     }
                 });
             }]
