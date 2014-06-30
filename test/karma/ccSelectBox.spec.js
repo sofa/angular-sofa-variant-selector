@@ -112,8 +112,8 @@ describe('Unit: sofa-select-box', function () {
             expect(select.value).toBe('0');
         });
 
-        it('should have an empty display value', function () {
-            expect(valueElement.innerHTML).toBe('');
+        it('should have a display value equal to the first options\' label', function () {
+            expect(valueElement.innerHTML).toBe('test');
         });
 
         it('should not display a choose option', function () {
@@ -170,14 +170,14 @@ describe('Unit: sofa-select-box', function () {
                 expect(valueElement.innerHTML).toBe('test');
             });
 
-            it('should select the null value if the selected one disappears', function() {
+            it('should select the first of the remaining values if the selected one disappears', function() {
                 expect(valueElement.innerHTML).toBe('preselected_value');
 
                 $scope.$apply(function () {
                     $scope.vm.data.splice(0, 1);
                 });
 
-                expect(valueElement.innerHTML).toBe('');
+                expect(valueElement.innerHTML).toBe('test');
             });
 
             it('it should update model on change', function() {
@@ -230,6 +230,45 @@ describe('Unit: sofa-select-box', function () {
                 select = element.querySelector('select');
             }));
 
+        });
+
+        describe('(object)', function () {
+            beforeEach(inject(function ($rootScope, $compile) {
+                $scope = $rootScope.$new();
+
+                vm = $scope.vm = {};
+
+                vm.model = {
+                    title: 'test_title',
+                    value: 'test_value'
+                };
+                vm.data = [
+                    {
+                        title: 'test_title',
+                        value: 'test_value'
+                    }
+                ];
+                vm.propertyName = 'test_property';
+                vm.displayValueExp = 'title';
+
+                $element = angular.element(
+                    '<div>' +
+                        '<cc-select-box' +
+                        ' model="vm.model" ' +
+                        ' data="vm.data" ' +
+                        ' display-value-exp="vm.displayValueExp" ' +
+                        ' property-name="{{vm.propertyName}}">' +
+                        ' </cc-select-box> ' +
+                    '</div>');
+
+                $compile($element)($scope);
+                $scope.$digest();
+
+                element = $element[0];
+                valueElement = getValueElement(element);
+                select = element.querySelector('select');
+            }));
+
             it('should display the selected value', function () {
                 expect(valueElement.innerHTML).toBe('test_title');
             });
@@ -239,7 +278,7 @@ describe('Unit: sofa-select-box', function () {
                 expect(value).toEqual(vm.model.title);
             });
 
-            it('it should restore the selected value if the dataset is updated with equal values', function() {
+            it('should restore the selected value if the dataset is updated with equal values', function() {
 
                 $scope.$apply(function () {
                     $scope.vm.data = [
@@ -367,12 +406,12 @@ describe('Unit: sofa-select-box', function () {
                 select = element.querySelector('select');
             }));
 
-            it('should set the corresponding form controller error', function () {
-                expect($scope[getFormName(i)].$error.required.length).toBe(1);
+            it('should not set the corresponding form controller error', function () {
+                expect($scope[getFormName(i)].$error.required).toBe(false);
             });
 
-            it('should initially be invalid', function () {
-                expect($scope[getFormName(i)].test_property.$invalid).toBe(true);
+            it('should initially be valid', function () {
+                expect($scope[getFormName(i)].test_property.$valid).toBe(true);
             });
         });
 
