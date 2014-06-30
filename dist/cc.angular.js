@@ -4150,6 +4150,9 @@ angular.module('sdk.directives.ccSelectBox')
                     scope.model = null;
                 }
             }
+            if (!scope.model && !scope.chooseText && scope.data.length) {
+                scope.model = scope.data[0];
+            }
         };
 
         return {
