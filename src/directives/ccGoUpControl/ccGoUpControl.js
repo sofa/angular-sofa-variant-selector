@@ -15,8 +15,6 @@ angular.module('sdk.directives.ccGoUpControl')
                 category: '=',
                 homeText: '@'
             },
-            replace: true,
-            transclude: true,
             link: function($scope, element, attributes){
 
                 $scope.getParentLabel = function () {
