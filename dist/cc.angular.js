@@ -811,12 +811,20 @@ angular.module('sdk.directives.ccCheckBox')
                 value: '=?'
             },
             templateUrl: 'src/directives/ccCheckBox/cc-checkbox.tpl.html',
+            controller: function($scope) {
+                return {
+                    getId: function(){
+                        return $scope.id;
+                    }
+                };
+            },
             link: function(scope, $element, attrs){
                 instanceCount++;
                 scope.id = instanceCount;
             }
         };
     });
+
 angular.module('sdk.directives.ccElasticViews', [
     'src/directives/ccElasticViews/elasticViews.tpl.html',
     /*ccElasticViews.domPos.left, */
