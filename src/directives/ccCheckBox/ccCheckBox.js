@@ -16,13 +16,13 @@ angular.module('sdk.directives.ccCheckBox')
                 value: '=?'
             },
             templateUrl: 'src/directives/ccCheckBox/cc-checkbox.tpl.html',
-            controller: function($scope) {
+            controller: ['$scope', function($scope) {
                 return {
                     getId: function(){
                         return $scope.id;
                     }
                 };
-            },
+            }],
             link: function(scope, $element, attrs){
                 instanceCount++;
                 scope.id = instanceCount;
