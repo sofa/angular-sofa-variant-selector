@@ -1,58 +1,96 @@
 angular.module('sdk.directives.ccLazyValidation', []);
 
+/**
+ * Lazy validation extends the modelController with alternative valid and invalid properties,
+ * which are set with a delay. This way, the user isn't disturbed by error messages while filling
+ * out a field.
+ * The new properties to use in your template are
+ * - ccValid
+ * - ccInvalid
+ */
+
 angular.module('sdk.directives.ccLazyValidation')
-    .directive('ccLazyValidation', function() {
+    .directive('ccLazyValidation', function () {
 
         'use strict';
 
-        var DEBOUNCE_MS     = 2000,
-            VALID_CLS       = 'cc-valid',
-            INVAID_CLS      = 'cc-invalid';
+        var DEBOUNCE_MS_DEFAULT = 2000;
 
         return {
             restrict: 'A',
             require: 'ngModel',
-            link: function($scope, element, attributes, controller){
+            link: function ($scope, element, attrs, controller) {
 
-                //there are situations where the VALID_CLS/INVALID_CLS needs to be set on the parent
-                //rather than directly on the element.
-                var notifyElement = attributes.ccLazyValidation === 'parent' ? element.parent() : element;
+                var DEBOUNCE_MS = DEBOUNCE_MS_DEFAULT,
+                    offCalled = false;
+
+                if (attrs.ccLazyValidation && typeof $scope.$eval(attrs.ccLazyValidation) === 'number') {
+                    DEBOUNCE_MS = $scope.$eval(attrs.ccLazyValidation);
+                }
+
+                var checkValidity = function () {
+                    // stop all remaining watches once the user starts interacting with the field
+                    if (!offCalled) {
+                        off();
+                        offCalled = true;
+                    }
+                    if (controller.$valid) {
+                        setValid();
+                    } else {
+                        if (controller.$dirty) {
+                            debouncedError();
+                        }
+                    }
+                };
+
+                var debouncedError = cc.Util.debounce(function (stop) {
+                    if (!stop && element[0].value.length > 0) {
+                        setInvalid();
+                    }
+                }, DEBOUNCE_MS);
 
 
                 var validate = function () {
                     if (controller.$dirty) {
-                        return controller.$valid ? setValid() : setInvalid();
+                        if (controller.$valid) {
+                            setValid();
+                        } else {
+                            setInvalid();
+                        }
                     }
-                    return false;
                 };
 
-                var debouncedKeyUp = cc.Util.debounce(function(){
-                    //if the user deletes all text from the box but
-                    //still hasn't moved focus to somewhere else,
-                    //don't bother him with complains
-                    if (element.val().length > 0){
-                        validate();
-                    }
-                }, DEBOUNCE_MS);
-
-                var setValid = function(){
-                    notifyElement.removeClass(INVAID_CLS);
-                    notifyElement.addClass(VALID_CLS);
+                var setValid = function () {
+                    debouncedError(true);
+                    $scope.$apply(function () {
+                        controller.ccValid = true;
+                        controller.ccInvalid = false;
+                    });
                 };
 
-                var setInvalid = function(){
-                    notifyElement.removeClass(VALID_CLS);
-                    notifyElement.addClass(INVAID_CLS);
+                var setInvalid = function () {
+                    $scope.$apply(function () {
+                        controller.ccValid = false;
+                        controller.ccInvalid = true;
+                    });
                 };
 
-                var resetState = function(){
-                    notifyElement.removeClass(VALID_CLS);
-                    notifyElement.removeClass(INVAID_CLS);
-                };
-
-                element.bind('keydown', resetState);
-                element.bind('keyup', debouncedKeyUp);
+                element.bind('keyup keydown', checkValidity);
                 element.bind('blur', validate);
+
+                // In case there are values coming from a controller we need to watch for changes
+                var off = $scope.$watch(function () { return controller.$viewValue; }, function (newValue) {
+                    if (newValue && newValue.length) {
+                        controller.ccValid = controller.$valid;
+                        controller.ccInvalid = controller.$invalid;
+                        off();
+                        offCalled = true;
+                    }
+                });
+
+                // Initially set to be neither valid nor invalid
+                controller.ccValid = false;
+                controller.ccInvalid = false;
             }
         };
     });
