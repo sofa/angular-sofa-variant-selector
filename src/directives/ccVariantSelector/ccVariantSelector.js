@@ -7,19 +7,32 @@ angular.module('sdk.directives.ccVariantSelector')
 
         // variants, selectedProperties, propertyKey
         return function (values, selectedValues, key) {
-            var selected = {},
-                applyFilters = false;
+            var selected = {
+                properties: {}
+            },
+            applyFilters = false;
 
             // reformat for built in filter and exclude current property
             for (var property in selectedValues) {
                 if (key !== property && selectedValues[property] !== null && selectedValues[property] !== undefined) {
-                    selected['properties.' + property] = selectedValues[property];
+                    selected.properties[property] = selectedValues[property];
                     applyFilters = true;
                 }
             }
 
+            var comparator = function(obj, text) {
+                if (obj && text && typeof obj === 'object' && typeof text === 'object') {
+                    for (var textKey in text) {
+                        if (obj[textKey] !== text[textKey]) {
+                            return false;
+                        } 
+                    }
+                    return true;
+                }
+            };
+
             // extract available variants
-            var variants = applyFilters ? $filter('filter')(values, selected, true) : values;
+            var variants = applyFilters ? $filter('filter')(values, selected, comparator) : values;
 
             // extract flat values for the curent property
             var result = [];
