@@ -152,8 +152,9 @@ angular.module("src/directives/ccThumbnailBar/cc-thumbnail-bar.tpl.html", []).ru
   $templateCache.put("src/directives/ccThumbnailBar/cc-thumbnail-bar.tpl.html",
     "<ul class=\"cc-thumbnail-bar\">\n" +
     "    <li ng-class=\"$index === selectedImageIndex ? 'cc-thumbnail-bar__item--active' : 'cc-thumbnail-bar__item'\"\n" +
-    "        ng-click=\"setSelectedImageIndex($index)\"\n" +
-    "        ng-repeat=\"image in images\" style=\"background-image:url('{{ image.url }}');\">\n" +
+    "        ng-click=\"setSelectedImage($index)\"\n" +
+    "        ng-repeat=\"image in images\">\n" +
+    "        <img class=\"cc-thumbnail-bar__image\" ng-src=\"{{image.thumbnail}}\" alt=\"\"/>\n" +
     "    </li>\n" +
     "</ul>\n" +
     "");
@@ -255,6 +256,16 @@ angular
     .module('sdk.services.deviceService')
     .factory('deviceService', ['$window', function($window){
         return new cc.DeviceService($window);
+}]);
+
+
+
+angular.module('sdk.services.imageResizeService', ['sdk.services.configService']);
+
+angular
+    .module('sdk.services.imageResizeService')
+    .factory('imageResizeService', ['configService', '$window', function(configService, $window) {
+        return new sofa.ImageResizerService(configService, $window);
 }]);
 
 
@@ -4242,7 +4253,7 @@ angular.module('sdk.directives.ccTemplateCode')
 angular.module('sdk.directives.ccThumbnailBar', ['src/directives/ccThumbnailBar/cc-thumbnail-bar.tpl.html']);
 
 angular.module('sdk.directives.ccThumbnailBar')
-    .directive('ccThumbnailBar', function() {
+    .directive('ccThumbnailBar', function () {
 
         'use strict';
 
@@ -4254,23 +4265,18 @@ angular.module('sdk.directives.ccThumbnailBar')
                 onChange: '&'
             },
             templateUrl: 'src/directives/ccThumbnailBar/cc-thumbnail-bar.tpl.html',
-            controller: ['$scope', function($scope){
-                $scope.setSelectedImageIndex = function(index){
+            controller: ['$scope', function ($scope) {
 
+                $scope.setSelectedImage = function (index) {
                     $scope.selectedImageIndex = index;
 
-                    var image = {
-                        index: index,
-                        url: $scope.images[index].url
-                    };
-
-                    $scope.onChange({ image: image });
+                    $scope.onChange({imageUrl: $scope.images[index].image});
                 };
 
-                $scope.$watch('images', function(newValue, oldValue) {
+                $scope.$watch('images', function (newValue) {
                     // reset the image index when images ref changes
                     if (angular.isArray(newValue)) {
-                        $scope.setSelectedImageIndex(0);
+                        $scope.setSelectedImage(0);
                     }
                 });
             }]

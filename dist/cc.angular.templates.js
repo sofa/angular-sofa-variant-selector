@@ -150,8 +150,9 @@ angular.module("src/directives/ccThumbnailBar/cc-thumbnail-bar.tpl.html", []).ru
   $templateCache.put("src/directives/ccThumbnailBar/cc-thumbnail-bar.tpl.html",
     "<ul class=\"cc-thumbnail-bar\">\n" +
     "    <li ng-class=\"$index === selectedImageIndex ? 'cc-thumbnail-bar__item--active' : 'cc-thumbnail-bar__item'\"\n" +
-    "        ng-click=\"setSelectedImageIndex($index)\"\n" +
-    "        ng-repeat=\"image in images\" style=\"background-image:url('{{ image.url }}');\">\n" +
+    "        ng-click=\"setSelectedImage($index)\"\n" +
+    "        ng-repeat=\"image in images\">\n" +
+    "        <img class=\"cc-thumbnail-bar__image\" ng-src=\"{{image.thumbnail}}\" alt=\"\"/>\n" +
     "    </li>\n" +
     "</ul>\n" +
     "");
