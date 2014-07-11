@@ -13,12 +13,12 @@ angular.module('sdk.directives.ccThumbnailBar')
                 onChange: '&'
             },
             templateUrl: 'src/directives/ccThumbnailBar/cc-thumbnail-bar.tpl.html',
-            controller: ['$scope', function ($scope) {
+            link: function ($scope) {
 
                 $scope.setSelectedImage = function (index) {
                     $scope.selectedImageIndex = index;
 
-                    $scope.onChange({imageUrl: $scope.images[index].image});
+                    $scope.onChange({image: $scope.images[index].image});
                 };
 
                 $scope.$watch('images', function (newValue) {
@@ -27,6 +27,6 @@ angular.module('sdk.directives.ccThumbnailBar')
                         $scope.setSelectedImage(0);
                     }
                 });
-            }]
+            }
         };
     });
