@@ -31,11 +31,12 @@ module.exports = function(grunt) {
             ccAngular:  [
                             'src/services/**/*.js',
                             'src/directives/**/*.js',
+                            '!src/directives/ccElasticViews/**/*.js',
                             'src/decorators/**/*.js',
                             'src/filter/**/*.js',
                             '!src/**/demos/**/*'
                         ],
-            ccTemplates: ['src/**/*.tpl.html', '!src/**/demos/**/*.tpl.html']
+            ccTemplates: ['src/**/*.tpl.html', '!src/**/demos/**/*.tpl.html', '!src/directives/ccElasticViews/**/*.tpl.html']
         },
         clean: ['<%= distdir %>/*'],
         jshint: {
