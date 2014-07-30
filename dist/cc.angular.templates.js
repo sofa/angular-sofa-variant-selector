@@ -1,4 +1,4 @@
-angular.module('cc.angular.templates', ['src/directives/ccAddress/ccaddress.tpl.html', 'src/directives/ccBreadcrumbs/cc-breadcrumbs.tpl.html', 'src/directives/ccCategoryTreeView/cc-category-tree-view.tpl.html', 'src/directives/ccCheckBox/cc-checkbox.tpl.html', 'src/directives/ccElasticViews/elasticViews.tpl.html', 'src/directives/ccFooterLinks/cc-footer-links.tpl.html', 'src/directives/ccGoBackButton/cc-go-back-button.tpl.html', 'src/directives/ccGoUpButton/cc-go-up-button.tpl.html', 'src/directives/ccGoUpControl/cc-go-up-control.tpl.html', 'src/directives/ccLoadingSpinner/ccloadingspinner.tpl.html', 'src/directives/ccPrice/cc-price.tpl.html', 'src/directives/ccSearchField/cc-search-field.tpl.html', 'src/directives/ccSelectBox/cc-select-box.tpl.html', 'src/directives/ccThumbnailBar/cc-thumbnail-bar.tpl.html', 'src/directives/ccVariantSelector/ccvariantselector.tpl.html', 'src/directives/ccZippy/cc-zippy.tpl.html', 'src/directives/sofaRadioButton/sofa-radio-button.tpl.html']);
+angular.module('cc.angular.templates', ['src/directives/ccAddress/ccaddress.tpl.html', 'src/directives/ccBreadcrumbs/cc-breadcrumbs.tpl.html', 'src/directives/ccCategoryTreeView/cc-category-tree-view.tpl.html', 'src/directives/ccCheckBox/cc-checkbox.tpl.html', 'src/directives/ccFooterLinks/cc-footer-links.tpl.html', 'src/directives/ccGoBackButton/cc-go-back-button.tpl.html', 'src/directives/ccGoUpButton/cc-go-up-button.tpl.html', 'src/directives/ccGoUpControl/cc-go-up-control.tpl.html', 'src/directives/ccLoadingSpinner/ccloadingspinner.tpl.html', 'src/directives/ccPrice/cc-price.tpl.html', 'src/directives/ccSearchField/cc-search-field.tpl.html', 'src/directives/ccSelectBox/cc-select-box.tpl.html', 'src/directives/ccThumbnailBar/cc-thumbnail-bar.tpl.html', 'src/directives/ccVariantSelector/ccvariantselector.tpl.html', 'src/directives/ccZippy/cc-zippy.tpl.html', 'src/directives/sofaRadioButton/sofa-radio-button.tpl.html']);
 
 angular.module("src/directives/ccAddress/ccaddress.tpl.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("src/directives/ccAddress/ccaddress.tpl.html",
@@ -53,20 +53,6 @@ angular.module("src/directives/ccCheckBox/cc-checkbox.tpl.html", []).run(["$temp
     "    <label for=\"cc-check-box-{{id}}\" class=\"cc-checkbox__label\" ng-bind-html=\"label\"></label>\n" +
     "</div>\n" +
     "");
-}]);
-
-angular.module("src/directives/ccElasticViews/elasticViews.tpl.html", []).run(["$templateCache", function($templateCache) {
-  $templateCache.put("src/directives/ccElasticViews/elasticViews.tpl.html",
-    "<div class=\"cc-elastic-views-viewport\">\n" +
-    "    <div \n" +
-    "        ng-repeat=\"view in views\"\n" +
-    "        cc-elastic-views-notifier \n" +
-    "        id=\"{{view.name}}\" \n" +
-    "        class=\"cc-elastic-views-view\" \n" +
-    "        ng-class=\"view.cls\" \n" +
-    "        ng-include=\"view.tpl\">\n" +
-    "    </div>\n" +
-    "<div>");
 }]);
 
 angular.module("src/directives/ccFooterLinks/cc-footer-links.tpl.html", []).run(["$templateCache", function($templateCache) {
