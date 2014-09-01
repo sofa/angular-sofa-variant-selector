@@ -1,6 +1,6 @@
 (function(window, cc, angular, undefined){
 
-angular.module('cc.angular.templates', ['src/directives/ccAddress/ccaddress.tpl.html', 'src/directives/ccBreadcrumbs/cc-breadcrumbs.tpl.html', 'src/directives/ccCategoryTreeView/cc-category-tree-view.tpl.html', 'src/directives/ccCheckBox/cc-checkbox.tpl.html', 'src/directives/ccFooterLinks/cc-footer-links.tpl.html', 'src/directives/ccGoBackButton/cc-go-back-button.tpl.html', 'src/directives/ccGoUpButton/cc-go-up-button.tpl.html', 'src/directives/ccGoUpControl/cc-go-up-control.tpl.html', 'src/directives/ccLoadingSpinner/ccloadingspinner.tpl.html', 'src/directives/ccPrice/cc-price.tpl.html', 'src/directives/ccSearchField/cc-search-field.tpl.html', 'src/directives/ccSelectBox/cc-select-box.tpl.html', 'src/directives/ccThumbnailBar/cc-thumbnail-bar.tpl.html', 'src/directives/ccVariantSelector/ccvariantselector.tpl.html', 'src/directives/ccZippy/cc-zippy.tpl.html', 'src/directives/sofaRadioButton/sofa-radio-button.tpl.html', 'src/directives/sofaTouchSlider/sofa-touch-slider-indicator.tpl.html', 'src/directives/sofaTouchSlider/sofa-touch-slider.tpl.html']);
+angular.module('cc.angular.templates', ['src/directives/ccAddress/ccaddress.tpl.html', 'src/directives/ccBreadcrumbs/cc-breadcrumbs.tpl.html', 'src/directives/ccCategoryTreeView/cc-category-tree-view.tpl.html', 'src/directives/ccCheckBox/cc-checkbox.tpl.html', 'src/directives/ccFooterLinks/cc-footer-links.tpl.html', 'src/directives/ccGoBackButton/cc-go-back-button.tpl.html', 'src/directives/ccGoUpButton/cc-go-up-button.tpl.html', 'src/directives/ccGoUpControl/cc-go-up-control.tpl.html', 'src/directives/ccLoadingSpinner/ccloadingspinner.tpl.html', 'src/directives/ccPrice/cc-price.tpl.html', 'src/directives/ccSearchField/cc-search-field.tpl.html', 'src/directives/ccSelectBox/cc-select-box.tpl.html', 'src/directives/ccThumbnailBar/cc-thumbnail-bar.tpl.html', 'src/directives/ccVariantSelector/ccvariantselector.tpl.html', 'src/directives/ccZippy/cc-zippy.tpl.html', 'src/directives/sofaFullPageView/sofa-full-page-view.tpl.html', 'src/directives/sofaRadioButton/sofa-radio-button.tpl.html', 'src/directives/sofaTouchSlider/sofa-touch-slider-indicator.tpl.html', 'src/directives/sofaTouchSlider/sofa-touch-slider.tpl.html']);
 
 angular.module("src/directives/ccAddress/ccaddress.tpl.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("src/directives/ccAddress/ccaddress.tpl.html",
@@ -171,6 +171,14 @@ angular.module("src/directives/ccZippy/cc-zippy.tpl.html", []).run(["$templateCa
     "    <div class=\"cc-zippy__content\" ng-transclude></div>\n" +
     "</div>\n" +
     "");
+}]);
+
+angular.module("src/directives/sofaFullPageView/sofa-full-page-view.tpl.html", []).run(["$templateCache", function($templateCache) {
+  $templateCache.put("src/directives/sofaFullPageView/sofa-full-page-view.tpl.html",
+    "<div class=\"sofa-full-page-view\" ng-class=\"{'sofa-full-page-view--active': active}\">\n" +
+    "    <button class=\"sofa-full-page-view__close\" ng-click=\"closeFullPageView($event)\"></button>\n" +
+    "    <div class=\"sofa-full-page-view__content\" ng-transclude></div>\n" +
+    "</div>");
 }]);
 
 angular.module("src/directives/sofaRadioButton/sofa-radio-button.tpl.html", []).run(["$templateCache", function($templateCache) {
@@ -2532,8 +2540,78 @@ angular.module('sdk.directives', [
     'sdk.directives.ccPrice',
     'sdk.directives.ccSearchField',
     'sdk.directives.sofaRadioButton',
-    'sdk.directives.sofaTouchSlider'
+    'sdk.directives.sofaTouchSlider',
+    'sdk.directives.sofaFullPageView'
 ]);
+angular.module('sdk.directives.sofaFullPageView', ['src/directives/sofaFullPageView/sofa-full-page-view.tpl.html']);
+
+
+angular.module('sdk.directives.sofaFullPageView')
+    .directive('sofaFullPageView', function () {
+
+        'use strict';
+
+        return {
+            restrict: 'E',
+            controller: function () {
+
+            },
+            link: function ($scope, $element, attrs) {
+                var onOpen  = $scope.$eval(attrs.onOpen);
+                var onClose = $scope.$eval(attrs.onClose);
+
+                $scope.openFullPageView = function (e) {
+                    e.preventDefault();
+                    if (angular.isFunction(onOpen)) {
+                        onOpen($scope);
+                    }
+                    $scope.active = true;
+                };
+                $scope.closeFullPageView = function (e) {
+                    e.preventDefault();
+                    if (angular.isFunction(onClose)) {
+                        onClose($scope);
+                    }
+                    $scope.active = false;
+                };
+
+                $scope.$on('$destroy', function () {
+                    $scope.cloneElement.remove();
+                });
+            }
+        };
+    })
+    .directive('sofaFullPageViewClone', function ($window) {
+        return {
+            restrict: 'E',
+            require: '^sofaFullPageView',
+            replace: true,
+            transclude: true,
+            templateUrl: 'src/directives/sofaFullPageView/sofa-full-page-view.tpl.html',
+            compile: function () {
+                return function ($scope, $element) {
+                    angular.element($window.document.body).prepend($element);
+                    $scope.active = false;
+                    $scope.cloneElement = $element;
+                    $element.css('height', $window.innerHeight + 'px');
+
+                    // orientationchange will not work for android, so we use the resize event
+                    $window.addEventListener('resize', function () {
+                        $element.css('height', $window.innerHeight + 'px');
+                    });
+                };
+            }
+        };
+    })
+    .directive('sofaFullPageViewOriginal', function () {
+        return {
+            restrict: 'E',
+            require: '^sofaFullPageView',
+            link: function ($scope, $element) {
+                $scope.originalElement = $element;
+            }
+        };
+    });
 // Taken from https://github.com/angular/angular.js/pull/6569
 // Credits to https://github.com/sjbarker
 angular.module('sdk.directives.sofaName', [])
