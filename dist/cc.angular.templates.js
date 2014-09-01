@@ -1,4 +1,4 @@
-angular.module('cc.angular.templates', ['src/directives/ccAddress/ccaddress.tpl.html', 'src/directives/ccBreadcrumbs/cc-breadcrumbs.tpl.html', 'src/directives/ccCategoryTreeView/cc-category-tree-view.tpl.html', 'src/directives/ccCheckBox/cc-checkbox.tpl.html', 'src/directives/ccFooterLinks/cc-footer-links.tpl.html', 'src/directives/ccGoBackButton/cc-go-back-button.tpl.html', 'src/directives/ccGoUpButton/cc-go-up-button.tpl.html', 'src/directives/ccGoUpControl/cc-go-up-control.tpl.html', 'src/directives/ccLoadingSpinner/ccloadingspinner.tpl.html', 'src/directives/ccPrice/cc-price.tpl.html', 'src/directives/ccSearchField/cc-search-field.tpl.html', 'src/directives/ccSelectBox/cc-select-box.tpl.html', 'src/directives/ccThumbnailBar/cc-thumbnail-bar.tpl.html', 'src/directives/ccVariantSelector/ccvariantselector.tpl.html', 'src/directives/ccZippy/cc-zippy.tpl.html', 'src/directives/sofaFullPageView/sofa-full-page-view.tpl.html', 'src/directives/sofaRadioButton/sofa-radio-button.tpl.html', 'src/directives/sofaTouchSlider/sofa-touch-slider-indicator.tpl.html', 'src/directives/sofaTouchSlider/sofa-touch-slider.tpl.html']);
+angular.module('cc.angular.templates', ['src/directives/ccAddress/ccaddress.tpl.html', 'src/directives/ccBreadcrumbs/cc-breadcrumbs.tpl.html', 'src/directives/ccCategoryTreeView/cc-category-tree-view.tpl.html', 'src/directives/ccCheckBox/cc-checkbox.tpl.html', 'src/directives/ccFooterLinks/cc-footer-links.tpl.html', 'src/directives/ccGoBackButton/cc-go-back-button.tpl.html', 'src/directives/ccGoUpButton/cc-go-up-button.tpl.html', 'src/directives/ccGoUpControl/cc-go-up-control.tpl.html', 'src/directives/ccLoadingSpinner/ccloadingspinner.tpl.html', 'src/directives/ccPrice/cc-price.tpl.html', 'src/directives/ccSearchField/cc-search-field.tpl.html', 'src/directives/ccSelectBox/cc-select-box.tpl.html', 'src/directives/ccThumbnailBar/cc-thumbnail-bar.tpl.html', 'src/directives/ccVariantSelector/ccvariantselector.tpl.html', 'src/directives/ccZippy/cc-zippy.tpl.html', 'src/directives/sofaFullPageView/sofa-full-page-view.tpl.html', 'src/directives/sofaImageZoom/sofa-image-zoom.tpl.html', 'src/directives/sofaRadioButton/sofa-radio-button.tpl.html', 'src/directives/sofaTouchSlider/sofa-touch-slider-indicator.tpl.html', 'src/directives/sofaTouchSlider/sofa-touch-slider.tpl.html']);
 
 angular.module("src/directives/ccAddress/ccaddress.tpl.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("src/directives/ccAddress/ccaddress.tpl.html",
@@ -176,6 +176,13 @@ angular.module("src/directives/sofaFullPageView/sofa-full-page-view.tpl.html", [
     "<div class=\"sofa-full-page-view\" ng-class=\"{'sofa-full-page-view--active': active}\">\n" +
     "    <button class=\"sofa-full-page-view__close\" ng-click=\"closeFullPageView($event)\"></button>\n" +
     "    <div class=\"sofa-full-page-view__content\" ng-transclude></div>\n" +
+    "</div>");
+}]);
+
+angular.module("src/directives/sofaImageZoom/sofa-image-zoom.tpl.html", []).run(["$templateCache", function($templateCache) {
+  $templateCache.put("src/directives/sofaImageZoom/sofa-image-zoom.tpl.html",
+    "<div class=\"sofa-image-zoom\" ng-class=\"{'sofa-image-zoom--active': active}\">\n" +
+    "    <img class=\"sofa-image-zoom__image\" ng-src=\"{{imageSrc}}\">\n" +
     "</div>");
 }]);
 
