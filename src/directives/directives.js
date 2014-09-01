@@ -27,5 +27,6 @@ angular.module('sdk.directives', [
     'sdk.directives.ccSearchField',
     'sdk.directives.sofaRadioButton',
     'sdk.directives.sofaTouchSlider',
-    'sdk.directives.sofaFullPageView'
+    'sdk.directives.sofaFullPageView',
+    'sdk.directives.sofaImageZoom'
 ]);
