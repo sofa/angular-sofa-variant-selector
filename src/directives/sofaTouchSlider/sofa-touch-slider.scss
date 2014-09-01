@@ -1,0 +1,147 @@
+.sofa-touch-slider-wrapper {
+    position: relative;
+
+    &:before,
+    &:after {
+        content:'';
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: .25rem;
+        z-index: 2;
+        opacity: 1;
+
+        -webkit-transition: opacity .3s;
+                transition: opacity .3s;
+    }
+
+    &:before {
+        left:-2px;
+        border-left:1px solid #bbb;
+
+        background-image: -webkit-gradient(
+                linear,
+                left top,
+                right top,
+                color-stop(0, rgba(0,0,0,.2)),
+                color-stop(1, transparent)
+        );
+        background-image: -o-linear-gradient(right, rgba(0,0,0,.2) 0%, transparent 100%);
+        background-image: -moz-linear-gradient(right, rgba(0,0,0,.2) 0%, transparent 100%);
+        background-image: -webkit-linear-gradient(right, rgba(0,0,0,.2) 0%, transparent 100%);
+        background-image: -ms-linear-gradient(right, rgba(0,0,0,.2) 0%, transparent 100%);
+        background-image: linear-gradient(to right, rgba(0,0,0,.2) 0%, transparent 100%);
+    }
+
+    &:after {
+        right:-2px;
+        border-right:1px solid #bbb;
+
+        background-image: -webkit-gradient(
+                linear,
+                right top,
+                left top,
+                color-stop(0, rgba(0,0,0,.2)),
+                color-stop(1, transparent)
+        );
+        background-image: -o-linear-gradient(left, rgba(0,0,0,.2) 0%, transparent 100%);
+        background-image: -moz-linear-gradient(left, rgba(0,0,0,.2) 0%, transparent 100%);
+        background-image: -webkit-linear-gradient(left, rgba(0,0,0,.2) 0%, transparent 100%);
+        background-image: -ms-linear-gradient(left, rgba(0,0,0,.2) 0%, transparent 100%);
+        background-image: linear-gradient(to left, rgba(0,0,0,.2) 0%, transparent 100%);
+    }
+}
+
+.sofa-touch-slider-mask {
+    overflow: hidden;
+}
+
+.sofa-touch-slider-max--left {
+    &:before {
+        opacity: 0;
+    }
+}
+.sofa-touch-slider-max--right {
+    &:after {
+        opacity: 0;
+    }
+}
+
+.sofa-touch-slider {
+    list-style: none;
+    margin:0;
+    padding:0;
+
+    display: -moz-box;         /* OLD - Firefox 19- (buggy but mostly works) */
+    display: -ms-flexbox;      /* TWEENER - IE 10 */
+    display: -webkit-flex;     /* NEW - Chrome */
+    display: flex;             /* NEW, Spec - Opera 12.1, Firefox 20+ */
+
+    -webkit-box-direction: normal;
+    -webkit-box-orient: horizontal;
+
+    -webkit-flex-direction: row;
+    -moz-flex-direction: row;
+    -ms-flex-direction: row;
+    flex-direction: row;
+
+    transition: -webkit-transform .3s;
+    transition:         transform .3s;
+
+    -webkit-transform: translateX(0);
+    transform:         translateX(0);
+
+    // some tweaks for less flickering. Never ever put this on the <li>'s...
+    -webkit-backface-visibility: hidden;
+    -webkit-transform-style: preserve-3d;
+}
+.sofa-touch-slider__item {
+    box-sizing: border-box;
+    padding: 5px;
+
+    img {
+        max-width: 100%;
+    }
+}
+
+%sofa-touch-slider-indicator__item {
+    display:inline-block;
+    width: 1rem;
+    height: 1rem;
+    line-height: 1rem;
+    background: #eee;
+    border-radius: 100%;
+    margin: 0 .125rem;
+    vertical-align: top;
+}
+
+.sofa-touch-slider-indicator {
+    text-align: center;
+    line-height: 1rem;
+    padding: .25rem .25rem .625rem;
+}
+.sofa-touch-slider-indicator__item {
+    @extend %sofa-touch-slider-indicator__item;
+}
+.sofa-touch-slider-indicator__item--active {
+    @extend %sofa-touch-slider-indicator__item;
+
+    background: #aaa;
+}
+
+// NO FLEXBOX FALLBACK
+
+.sofa-touch-slider-no-flexbox {
+
+    .sofa-touch-slider {
+        &:after {
+            content: ' ';
+            display: block;
+            clear:left;
+        }
+    }
+
+    .sofa-touch-slider__item {
+        float: left;
+    }
+}
