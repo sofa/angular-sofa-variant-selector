@@ -1,5 +1,5 @@
 angular.module('sdk.directives.sofaImageAspectRatio', [])
-    .directive('sofaImageAspectRatio', function ($window, $rootScope, deviceService) {
+    .directive('sofaImageAspectRatio', ['$window', '$rootScope', 'deviceService', function ($window, $rootScope, deviceService) {
 
         'use strict';
         
@@ -27,4 +27,4 @@ angular.module('sdk.directives.sofaImageAspectRatio', [])
                 $scope.$onRootScope('sofaImageAspectRatio.orientationChange', setStyles);
             }
         };
-    });
+    }]);

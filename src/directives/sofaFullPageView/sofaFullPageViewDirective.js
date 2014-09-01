@@ -36,7 +36,7 @@ angular.module('sdk.directives.sofaFullPageView')
             }
         };
     })
-    .directive('sofaFullPageViewClone', function ($window) {
+    .directive('sofaFullPageViewClone', ['$window', function ($window) {
         return {
             restrict: 'E',
             require: '^sofaFullPageView',
@@ -57,7 +57,7 @@ angular.module('sdk.directives.sofaFullPageView')
                 };
             }
         };
-    })
+    }])
     .directive('sofaFullPageViewOriginal', function () {
         return {
             restrict: 'E',
