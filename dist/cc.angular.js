@@ -2590,7 +2590,7 @@ angular.module('sdk.directives.sofaFullPageView')
             }
         };
     })
-    .directive('sofaFullPageViewClone', function ($window) {
+    .directive('sofaFullPageViewClone', ['$window', function ($window) {
         return {
             restrict: 'E',
             require: '^sofaFullPageView',
@@ -2611,7 +2611,7 @@ angular.module('sdk.directives.sofaFullPageView')
                 };
             }
         };
-    })
+    }])
     .directive('sofaFullPageViewOriginal', function () {
         return {
             restrict: 'E',
@@ -2622,7 +2622,7 @@ angular.module('sdk.directives.sofaFullPageView')
         };
     });
 angular.module('sdk.directives.sofaImageAspectRatio', [])
-    .directive('sofaImageAspectRatio', function ($window, $rootScope, deviceService) {
+    .directive('sofaImageAspectRatio', ['$window', '$rootScope', 'deviceService', function ($window, $rootScope, deviceService) {
 
         'use strict';
         
@@ -2650,7 +2650,7 @@ angular.module('sdk.directives.sofaImageAspectRatio', [])
                 $scope.$onRootScope('sofaImageAspectRatio.orientationChange', setStyles);
             }
         };
-    });
+    }]);
 /* global Hammer */
 
 /**
@@ -3240,7 +3240,7 @@ angular.module('sdk.directives.sofaTouchSlider')
                 selectedIndex: '=?'
             },
             templateUrl: 'src/directives/sofaTouchSlider/sofa-touch-slider.tpl.html',
-            controller: function ($scope) {
+            controller: ['$scope', function ($scope) {
                 this.getItems = function () {
                     return $scope.items;
                 };
@@ -3248,7 +3248,7 @@ angular.module('sdk.directives.sofaTouchSlider')
                 this.getSlideIndex = function () {
                     return $scope.slideIndex;
                 };
-            },
+            }],
             link: function ($scope, $element, attrs, controller, transclude) {
 
                 if (!angular.isFunction($window.Hammer)) {

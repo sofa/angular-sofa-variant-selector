@@ -85,7 +85,7 @@ angular.module('sdk.directives.sofaTouchSlider')
                 selectedIndex: '=?'
             },
             templateUrl: 'src/directives/sofaTouchSlider/sofa-touch-slider.tpl.html',
-            controller: function ($scope) {
+            controller: ['$scope', function ($scope) {
                 this.getItems = function () {
                     return $scope.items;
                 };
@@ -93,7 +93,7 @@ angular.module('sdk.directives.sofaTouchSlider')
                 this.getSlideIndex = function () {
                     return $scope.slideIndex;
                 };
-            },
+            }],
             link: function ($scope, $element, attrs, controller, transclude) {
 
                 if (!angular.isFunction($window.Hammer)) {
