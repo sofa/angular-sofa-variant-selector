@@ -28,5 +28,6 @@ angular.module('sdk.directives', [
     'sdk.directives.sofaRadioButton',
     'sdk.directives.sofaTouchSlider',
     'sdk.directives.sofaFullPageView',
-    'sdk.directives.sofaImageZoom'
+    'sdk.directives.sofaImageZoom',
+    'sdk.directives.sofaImageAspectRatio'
 ]);
