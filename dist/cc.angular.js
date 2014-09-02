@@ -3591,6 +3591,10 @@ angular
             CHF: {
                 synonyms: ['CHF'],
                 character: 'CHF'
+            },
+            PLN: {
+                 synonyms: ['PLN'],
+                 character: 'z\u0142'
             }
         };
 
@@ -3620,6 +3624,9 @@ angular
             }
             else if (currencyKey === 'CHF'){
                 return currencyChar + ' ' + pointToComma(fixedVal);
+            }
+            else if (currencyKey === 'PLN'){
+                return pointToComma(fixedVal) + ' ' + currencyChar;
             }
             else{
                 return fixedVal;
