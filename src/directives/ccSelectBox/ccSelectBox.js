@@ -52,7 +52,9 @@ angular.module('sdk.directives.ccSelectBox')
             link: function (scope) {
 
                 // Initial run to map any preselected model values
-                mapModelToData(scope);
+                if (scope.data) {
+                    mapModelToData(scope);
+                }
 
                 // If by any reason the data object has changed, we have to map any existing model data to the new data
                 scope.$watchCollection('data', function (newData, oldData) {
