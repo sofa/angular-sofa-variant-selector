@@ -1,3 +1,4 @@
-angular.module('sdk.filter',    [
-                                    'sdk.filter.currency'
-                                ]);
+angular.module('sdk.filter', [
+    'sdk.filter.currency',
+    'sdk.filter.stringReplace'
+]);
