@@ -14,10 +14,11 @@ angular.module('sdk.directives.sofaRadioButton')
                 model: '=',
                 label: '=',
                 value: '=',
-                disabled: '='
+                disabled: '=?',
+                propertyName: '@'
             },
             templateUrl: 'src/directives/sofaRadioButton/sofa-radio-button.tpl.html',
-            link: function (scope, $element, attrs) {
+            link: function (scope) {
                 instanceCount++;
                 scope.id = instanceCount;
             }
