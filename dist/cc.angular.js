@@ -1,6 +1,6 @@
 (function(window, cc, angular, undefined){
 
-angular.module('cc.angular.templates', ['src/directives/ccAddress/ccaddress.tpl.html', 'src/directives/ccBreadcrumbs/cc-breadcrumbs.tpl.html', 'src/directives/ccCategoryTreeView/cc-category-tree-view.tpl.html', 'src/directives/ccCheckBox/cc-checkbox.tpl.html', 'src/directives/ccFooterLinks/cc-footer-links.tpl.html', 'src/directives/ccGoBackButton/cc-go-back-button.tpl.html', 'src/directives/ccGoUpButton/cc-go-up-button.tpl.html', 'src/directives/ccGoUpControl/cc-go-up-control.tpl.html', 'src/directives/ccLoadingSpinner/ccloadingspinner.tpl.html', 'src/directives/ccPrice/cc-price.tpl.html', 'src/directives/ccSearchField/cc-search-field.tpl.html', 'src/directives/ccSelectBox/cc-select-box.tpl.html', 'src/directives/ccThumbnailBar/cc-thumbnail-bar.tpl.html', 'src/directives/ccVariantSelector/ccvariantselector.tpl.html', 'src/directives/ccZippy/cc-zippy.tpl.html', 'src/directives/sofaFullPageView/sofa-full-page-view.tpl.html', 'src/directives/sofaImageZoom/sofa-image-zoom.tpl.html', 'src/directives/sofaRadioButton/sofa-radio-button.tpl.html', 'src/directives/sofaTouchSlider/sofa-touch-slider-indicator.tpl.html', 'src/directives/sofaTouchSlider/sofa-touch-slider.tpl.html']);
+angular.module('cc.angular.templates', ['src/directives/ccAddress/ccaddress.tpl.html', 'src/directives/ccBreadcrumbs/cc-breadcrumbs.tpl.html', 'src/directives/ccCategoryTreeView/cc-category-tree-view.tpl.html', 'src/directives/ccCheckBox/cc-checkbox.tpl.html', 'src/directives/ccFooterLinks/cc-footer-links.tpl.html', 'src/directives/ccGoBackButton/cc-go-back-button.tpl.html', 'src/directives/ccGoUpButton/cc-go-up-button.tpl.html', 'src/directives/ccGoUpControl/cc-go-up-control.tpl.html', 'src/directives/ccLoadingSpinner/ccloadingspinner.tpl.html', 'src/directives/ccPrice/cc-price.tpl.html', 'src/directives/ccSearchField/cc-search-field.tpl.html', 'src/directives/ccSelectBox/cc-select-box.tpl.html', 'src/directives/ccThumbnailBar/cc-thumbnail-bar.tpl.html', 'src/directives/ccVariantSelector/ccvariantselector.tpl.html', 'src/directives/ccZippy/cc-zippy.tpl.html', 'src/directives/sofaFullPageView/sofa-full-page-view.tpl.html', 'src/directives/sofaImageZoom/sofa-image-zoom.tpl.html', 'src/directives/sofaRadioButton/sofa-radio-button.tpl.html', 'src/directives/sofaRangeSlider/sofa-range-slider.tpl.html', 'src/directives/sofaTouchSlider/sofa-touch-slider-indicator.tpl.html', 'src/directives/sofaTouchSlider/sofa-touch-slider.tpl.html']);
 
 angular.module("src/directives/ccAddress/ccaddress.tpl.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("src/directives/ccAddress/ccaddress.tpl.html",
@@ -51,7 +51,7 @@ angular.module("src/directives/ccCategoryTreeView/cc-category-tree-view.tpl.html
 angular.module("src/directives/ccCheckBox/cc-checkbox.tpl.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("src/directives/ccCheckBox/cc-checkbox.tpl.html",
     "<div class=\"cc-checkbox\">\n" +
-    "    <input type=\"checkbox\" ng-model=\"value\" id=\"cc-check-box-{{id}}\" class=\"cc-checkbox__input\">\n" +
+    "    <input type=\"checkbox\" sofa-name=\"propertyName\" ng-model=\"innerModel\" id=\"cc-check-box-{{id}}\" class=\"cc-checkbox__input\">\n" +
     "    <label for=\"cc-check-box-{{id}}\" class=\"cc-checkbox__label\" ng-bind-html=\"label\"></label>\n" +
     "</div>\n" +
     "");
@@ -191,10 +191,23 @@ angular.module("src/directives/sofaImageZoom/sofa-image-zoom.tpl.html", []).run(
 angular.module("src/directives/sofaRadioButton/sofa-radio-button.tpl.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("src/directives/sofaRadioButton/sofa-radio-button.tpl.html",
     "<div class=\"sofa-radio-button\" ng-class=\"{ 'sofa-radio-button--disabled': disabled }\">\n" +
-    "    <input ng-disabled=\"disabled\" type=\"radio\" ng-model=\"model\" id=\"sofa-radio-{{id}}\" value=\"{{value}}\" class=\"sofa-radio-button__input\">\n" +
+    "    <input ng-disabled=\"disabled\" type=\"radio\" sofa-name=\"propertyName\" value=\"{{value}}\" ng-model=\"model\" id=\"sofa-radio-{{id}}\" class=\"sofa-radio-button__input\">\n" +
     "    <label for=\"sofa-radio-{{id}}\" class=\"sofa-radio-button__label\" bindonce bo-text=\"label\"></label>\n" +
     "</div>\n" +
     "");
+}]);
+
+angular.module("src/directives/sofaRangeSlider/sofa-range-slider.tpl.html", []).run(["$templateCache", function($templateCache) {
+  $templateCache.put("src/directives/sofaRangeSlider/sofa-range-slider.tpl.html",
+    "<div class=\"sofa-range-slider-wrapper\">\n" +
+    "    <span ng-bind=\"displayFn(rangeStart)\" class=\"sofa-range-slider-label--start\"></span>\n" +
+    "    <span ng-bind=\"displayFn(rangeEnd)\" class=\"sofa-range-slider-label--end\"></span>\n" +
+    "    <div class=\"sofa-range-slider\">\n" +
+    "        <div class=\"sofa-range-slider__handle--start\"></div>\n" +
+    "        <span class=\"sofa-range-slider__range\"></span>\n" +
+    "        <div class=\"sofa-range-slider__handle--end\"></div>\n" +
+    "    </div>\n" +
+    "</div>");
 }]);
 
 angular.module("src/directives/sofaTouchSlider/sofa-touch-slider-indicator.tpl.html", []).run(["$templateCache", function($templateCache) {
@@ -617,6 +630,49 @@ angular.module('chayns', [])
         }
     });
 
+angular.module('sdk.services.localeService', []);
+
+angular
+    .module('sdk.services.localeService')
+    .factory('localeService', ['$window', function ($window) {
+
+        'use strict';
+
+        var localeData = $window.cc.Lang;
+
+        var self = {};
+
+        self.getTranslation = function (path) {
+
+            if (!path) {
+                return localeData;
+            }
+
+            var objects = path.split('.');
+            var locale  = '';
+            var length  = objects.length;
+            var ln      = localeData;
+
+            objects.every(function (el, i) {
+                if (!ln[el]) {
+                    throw new Error('No translation found for: "' + el + '"');
+                } else {
+                    if (i + 1 !== length) {
+                        ln = ln[el];
+                        return true;
+                    } else {
+                        locale = ln[el];
+                        return false;
+                    }
+                }
+            });
+
+            return locale;
+        };
+
+        return self;
+    }]);
+
 angular.module('sdk.directives.ccAddress', ['src/directives/ccAddress/ccaddress.tpl.html']);
 
 angular.module('sdk.directives.ccAddress')
@@ -825,11 +881,10 @@ angular.module('sdk.directives.ccCategoryTreeView')
         };
     }]);
 
-
 angular.module('sdk.directives.ccCheckBox', ['src/directives/ccCheckBox/cc-checkbox.tpl.html']);
 
 angular.module('sdk.directives.ccCheckBox')
-    .directive('ccCheckBox', function() {
+    .directive('ccCheckBox', function () {
 
         'use strict';
 
@@ -839,20 +894,54 @@ angular.module('sdk.directives.ccCheckBox')
             restrict: 'E',
             replace: true,
             scope: {
-                label: '=?',
-                value: '=?'
+                model: '=',
+                label: '=',
+                value: '=',
+                disabled: '=?',
+                propertyName: '@'
             },
             templateUrl: 'src/directives/ccCheckBox/cc-checkbox.tpl.html',
-            controller: ['$scope', function($scope) {
+            controller: ['$scope', function ($scope) {
                 return {
-                    getId: function(){
+                    getId: function () {
                         return $scope.id;
                     }
                 };
             }],
-            link: function(scope, $element, attrs){
+            link: function (scope) {
                 instanceCount++;
                 scope.id = instanceCount;
+
+                var isArrayData = angular.isArray(scope.model);
+
+                scope.innerModel = isArrayData ? '' : scope.model;
+
+                // In case label comes in as a number, which doesn't work with the html parser
+                scope.label = scope.label + '';
+
+                if (isArrayData) {
+                    // Changing the innerModel should change the outer model
+                    scope.$watch('innerModel', function (nv, ov) {
+                        if (nv !== ov) {
+                            var i = scope.model.indexOf(scope.value);
+
+                            if (nv === true && i === -1) {
+                                scope.model.push(scope.value);
+                            } else if (!nv && i > -1) {
+                                scope.model.splice(i, 1);
+                            }
+                        }
+                    });
+                    // Changes in the outer model must be reflected in the innerModel
+                    scope.$watch('model', function (nv) {
+                        var i = nv.indexOf(scope.value);
+                        scope.innerModel = i > -1;
+                    }, true);
+                } else {
+                    scope.$watch('innerModel', function (nv) {
+                        scope.model = nv;
+                    });
+                }
             }
         };
     });
@@ -2258,7 +2347,9 @@ angular.module('sdk.directives.ccSelectBox')
             link: function (scope) {
 
                 // Initial run to map any preselected model values
-                mapModelToData(scope);
+                if (scope.data) {
+                    mapModelToData(scope);
+                }
 
                 // If by any reason the data object has changed, we have to map any existing model data to the new data
                 scope.$watchCollection('data', function (newData, oldData) {
@@ -2548,6 +2639,7 @@ angular.module('sdk.directives', [
     'sdk.directives.ccSearchField',
     'sdk.directives.sofaRadioButton',
     'sdk.directives.sofaTouchSlider',
+    'sdk.directives.sofaRangeSlider',
     'sdk.directives.sofaFullPageView',
     'sdk.directives.sofaImageZoom',
     'sdk.directives.sofaImageAspectRatio'
@@ -3143,12 +3235,256 @@ angular.module('sdk.directives.sofaRadioButton')
                 model: '=',
                 label: '=',
                 value: '=',
-                disabled: '='
+                disabled: '=?',
+                propertyName: '@'
             },
             templateUrl: 'src/directives/sofaRadioButton/sofa-radio-button.tpl.html',
-            link: function (scope, $element, attrs) {
+            link: function (scope) {
                 instanceCount++;
                 scope.id = instanceCount;
+            }
+        };
+    });
+
+/* global Hammer */
+
+/**
+ * Horizontal Range Slider Control.
+ * Dependencies: hammerjs (v.2.0)
+ */
+
+// TODO: check performance
+// TODO: code can be optimized at several places...
+// TODO: add disabled state (add "disabled: '=?'")
+// TODO: make it work with ngModel and sofa-name (add "propertyName: '@'")
+
+angular.module('sdk.directives.sofaRangeSlider', ['src/directives/sofaRangeSlider/sofa-range-slider.tpl.html']);
+
+angular.module('sdk.directives.sofaRangeSlider')
+    .directive('sofaRangeSlider', function () {
+
+        'use strict';
+
+        if (!angular.isFunction(Hammer)) {
+            throw new Error('Hammer.js is missing');
+        }
+
+        var TRANSFORM_PROPERTY = 'transform';
+
+        ['webkit', 'Moz', 'O', 'ms'].every(function (prefix) {
+            var e = prefix + 'Transform';
+            if (document.body.style[e] !== undefined) {
+                TRANSFORM_PROPERTY = e;
+                return false;
+            }
+            return true;
+        });
+
+        var isVisible = function (el) {
+            return el.offsetWidth > 0;
+        };
+
+        return {
+            restrict: 'E',
+            replace: true,
+            scope: {
+                model: '=',
+                minValue: '=',
+                maxValue: '=',
+                step: '=?',
+                displayValueExp: '&?'
+            },
+            templateUrl: 'src/directives/sofaRangeSlider/sofa-range-slider.tpl.html',
+            link: function ($scope, $element) {
+
+                var startHandle = $element[0].querySelector('.sofa-range-slider__handle--start');
+                var endHandle   = $element[0].querySelector('.sofa-range-slider__handle--end');
+                var slider      = $element[0].querySelector('.sofa-range-slider');
+                var range       = $element[0].querySelector('.sofa-range-slider__range');
+                var dimensions;
+
+                var getDimensions = function () {
+                    return {
+                        totalWidth:  slider.getBoundingClientRect().width,
+                        handleWidth: startHandle.getBoundingClientRect().width
+                    };
+                };
+
+                dimensions = getDimensions();
+
+                // The slider might be loaded in a hidden state.
+                // If so, we're not having its dimensions until it's shown...
+                if (dimensions.totalWidth === 0) {
+                    var off = $scope.$watch(function () {
+                        return isVisible(slider);
+                    }, function (nv) {
+                        if (nv) {
+                            dimensions = getDimensions();
+                            setup();
+                            off();
+                        }
+                    });
+                }
+
+                var positionTracker = {
+                    start: 0,
+                    end: 0
+                };
+
+                var savePosition = function (type, position) {
+                    positionTracker[type] = position;
+                };
+
+                $scope.displayFn = function (value) {
+                    return angular.isFunction($scope.displayValueExp) ? $scope.displayValueExp({value: value}) : value;
+                };
+
+                var getInnerModel = function (totalWidth, model, min, max, step) {
+                    if (!model) {
+                        return false;
+                    }
+
+                    var modelStart = model.start;
+                    var modelEnd = model.end;
+                    var startPosition, endPosition, startPercentage, endPercentage, minValue, maxValue;
+
+                    startPercentage = modelStart * 100 / max;
+                    endPercentage = modelEnd * 100 / max;
+
+                    startPosition = parseInt(totalWidth / 100 * startPercentage, 10);
+                    endPosition = -(totalWidth - parseInt(totalWidth / 100 * endPercentage, 10));
+
+                    minValue = parseInt(max / 100 * startPercentage, 10);
+                    maxValue = parseInt(max / 100 * endPercentage, 10);
+
+                    if (step) {
+                        [startPosition, endPosition, minValue, maxValue].forEach(function (value) {
+                            value = Math.round(value * step) / step;
+                        });
+                    }
+
+                    startHandle.style[TRANSFORM_PROPERTY] = 'translateX(' + startPosition + 'px)';
+                    endHandle.style[TRANSFORM_PROPERTY] = 'translateX(' + endPosition + 'px)';
+
+                    savePosition('start', startPosition);
+                    savePosition('end', endPosition);
+
+                    return {
+                        start: startPosition,
+                        end:   endPosition,
+                        min:   minValue,
+                        max:   maxValue
+                    };
+                };
+
+                var setup = function () {
+                    var initialModel = getInnerModel(dimensions.totalWidth, $scope.model, $scope.minValue, $scope.maxValue, $scope.step);
+
+                    // Inner model (updates the labels while dragging a handle)
+                    $scope.rangeStart = initialModel ? initialModel.min : $scope.minValue;
+                    $scope.rangeEnd   = initialModel ? initialModel.max : $scope.maxValue;
+
+                    range.style.left  = initialModel ? initialModel.start + 'px' : '0';
+                    range.style.right = initialModel ? Math.abs(initialModel.end) + 'px' : '0';
+                };
+
+                if (dimensions.totalWidth > 0) {
+                    setup();
+                }
+
+                var setSlider = function (type, value) {
+                    var percentage, newValue;
+                    if (type === 'start') {
+                        percentage = value * 100 / dimensions.totalWidth;
+                        newValue = parseInt($scope.maxValue / 100 * percentage, 10);
+                        if ($scope.step) {
+                            newValue = Math.round(newValue / $scope.step) * $scope.step;
+                        }
+                        $scope.$apply(function () {
+                            $scope.rangeStart = newValue;
+                        });
+                        range.style.left  = value + 'px';
+                    } else {
+                        percentage = (dimensions.totalWidth + value) * 100 / dimensions.totalWidth;
+                        newValue = parseInt($scope.maxValue / 100 * percentage, 10);
+                        if ($scope.step) {
+                            newValue = Math.round(newValue / $scope.step) * $scope.step;
+                        }
+                        $scope.$apply(function () {
+                            $scope.rangeEnd = newValue;
+                        });
+                        range.style.right = Math.abs(value) + 'px';
+                    }
+                };
+
+                var updateModel = function () {
+                    $scope.$apply(function () {
+                        $scope.model = {
+                            start: $scope.rangeStart,
+                            end: $scope.rangeEnd
+                        };
+                    });
+                };
+
+                var moveElement = function (type, el, delta, final) {
+                    var newPos, minPos, maxPos;
+
+                    if (type === 'start') {
+                        newPos = positionTracker.start + delta;
+                        minPos = 0;
+                        maxPos = dimensions.totalWidth - Math.abs(positionTracker.end) - (dimensions.handleWidth * 2);
+                        if (newPos < minPos) {
+                            newPos = minPos;
+                        } else if (newPos > maxPos) {
+                            newPos = maxPos;
+                        }
+                        // update inner start model
+                        setSlider(type, newPos);
+                    } else {
+                        newPos = positionTracker.end + delta;
+                        minPos = -(dimensions.totalWidth - positionTracker.start - (dimensions.handleWidth * 2));
+                        maxPos = 0;
+                        if (newPos < minPos) {
+                            newPos = minPos;
+                        } else if (newPos > maxPos) {
+                            newPos = maxPos;
+                        }
+                        // update inner end model
+                        setSlider(type, newPos);
+                    }
+                    el.style[TRANSFORM_PROPERTY] = 'translateX(' + newPos + 'px)';
+
+                    if (final) {
+                        savePosition(type, newPos);
+                        updateModel();
+                    }
+                };
+
+                // Touch stuff
+                var mcA = new Hammer.Manager(startHandle);
+                var mcB = new Hammer.Manager(endHandle);
+
+                var panConfig = {
+                    direction: Hammer.DIRECTION_HORIZONTAL,
+                    threshold: 10,
+                    touchAction: 'pan'
+                };
+
+                var horizontalA = new Hammer.Pan(panConfig);
+                var horizontalB = new Hammer.Pan(panConfig);
+
+                mcA.add(horizontalA);
+                mcB.add(horizontalB);
+
+                mcA.on('panmove panend', function (e) {
+                    e.preventDefault();
+                    moveElement('start', startHandle, parseInt(e.deltaX, 10), e.type === 'panend');
+                });
+
+                mcB.on('panmove panend', function (e) {
+                    e.preventDefault();
+                    moveElement('end', endHandle, parseInt(e.deltaX, 10), e.type === 'panend');
+                });
             }
         };
     });
@@ -3634,8 +3970,51 @@ angular
         };
     }]);
 
-angular.module('sdk.filter',    [
-                                    'sdk.filter.currency'
-                                ]);
+angular.module('sdk.filter', [
+    'sdk.filter.currency',
+    'sdk.filter.stringReplace'
+]);
+
+angular
+    .module('sdk.filter.stringReplace', [])
+    .filter('stringReplace', [function () {
+
+        'use strict';
+        // Takes n arguments after "template". Either an array or arguments are turned into one
+        return function (template) {
+            var values = [];
+
+            if (arguments.length < 2) {
+                return template;
+            } else if (arguments.length > 2) {
+                // Turn all arguments except the first one into an array
+                values = Array.prototype.slice.call(arguments, 1);
+            } else {
+                var arg = arguments[1];
+
+                if (angular.isArray(arg)) {
+                    values = arg;
+                } else if (angular.isString(arg) || angular.isNumber(arg)) {
+                    values[0] = arg;
+                } else {
+                    return template;
+                }
+            }
+
+            var parse = function (template, values) {
+                var regEx = /%s/,
+                    hits  = template.match(/%s/g).length,
+                    i     = 0;
+
+                for (; i < hits + 1; i++) {
+                    template = template.replace(regEx, values[i]);
+                }
+
+                return template;
+            };
+
+            return parse(template, values);
+        };
+    }]);
 
 }).call(this, window, window.cc, window.angular);

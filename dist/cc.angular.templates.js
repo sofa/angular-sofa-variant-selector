@@ -1,4 +1,4 @@
-angular.module('cc.angular.templates', ['src/directives/ccAddress/ccaddress.tpl.html', 'src/directives/ccBreadcrumbs/cc-breadcrumbs.tpl.html', 'src/directives/ccCategoryTreeView/cc-category-tree-view.tpl.html', 'src/directives/ccCheckBox/cc-checkbox.tpl.html', 'src/directives/ccFooterLinks/cc-footer-links.tpl.html', 'src/directives/ccGoBackButton/cc-go-back-button.tpl.html', 'src/directives/ccGoUpButton/cc-go-up-button.tpl.html', 'src/directives/ccGoUpControl/cc-go-up-control.tpl.html', 'src/directives/ccLoadingSpinner/ccloadingspinner.tpl.html', 'src/directives/ccPrice/cc-price.tpl.html', 'src/directives/ccSearchField/cc-search-field.tpl.html', 'src/directives/ccSelectBox/cc-select-box.tpl.html', 'src/directives/ccThumbnailBar/cc-thumbnail-bar.tpl.html', 'src/directives/ccVariantSelector/ccvariantselector.tpl.html', 'src/directives/ccZippy/cc-zippy.tpl.html', 'src/directives/sofaFullPageView/sofa-full-page-view.tpl.html', 'src/directives/sofaImageZoom/sofa-image-zoom.tpl.html', 'src/directives/sofaRadioButton/sofa-radio-button.tpl.html', 'src/directives/sofaTouchSlider/sofa-touch-slider-indicator.tpl.html', 'src/directives/sofaTouchSlider/sofa-touch-slider.tpl.html']);
+angular.module('cc.angular.templates', ['src/directives/ccAddress/ccaddress.tpl.html', 'src/directives/ccBreadcrumbs/cc-breadcrumbs.tpl.html', 'src/directives/ccCategoryTreeView/cc-category-tree-view.tpl.html', 'src/directives/ccCheckBox/cc-checkbox.tpl.html', 'src/directives/ccFooterLinks/cc-footer-links.tpl.html', 'src/directives/ccGoBackButton/cc-go-back-button.tpl.html', 'src/directives/ccGoUpButton/cc-go-up-button.tpl.html', 'src/directives/ccGoUpControl/cc-go-up-control.tpl.html', 'src/directives/ccLoadingSpinner/ccloadingspinner.tpl.html', 'src/directives/ccPrice/cc-price.tpl.html', 'src/directives/ccSearchField/cc-search-field.tpl.html', 'src/directives/ccSelectBox/cc-select-box.tpl.html', 'src/directives/ccThumbnailBar/cc-thumbnail-bar.tpl.html', 'src/directives/ccVariantSelector/ccvariantselector.tpl.html', 'src/directives/ccZippy/cc-zippy.tpl.html', 'src/directives/sofaFullPageView/sofa-full-page-view.tpl.html', 'src/directives/sofaImageZoom/sofa-image-zoom.tpl.html', 'src/directives/sofaRadioButton/sofa-radio-button.tpl.html', 'src/directives/sofaRangeSlider/sofa-range-slider.tpl.html', 'src/directives/sofaTouchSlider/sofa-touch-slider-indicator.tpl.html', 'src/directives/sofaTouchSlider/sofa-touch-slider.tpl.html']);
 
 angular.module("src/directives/ccAddress/ccaddress.tpl.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("src/directives/ccAddress/ccaddress.tpl.html",
@@ -49,7 +49,7 @@ angular.module("src/directives/ccCategoryTreeView/cc-category-tree-view.tpl.html
 angular.module("src/directives/ccCheckBox/cc-checkbox.tpl.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("src/directives/ccCheckBox/cc-checkbox.tpl.html",
     "<div class=\"cc-checkbox\">\n" +
-    "    <input type=\"checkbox\" ng-model=\"value\" id=\"cc-check-box-{{id}}\" class=\"cc-checkbox__input\">\n" +
+    "    <input type=\"checkbox\" sofa-name=\"propertyName\" ng-model=\"innerModel\" id=\"cc-check-box-{{id}}\" class=\"cc-checkbox__input\">\n" +
     "    <label for=\"cc-check-box-{{id}}\" class=\"cc-checkbox__label\" ng-bind-html=\"label\"></label>\n" +
     "</div>\n" +
     "");
@@ -189,10 +189,23 @@ angular.module("src/directives/sofaImageZoom/sofa-image-zoom.tpl.html", []).run(
 angular.module("src/directives/sofaRadioButton/sofa-radio-button.tpl.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("src/directives/sofaRadioButton/sofa-radio-button.tpl.html",
     "<div class=\"sofa-radio-button\" ng-class=\"{ 'sofa-radio-button--disabled': disabled }\">\n" +
-    "    <input ng-disabled=\"disabled\" type=\"radio\" ng-model=\"model\" id=\"sofa-radio-{{id}}\" value=\"{{value}}\" class=\"sofa-radio-button__input\">\n" +
+    "    <input ng-disabled=\"disabled\" type=\"radio\" sofa-name=\"propertyName\" value=\"{{value}}\" ng-model=\"model\" id=\"sofa-radio-{{id}}\" class=\"sofa-radio-button__input\">\n" +
     "    <label for=\"sofa-radio-{{id}}\" class=\"sofa-radio-button__label\" bindonce bo-text=\"label\"></label>\n" +
     "</div>\n" +
     "");
+}]);
+
+angular.module("src/directives/sofaRangeSlider/sofa-range-slider.tpl.html", []).run(["$templateCache", function($templateCache) {
+  $templateCache.put("src/directives/sofaRangeSlider/sofa-range-slider.tpl.html",
+    "<div class=\"sofa-range-slider-wrapper\">\n" +
+    "    <span ng-bind=\"displayFn(rangeStart)\" class=\"sofa-range-slider-label--start\"></span>\n" +
+    "    <span ng-bind=\"displayFn(rangeEnd)\" class=\"sofa-range-slider-label--end\"></span>\n" +
+    "    <div class=\"sofa-range-slider\">\n" +
+    "        <div class=\"sofa-range-slider__handle--start\"></div>\n" +
+    "        <span class=\"sofa-range-slider__range\"></span>\n" +
+    "        <div class=\"sofa-range-slider__handle--end\"></div>\n" +
+    "    </div>\n" +
+    "</div>");
 }]);
 
 angular.module("src/directives/sofaTouchSlider/sofa-touch-slider-indicator.tpl.html", []).run(["$templateCache", function($templateCache) {
