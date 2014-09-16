@@ -136,7 +136,7 @@ angular.module('sdk.directives.sofaImageZoom')
         };
 
         // ZOOM!
-        self.setZoom = function (zoomElement, zoomFactor) {
+        self.setZoom = function (zoomElement, zoomFactor, save) {
             var scaleValue = 'scale(' + zoomFactor + ')';
             var hasScaleStyle = zoomElement.style[TRANSFORM_PROPERTY].search(/scale/) > -1;
 
@@ -144,6 +144,10 @@ angular.module('sdk.directives.sofaImageZoom')
                 zoomElement.style[TRANSFORM_PROPERTY] = zoomElement.style[TRANSFORM_PROPERTY].replace(scaleRegEx, scaleValue);
             } else {
                 zoomElement.style[TRANSFORM_PROPERTY] = zoomElement.style[TRANSFORM_PROPERTY] + ' ' + scaleValue;
+            }
+
+            if (save) {
+                self.setZoomFactor(zoomFactor);
             }
         };
 
@@ -158,11 +162,7 @@ angular.module('sdk.directives.sofaImageZoom')
                 zoomFactor = maxScale;
             }
 
-            self.setZoom(zoomElement, zoomFactor);
-
-            if (end) {
-                self.setZoomFactor(zoomFactor);
-            }
+            self.setZoom(zoomElement, zoomFactor, end);
         };
 
         self.checkLimits = function () {
@@ -208,9 +208,20 @@ angular.module('sdk.directives.sofaImageZoom')
             return limits;
         };
 
+        self.shouldMove = function () {
+            var allowX = cache.containerDimensions.w - cache.basePosition.w * cache.zoomFactor < 0;
+            var allowY = cache.containerDimensions.h - cache.basePosition.h * cache.zoomFactor < 0;
+
+            return allowX || allowY;
+        };
+
         self.move = function (event, zoomElement, end) {
             var xPos = parseInt(event.deltaX / cache.zoomFactor + cache.movePosition.x, 10);
             var yPos = parseInt(event.deltaY / cache.zoomFactor + cache.movePosition.y, 10);
+
+            if (!self.shouldMove()) {
+                return;
+            }
 
             // Check for boundaries
             var limits = self.checkLimits();

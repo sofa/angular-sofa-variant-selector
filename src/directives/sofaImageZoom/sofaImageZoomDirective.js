@@ -59,12 +59,17 @@ angular.module('sdk.directives.sofaImageZoom')
 
                     var pinch = new Hammer.Pinch();
                     var pan   = new Hammer.Pan();
+                    var tap   = new Hammer.Tap({
+                        event: 'doubletap',
+                        taps: 2,
+                        posThreshold: 20
+                    });
 
                     pinch.recognizeWith(pan);
 
                     var sessionEnded = false;
 
-                    mc.add([pinch, pan]);
+                    mc.add([pinch, pan, tap]);
 
                     mc.on('pinchin pinchout', function (e) {
                         if (!sessionEnded) {
@@ -79,10 +84,14 @@ angular.module('sdk.directives.sofaImageZoom')
                         if (sofaImageZoomService.getZoomFactor() <= 1) {
                             scope.closeZoomView();
                         }
-                    }).on('pan', function (e) {
-                        sofaImageZoomService.move(e, scope.$zoomImage[0]);
-                    }).on('panend', function (e) {
-                        sofaImageZoomService.move(e, scope.$zoomImage[0], true);
+                    }).on('pan panend', function (e) {
+                        sofaImageZoomService.move(e, scope.$zoomImage[0], e.type === 'panend');
+                    }).on('doubletap', function () {
+                        if (sofaImageZoomService.getZoomFactor() > 1) {
+                            scope.closeZoomView();
+                        } else {
+                            sofaImageZoomService.setZoom(scope.$zoomImage[0], 1.5);
+                        }
                     });
 
                     // This is for the cleanup
@@ -127,25 +136,33 @@ angular.module('sdk.directives.sofaImageZoom')
                         var mc = new Hammer.Manager($element[0]);
 
                         var pinch = new Hammer.Pinch();
+                        var tap   = new Hammer.Tap({
+                            event: 'doubletap',
+                            taps: 2,
+                            posThreshold: 20
+                        });
 
                         // Helper to prevent another "pinchin/pinchout" after the "pinchend" was fired
                         // (pinch fires 2 touchend events)
                         var sessionEnded = false;
 
-                        mc.add([pinch]);
+                        mc.add([pinch, tap]);
 
                         mc.on('pinchstart', function () {
                             sessionEnded = false;
-                        });
-                        mc.on('pinchin pinchout', function (e) {
+                        }).on('pinchin pinchout', function (e) {
                             if (!sessionEnded) {
                                 if (!scope.active && e.type === 'pinchout') {
                                     activateZoom();
                                 }
                                 sofaImageZoomService.zoom(e, scope.$zoomImage[0]);
                             }
-                        });
-                        mc.on('pinchend', function (e) {
+                        }).on('doubletap', function () {
+                            if (!scope.active) {
+                                activateZoom();
+                                sofaImageZoomService.setZoom(scope.$zoomImage[0], 1.5, true);
+                            }
+                        }).on('pinchend', function (e) {
                             sessionEnded = true;
                             sofaImageZoomService.zoom(e, scope.$zoomImage[0], true);
 
