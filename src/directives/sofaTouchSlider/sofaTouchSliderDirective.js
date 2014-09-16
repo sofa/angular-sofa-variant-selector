@@ -338,17 +338,18 @@ angular.module('sdk.directives.sofaTouchSlider')
                 };
 
                 // Items may come async...
-                if (!$scope.items || $scope.items.length === 0) {
+                if (!$scope.items || !$scope.items.length) {
                     var off = $scope.$watch('items', function (newValue) {
                         if (newValue && newValue.length) {
                             api = initialize();
+                            $scope.showIndicator = $scope.showIndicator && $scope.items.length > 1;
                             off();
                         }
                     });
                 } else {
                     api = initialize();
+                    $scope.showIndicator = $scope.showIndicator && $scope.items.length > 1;
                 }
-
             }
         };
     }]);

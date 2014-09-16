@@ -1,70 +1,5 @@
-.sofa-touch-slider-wrapper {
-    position: relative;
-
-    &:before,
-    &:after {
-        content:'';
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        width: .25rem;
-        z-index: 2;
-        opacity: 1;
-
-        -webkit-transition: opacity .3s;
-                transition: opacity .3s;
-    }
-
-    &:before {
-        left:-2px;
-        border-left:1px solid #bbb;
-
-        background-image: -webkit-gradient(
-                linear,
-                left top,
-                right top,
-                color-stop(0, rgba(0,0,0,.2)),
-                color-stop(1, transparent)
-        );
-        background-image: -o-linear-gradient(right, rgba(0,0,0,.2) 0%, transparent 100%);
-        background-image: -moz-linear-gradient(right, rgba(0,0,0,.2) 0%, transparent 100%);
-        background-image: -webkit-linear-gradient(right, rgba(0,0,0,.2) 0%, transparent 100%);
-        background-image: -ms-linear-gradient(right, rgba(0,0,0,.2) 0%, transparent 100%);
-        background-image: linear-gradient(to right, rgba(0,0,0,.2) 0%, transparent 100%);
-    }
-
-    &:after {
-        right:-2px;
-        border-right:1px solid #bbb;
-
-        background-image: -webkit-gradient(
-                linear,
-                right top,
-                left top,
-                color-stop(0, rgba(0,0,0,.2)),
-                color-stop(1, transparent)
-        );
-        background-image: -o-linear-gradient(left, rgba(0,0,0,.2) 0%, transparent 100%);
-        background-image: -moz-linear-gradient(left, rgba(0,0,0,.2) 0%, transparent 100%);
-        background-image: -webkit-linear-gradient(left, rgba(0,0,0,.2) 0%, transparent 100%);
-        background-image: -ms-linear-gradient(left, rgba(0,0,0,.2) 0%, transparent 100%);
-        background-image: linear-gradient(to left, rgba(0,0,0,.2) 0%, transparent 100%);
-    }
-}
-
 .sofa-touch-slider-mask {
     overflow: hidden;
-}
-
-.sofa-touch-slider-max--left {
-    &:before {
-        opacity: 0;
-    }
-}
-.sofa-touch-slider-max--right {
-    &:after {
-        opacity: 0;
-    }
 }
 
 .sofa-touch-slider {
@@ -108,17 +43,17 @@
     display:inline-block;
     width: 1rem;
     height: 1rem;
-    line-height: 1rem;
-    background: #eee;
+    line-height: 1.25rem;
     border-radius: 100%;
+    border:1px solid #aaa;
     margin: 0 .125rem;
     vertical-align: top;
 }
 
 .sofa-touch-slider-indicator {
     text-align: center;
-    line-height: 1rem;
-    padding: .25rem .25rem .625rem;
+    line-height: 1.25rem;
+    padding: .625rem .25rem;
 }
 .sofa-touch-slider-indicator__item {
     @extend %sofa-touch-slider-indicator__item;
