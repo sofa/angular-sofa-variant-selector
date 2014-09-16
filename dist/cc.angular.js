@@ -2804,12 +2804,17 @@ angular.module('sdk.directives.sofaImageZoom')
 
                     var pinch = new Hammer.Pinch();
                     var pan   = new Hammer.Pan();
+                    var tap   = new Hammer.Tap({
+                        event: 'doubletap',
+                        taps: 2,
+                        posThreshold: 20
+                    });
 
                     pinch.recognizeWith(pan);
 
                     var sessionEnded = false;
 
-                    mc.add([pinch, pan]);
+                    mc.add([pinch, pan, tap]);
 
                     mc.on('pinchin pinchout', function (e) {
                         if (!sessionEnded) {
@@ -2824,10 +2829,14 @@ angular.module('sdk.directives.sofaImageZoom')
                         if (sofaImageZoomService.getZoomFactor() <= 1) {
                             scope.closeZoomView();
                         }
-                    }).on('pan', function (e) {
-                        sofaImageZoomService.move(e, scope.$zoomImage[0]);
-                    }).on('panend', function (e) {
-                        sofaImageZoomService.move(e, scope.$zoomImage[0], true);
+                    }).on('pan panend', function (e) {
+                        sofaImageZoomService.move(e, scope.$zoomImage[0], e.type === 'panend');
+                    }).on('doubletap', function () {
+                        if (sofaImageZoomService.getZoomFactor() > 1) {
+                            scope.closeZoomView();
+                        } else {
+                            sofaImageZoomService.setZoom(scope.$zoomImage[0], 1.5);
+                        }
                     });
 
                     // This is for the cleanup
@@ -2872,25 +2881,33 @@ angular.module('sdk.directives.sofaImageZoom')
                         var mc = new Hammer.Manager($element[0]);
 
                         var pinch = new Hammer.Pinch();
+                        var tap   = new Hammer.Tap({
+                            event: 'doubletap',
+                            taps: 2,
+                            posThreshold: 20
+                        });
 
                         // Helper to prevent another "pinchin/pinchout" after the "pinchend" was fired
                         // (pinch fires 2 touchend events)
                         var sessionEnded = false;
 
-                        mc.add([pinch]);
+                        mc.add([pinch, tap]);
 
                         mc.on('pinchstart', function () {
                             sessionEnded = false;
-                        });
-                        mc.on('pinchin pinchout', function (e) {
+                        }).on('pinchin pinchout', function (e) {
                             if (!sessionEnded) {
                                 if (!scope.active && e.type === 'pinchout') {
                                     activateZoom();
                                 }
                                 sofaImageZoomService.zoom(e, scope.$zoomImage[0]);
                             }
-                        });
-                        mc.on('pinchend', function (e) {
+                        }).on('doubletap', function () {
+                            if (!scope.active) {
+                                activateZoom();
+                                sofaImageZoomService.setZoom(scope.$zoomImage[0], 1.5, true);
+                            }
+                        }).on('pinchend', function (e) {
                             sessionEnded = true;
                             sofaImageZoomService.zoom(e, scope.$zoomImage[0], true);
 
@@ -3049,7 +3066,7 @@ angular.module('sdk.directives.sofaImageZoom')
         };
 
         // ZOOM!
-        self.setZoom = function (zoomElement, zoomFactor) {
+        self.setZoom = function (zoomElement, zoomFactor, save) {
             var scaleValue = 'scale(' + zoomFactor + ')';
             var hasScaleStyle = zoomElement.style[TRANSFORM_PROPERTY].search(/scale/) > -1;
 
@@ -3057,6 +3074,10 @@ angular.module('sdk.directives.sofaImageZoom')
                 zoomElement.style[TRANSFORM_PROPERTY] = zoomElement.style[TRANSFORM_PROPERTY].replace(scaleRegEx, scaleValue);
             } else {
                 zoomElement.style[TRANSFORM_PROPERTY] = zoomElement.style[TRANSFORM_PROPERTY] + ' ' + scaleValue;
+            }
+
+            if (save) {
+                self.setZoomFactor(zoomFactor);
             }
         };
 
@@ -3071,11 +3092,7 @@ angular.module('sdk.directives.sofaImageZoom')
                 zoomFactor = maxScale;
             }
 
-            self.setZoom(zoomElement, zoomFactor);
-
-            if (end) {
-                self.setZoomFactor(zoomFactor);
-            }
+            self.setZoom(zoomElement, zoomFactor, end);
         };
 
         self.checkLimits = function () {
@@ -3121,9 +3138,20 @@ angular.module('sdk.directives.sofaImageZoom')
             return limits;
         };
 
+        self.shouldMove = function () {
+            var allowX = cache.containerDimensions.w - cache.basePosition.w * cache.zoomFactor < 0;
+            var allowY = cache.containerDimensions.h - cache.basePosition.h * cache.zoomFactor < 0;
+
+            return allowX || allowY;
+        };
+
         self.move = function (event, zoomElement, end) {
             var xPos = parseInt(event.deltaX / cache.zoomFactor + cache.movePosition.x, 10);
             var yPos = parseInt(event.deltaY / cache.zoomFactor + cache.movePosition.y, 10);
+
+            if (!self.shouldMove()) {
+                return;
+            }
 
             // Check for boundaries
             var limits = self.checkLimits();
@@ -3829,17 +3857,18 @@ angular.module('sdk.directives.sofaTouchSlider')
                 };
 
                 // Items may come async...
-                if (!$scope.items || $scope.items.length === 0) {
+                if (!$scope.items || !$scope.items.length) {
                     var off = $scope.$watch('items', function (newValue) {
                         if (newValue && newValue.length) {
                             api = initialize();
+                            $scope.showIndicator = $scope.showIndicator && $scope.items.length > 1;
                             off();
                         }
                     });
                 } else {
                     api = initialize();
+                    $scope.showIndicator = $scope.showIndicator && $scope.items.length > 1;
                 }
-
             }
         };
     }]);
