@@ -41,8 +41,8 @@ angular.module('sdk.directives.sofaRangeSlider')
             replace: true,
             scope: {
                 model: '=',
-                minValue: '=',
-                maxValue: '=',
+                minLimit: '=',
+                maxLimit: '=',
                 step: '=?',
                 displayValueExp: '&?'
             },
@@ -54,6 +54,16 @@ angular.module('sdk.directives.sofaRangeSlider')
                 var slider      = $element[0].querySelector('.sofa-range-slider');
                 var range       = $element[0].querySelector('.sofa-range-slider__range');
                 var dimensions;
+
+                if (!$scope.model) {
+                    $scope.model = {
+                        min: $scope.minLimit,
+                        max: $scope.maxLimit
+                    };
+                }
+
+                $scope.rangeStart = $scope.model.min;
+                $scope.rangeEnd   = $scope.model.max;
 
                 var getDimensions = function () {
                     return {
@@ -79,8 +89,8 @@ angular.module('sdk.directives.sofaRangeSlider')
                 }
 
                 var positionTracker = {
-                    start: 0,
-                    end: 0
+                    min: 0,
+                    max: 0
                 };
 
                 var savePosition = function (type, position) {
@@ -96,9 +106,9 @@ angular.module('sdk.directives.sofaRangeSlider')
                         return false;
                     }
 
-                    var modelStart = model.start;
-                    var modelEnd = model.end;
-                    var startPosition, endPosition, startPercentage, endPercentage, minValue, maxValue;
+                    var modelStart = model.min;
+                    var modelEnd = model.max;
+                    var startPosition, endPosition, startPercentage, endPercentage, minLimit, maxLimit;
 
                     startPercentage = modelStart * 100 / max;
                     endPercentage = modelEnd * 100 / max;
@@ -106,11 +116,11 @@ angular.module('sdk.directives.sofaRangeSlider')
                     startPosition = parseInt(totalWidth / 100 * startPercentage, 10);
                     endPosition = -(totalWidth - parseInt(totalWidth / 100 * endPercentage, 10));
 
-                    minValue = parseInt(max / 100 * startPercentage, 10);
-                    maxValue = parseInt(max / 100 * endPercentage, 10);
+                    minLimit = parseInt(max / 100 * startPercentage, 10);
+                    maxLimit = parseInt(max / 100 * endPercentage, 10);
 
                     if (step) {
-                        [startPosition, endPosition, minValue, maxValue].forEach(function (value) {
+                        [startPosition, endPosition, minLimit, maxLimit].forEach(function (value) {
                             value = Math.round(value * step) / step;
                         });
                     }
@@ -118,26 +128,26 @@ angular.module('sdk.directives.sofaRangeSlider')
                     startHandle.style[TRANSFORM_PROPERTY] = 'translateX(' + startPosition + 'px)';
                     endHandle.style[TRANSFORM_PROPERTY] = 'translateX(' + endPosition + 'px)';
 
-                    savePosition('start', startPosition);
-                    savePosition('end', endPosition);
+                    savePosition('min', startPosition);
+                    savePosition('max', endPosition);
 
                     return {
-                        start: startPosition,
-                        end:   endPosition,
-                        min:   minValue,
-                        max:   maxValue
+                        startPosition: startPosition,
+                        endPosition: endPosition,
+                        minLimit: minLimit,
+                        maxLimit: maxLimit
                     };
                 };
 
                 var setup = function () {
-                    var initialModel = getInnerModel(dimensions.totalWidth, $scope.model, $scope.minValue, $scope.maxValue, $scope.step);
+                    var initialModel = getInnerModel(dimensions.totalWidth, $scope.model, $scope.minLimit, $scope.maxLimit, $scope.step);
 
                     // Inner model (updates the labels while dragging a handle)
-                    $scope.rangeStart = initialModel ? initialModel.min : $scope.minValue;
-                    $scope.rangeEnd   = initialModel ? initialModel.max : $scope.maxValue;
+                    $scope.rangeStart = initialModel ? initialModel.minLimit : $scope.minLimit;
+                    $scope.rangeEnd   = initialModel ? initialModel.maxLimit : $scope.maxLimit;
 
-                    range.style.left  = initialModel ? initialModel.start + 'px' : '0';
-                    range.style.right = initialModel ? Math.abs(initialModel.end) + 'px' : '0';
+                    range.style.left  = initialModel ? initialModel.startPosition + 'px' : '0';
+                    range.style.right = initialModel ? Math.abs(initialModel.endPosition) + 'px' : '0';
                 };
 
                 if (dimensions.totalWidth > 0) {
@@ -146,9 +156,9 @@ angular.module('sdk.directives.sofaRangeSlider')
 
                 var setSlider = function (type, value) {
                     var percentage, newValue;
-                    if (type === 'start') {
+                    if (type === 'min') {
                         percentage = value * 100 / dimensions.totalWidth;
-                        newValue = parseInt($scope.maxValue / 100 * percentage, 10);
+                        newValue = parseInt($scope.maxLimit / 100 * percentage, 10);
                         if ($scope.step) {
                             newValue = Math.round(newValue / $scope.step) * $scope.step;
                         }
@@ -158,7 +168,7 @@ angular.module('sdk.directives.sofaRangeSlider')
                         range.style.left  = value + 'px';
                     } else {
                         percentage = (dimensions.totalWidth + value) * 100 / dimensions.totalWidth;
-                        newValue = parseInt($scope.maxValue / 100 * percentage, 10);
+                        newValue = parseInt($scope.maxLimit / 100 * percentage, 10);
                         if ($scope.step) {
                             newValue = Math.round(newValue / $scope.step) * $scope.step;
                         }
@@ -169,22 +179,30 @@ angular.module('sdk.directives.sofaRangeSlider')
                     }
                 };
 
+                // Updates the model after the range slider was moved by touch
                 var updateModel = function () {
                     $scope.$apply(function () {
                         $scope.model = {
-                            start: $scope.rangeStart,
-                            end: $scope.rangeEnd
+                            min: $scope.rangeStart,
+                            max: $scope.rangeEnd
                         };
                     });
                 };
 
+                // Watches for model changes from the outside
+                $scope.$watch('model', function (nv, ov) {
+                    if (nv !== ov) {
+                        setup();
+                    }
+                }, true);
+
                 var moveElement = function (type, el, delta, final) {
                     var newPos, minPos, maxPos;
 
-                    if (type === 'start') {
-                        newPos = positionTracker.start + delta;
+                    if (type === 'min') {
+                        newPos = positionTracker.min + delta;
                         minPos = 0;
-                        maxPos = dimensions.totalWidth - Math.abs(positionTracker.end) - (dimensions.handleWidth * 2);
+                        maxPos = dimensions.totalWidth - Math.abs(positionTracker.max) - (dimensions.handleWidth * 2);
                         if (newPos < minPos) {
                             newPos = minPos;
                         } else if (newPos > maxPos) {
@@ -193,8 +211,8 @@ angular.module('sdk.directives.sofaRangeSlider')
                         // update inner start model
                         setSlider(type, newPos);
                     } else {
-                        newPos = positionTracker.end + delta;
-                        minPos = -(dimensions.totalWidth - positionTracker.start - (dimensions.handleWidth * 2));
+                        newPos = positionTracker.max + delta;
+                        minPos = -(dimensions.totalWidth - positionTracker.min - (dimensions.handleWidth * 2));
                         maxPos = 0;
                         if (newPos < minPos) {
                             newPos = minPos;
@@ -230,12 +248,12 @@ angular.module('sdk.directives.sofaRangeSlider')
 
                 mcA.on('panmove panend', function (e) {
                     e.preventDefault();
-                    moveElement('start', startHandle, parseInt(e.deltaX, 10), e.type === 'panend');
+                    moveElement('min', startHandle, parseInt(e.deltaX, 10), e.type === 'panend');
                 });
 
                 mcB.on('panmove panend', function (e) {
                     e.preventDefault();
-                    moveElement('end', endHandle, parseInt(e.deltaX, 10), e.type === 'panend');
+                    moveElement('max', endHandle, parseInt(e.deltaX, 10), e.type === 'panend');
                 });
             }
         };
