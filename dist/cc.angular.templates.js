@@ -148,12 +148,12 @@ angular.module("src/directives/ccVariantSelector/ccvariantselector.tpl.html", []
   $templateCache.put("src/directives/ccVariantSelector/ccvariantselector.tpl.html",
     "<ul class=\"cc-variant-selector\" ng-if=\"variants.length\">\n" +
     "    <li class=\"cc-variant-selector__item\" ng-repeat=\"property in properties\">\n" +
-    "        <label class=\"cc-variant-selector__label\" ng-bind=\"property\"></label>\n" +
+    "        <label class=\"cc-variant-selector__label\" ng-bind=\"property.label\"></label>\n" +
     "        <cc-select-box\n" +
-    "                model=\"selectedProperties[property]\"\n" +
-    "                data=\"data[property]\"\n" +
-    "                choose-text=\"property\"\n" +
-    "                property-name=\"variant_{{property}}\">\n" +
+    "                model=\"selectedProperties[property.name]\"\n" +
+    "                data=\"data[property.name]\"\n" +
+    "                choose-text=\"property.label\"\n" +
+    "                property-name=\"variant_{{property.name}}\">\n" +
     "        </cc-select-box>\n" +
     "    </li>\n" +
     "</ul>");

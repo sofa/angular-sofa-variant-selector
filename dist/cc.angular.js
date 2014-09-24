@@ -150,12 +150,12 @@ angular.module("src/directives/ccVariantSelector/ccvariantselector.tpl.html", []
   $templateCache.put("src/directives/ccVariantSelector/ccvariantselector.tpl.html",
     "<ul class=\"cc-variant-selector\" ng-if=\"variants.length\">\n" +
     "    <li class=\"cc-variant-selector__item\" ng-repeat=\"property in properties\">\n" +
-    "        <label class=\"cc-variant-selector__label\" ng-bind=\"property\"></label>\n" +
+    "        <label class=\"cc-variant-selector__label\" ng-bind=\"property.label\"></label>\n" +
     "        <cc-select-box\n" +
-    "                model=\"selectedProperties[property]\"\n" +
-    "                data=\"data[property]\"\n" +
-    "                choose-text=\"property\"\n" +
-    "                property-name=\"variant_{{property}}\">\n" +
+    "                model=\"selectedProperties[property.name]\"\n" +
+    "                data=\"data[property.name]\"\n" +
+    "                choose-text=\"property.label\"\n" +
+    "                property-name=\"variant_{{property.name}}\">\n" +
     "        </cc-select-box>\n" +
     "    </li>\n" +
     "</ul>");
@@ -634,7 +634,7 @@ angular.module('sdk.services.localeService', []);
 
 angular
     .module('sdk.services.localeService')
-    .factory('localeService', ['$window', function ($window) {
+    .factory('localeService', ['$window', '$exceptionHandler', function ($window, $exceptionHandler) {
 
         'use strict';
 
@@ -654,16 +654,20 @@ angular
             var ln      = localeData;
 
             objects.every(function (el, i) {
-                if (!ln[el]) {
-                    throw new Error('No translation found for: "' + el + '"');
-                } else {
-                    if (i + 1 !== length) {
-                        ln = ln[el];
-                        return true;
+                try {
+                    if (!ln[el]) {
+                        throw new Error('No translation found for: "' + el + '"');
                     } else {
-                        locale = ln[el];
-                        return false;
+                        if (i + 1 !== length) {
+                            ln = ln[el];
+                            return true;
+                        } else {
+                            locale = ln[el];
+                            return false;
+                        }
                     }
+                } catch (e) {
+                    $exceptionHandler(e);
                 }
             });
 
@@ -2466,12 +2470,12 @@ angular.module('sdk.directives.ccVariantSelector')
                 }
             }
 
-            var comparator = function(obj, text) {
+            var comparator = function (obj, text) {
                 if (obj && text && typeof obj === 'object' && typeof text === 'object') {
                     for (var textKey in text) {
                         if (obj[textKey] !== text[textKey]) {
                             return false;
-                        } 
+                        }
                     }
                     return true;
                 }
@@ -2492,7 +2496,7 @@ angular.module('sdk.directives.ccVariantSelector')
         };
     }])
 
-    .directive('ccVariantSelector', ['$filter', function ($filter) {
+    .directive('ccVariantSelector', ['$filter', 'localeService', function ($filter, localeService) {
 
         'use strict';
 
@@ -2510,7 +2514,7 @@ angular.module('sdk.directives.ccVariantSelector')
 
                 // extract flat list of available properties
                 // maybe iterating on the first variant is enough ?
-                scope.properties = [];
+                scope.properties = {};
                 scope.selectedProperties = scope.selectedProperties || {};
                 scope.data = {};
 
@@ -2519,8 +2523,8 @@ angular.module('sdk.directives.ccVariantSelector')
                 };
 
                 var setData = function () {
-                    scope.properties.forEach(function (property) {
-                        scope.data[property] = getDataByProperty(property);
+                    angular.forEach(scope.properties, function (property) {
+                        scope.data[property.name] = getDataByProperty(property.name);
                     });
                 };
 
@@ -2535,7 +2539,7 @@ angular.module('sdk.directives.ccVariantSelector')
                         return true;
                     });
 
-                    return filteredVariants.length > 0 ? filteredVariants[0] : null;
+                    return filteredVariants.length ? filteredVariants[0] : null;
                 };
 
                 scope.variants.forEach(function (variant) {
@@ -2544,8 +2548,11 @@ angular.module('sdk.directives.ccVariantSelector')
                         //for each available property. So we can later figure out
                         //which are missing.
                         scope.selectedProperties[property] = null;
-                        if (scope.properties.indexOf(property) === -1) {
-                            scope.properties.push(property);
+                        if (!scope.properties[property]) {
+                            scope.properties[property] = {
+                                name: property,
+                                label: localeService.getTranslation('variantSelector.' + property) || property
+                            };
                         }
                     }
                 });
