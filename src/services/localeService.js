@@ -2,7 +2,7 @@ angular.module('sdk.services.localeService', []);
 
 angular
     .module('sdk.services.localeService')
-    .factory('localeService', ['$window', function ($window) {
+    .factory('localeService', ['$window', '$exceptionHandler', function ($window, $exceptionHandler) {
 
         'use strict';
 
@@ -22,16 +22,20 @@ angular
             var ln      = localeData;
 
             objects.every(function (el, i) {
-                if (!ln[el]) {
-                    throw new Error('No translation found for: "' + el + '"');
-                } else {
-                    if (i + 1 !== length) {
-                        ln = ln[el];
-                        return true;
+                try {
+                    if (!ln[el]) {
+                        throw new Error('No translation found for: "' + el + '"');
                     } else {
-                        locale = ln[el];
-                        return false;
+                        if (i + 1 !== length) {
+                            ln = ln[el];
+                            return true;
+                        } else {
+                            locale = ln[el];
+                            return false;
+                        }
                     }
+                } catch (e) {
+                    $exceptionHandler(e);
                 }
             });
 
