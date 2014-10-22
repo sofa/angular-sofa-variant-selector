@@ -1,6 +1,6 @@
 (function(window, cc, angular, undefined){
 
-angular.module('cc.angular.templates', ['src/directives/ccAddress/ccaddress.tpl.html', 'src/directives/ccBreadcrumbs/cc-breadcrumbs.tpl.html', 'src/directives/ccCategoryTreeView/cc-category-tree-view.tpl.html', 'src/directives/ccCheckBox/cc-checkbox.tpl.html', 'src/directives/ccFooterLinks/cc-footer-links.tpl.html', 'src/directives/ccGoBackButton/cc-go-back-button.tpl.html', 'src/directives/ccGoUpButton/cc-go-up-button.tpl.html', 'src/directives/ccGoUpControl/cc-go-up-control.tpl.html', 'src/directives/ccLoadingSpinner/ccloadingspinner.tpl.html', 'src/directives/ccPrice/cc-price.tpl.html', 'src/directives/ccSearchField/cc-search-field.tpl.html', 'src/directives/ccSelectBox/cc-select-box.tpl.html', 'src/directives/ccThumbnailBar/cc-thumbnail-bar.tpl.html', 'src/directives/ccVariantSelector/ccvariantselector.tpl.html', 'src/directives/ccZippy/cc-zippy.tpl.html', 'src/directives/sofaFullPageView/sofa-full-page-view.tpl.html', 'src/directives/sofaImageZoom/sofa-image-zoom.tpl.html', 'src/directives/sofaRadioButton/sofa-radio-button.tpl.html', 'src/directives/sofaRangeSlider/sofa-range-slider.tpl.html', 'src/directives/sofaTouchSlider/sofa-touch-slider-indicator.tpl.html', 'src/directives/sofaTouchSlider/sofa-touch-slider.tpl.html']);
+angular.module('cc.angular.templates', ['src/directives/ccAddress/ccaddress.tpl.html', 'src/directives/ccBreadcrumbs/cc-breadcrumbs.tpl.html', 'src/directives/ccCategoryTreeView/cc-category-tree-view.tpl.html', 'src/directives/ccCheckBox/cc-checkbox.tpl.html', 'src/directives/ccFooterLinks/cc-footer-links.tpl.html', 'src/directives/ccGoBackButton/cc-go-back-button.tpl.html', 'src/directives/ccGoUpButton/cc-go-up-button.tpl.html', 'src/directives/ccGoUpControl/cc-go-up-control.tpl.html', 'src/directives/ccLoadingSpinner/ccloadingspinner.tpl.html', 'src/directives/ccPrice/cc-price.tpl.html', 'src/directives/ccSearchField/cc-search-field.tpl.html', 'src/directives/ccSelectBox/cc-select-box.tpl.html', 'src/directives/ccThumbnailBar/cc-thumbnail-bar.tpl.html', 'src/directives/ccVariantSelector/ccvariantselector.tpl.html', 'src/directives/ccZippy/cc-zippy.tpl.html', 'src/directives/sofaDateField/sofa-date-field.tpl.html', 'src/directives/sofaFullPageView/sofa-full-page-view.tpl.html', 'src/directives/sofaImageZoom/sofa-image-zoom.tpl.html', 'src/directives/sofaRadioButton/sofa-radio-button.tpl.html', 'src/directives/sofaRangeSlider/sofa-range-slider.tpl.html', 'src/directives/sofaTouchSlider/sofa-touch-slider-indicator.tpl.html', 'src/directives/sofaTouchSlider/sofa-touch-slider.tpl.html']);
 
 angular.module("src/directives/ccAddress/ccaddress.tpl.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("src/directives/ccAddress/ccaddress.tpl.html",
@@ -169,6 +169,28 @@ angular.module("src/directives/ccZippy/cc-zippy.tpl.html", []).run(["$templateCa
     "        <i class=\"cc-zippy-icon\"></i>\n" +
     "    </div>\n" +
     "    <div class=\"cc-zippy__content\" ng-transclude></div>\n" +
+    "</div>\n" +
+    "");
+}]);
+
+angular.module("src/directives/sofaDateField/sofa-date-field.tpl.html", []).run(["$templateCache", function($templateCache) {
+  $templateCache.put("src/directives/sofaDateField/sofa-date-field.tpl.html",
+    "<div class=\"sofa-date-field\">\n" +
+    "    <label for=\"{{fieldName}}_day\" ng-bind=\"ln.day\" class=\"sofa-hidden\"></label>\n" +
+    "    <input type=\"text\" id=\"{{fieldName}}_day\" ng-model=\"innerModel.day\"\n" +
+    "           class=\"sofa-date-field--day\" placeholder=\"{{ln.placeholder.day}}\"\n" +
+    "           sofa-name=\"fieldName + '_day'\"\n" +
+    "           ng-required=\"isRequired\" ng-pattern=\"/(^0[1-9]$)|(^[12][0-9]$)|(^3[01])/gm\" maxlength=\"2\"/>\n" +
+    "    <label for=\"{{fieldName}}_month\" ng-bind=\"ln.month\" class=\"sofa-hidden\"></label>\n" +
+    "    <input type=\"text\" id=\"{{fieldName}}_month\" ng-model=\"innerModel.month\"\n" +
+    "           class=\"sofa-date-field--month\" placeholder=\"{{ln.placeholder.month}}\"\n" +
+    "           sofa-name=\"fieldName + '_month'\"\n" +
+    "           ng-required=\"isRequired\" ng-pattern=\"/(^0[1-9]$)|(^1[0-2]$)/gm\" maxlength=\"2\" />\n" +
+    "    <label for=\"{{fieldName}}_year\" ng-bind=\"ln.year\" class=\"sofa-hidden\"></label>\n" +
+    "    <input type=\"text\" id=\"{{fieldName}}_year\" ng-model=\"innerModel.year\"\n" +
+    "           class=\"sofa-date-field--year\" placeholder=\"{{ln.placeholder.year}}\"\n" +
+    "           sofa-name=\"fieldName + '_year'\"\n" +
+    "           ng-required=\"isRequired\" maxlength=\"4\" />\n" +
     "</div>\n" +
     "");
 }]);
@@ -2042,7 +2064,7 @@ angular.module('sdk.directives.ccLazyValidation')
                 };
 
                 var debouncedError = cc.Util.debounce(function (stop) {
-                    if (!stop && element[0].value.length > 0) {
+                    if (!stop && (element[0].value === undefined || element[0].value.length > 0)) {
                         setInvalid();
                     }
                 }, DEBOUNCE_MS);
@@ -2092,6 +2114,7 @@ angular.module('sdk.directives.ccLazyValidation')
             }
         };
     });
+
 
 angular.module('sdk.directives.ccLoadingSpinner', ['src/directives/ccLoadingSpinner/ccloadingspinner.tpl.html']);
 
@@ -2644,6 +2667,7 @@ angular.module('sdk.directives', [
     'sdk.directives.ccImageZoom',
     'sdk.directives.ccPrice',
     'sdk.directives.ccSearchField',
+    'sdk.directives.sofaDateField',
     'sdk.directives.sofaRadioButton',
     'sdk.directives.sofaTouchSlider',
     'sdk.directives.sofaRangeSlider',
@@ -2651,6 +2675,78 @@ angular.module('sdk.directives', [
     'sdk.directives.sofaImageZoom',
     'sdk.directives.sofaImageAspectRatio'
 ]);
+
+angular.module('sdk.directives.sofaDateField', [
+        'src/directives/sofaDateField/sofa-date-field.tpl.html',
+        'sdk.services.localeService'
+    ]).directive('sofaDateField', ['localeService', function (localeService) {
+
+        'use strict';
+
+        // Matches a full-date string (e.g., "1980-11-27") as in http://tools.ietf.org/html/rfc3339#page-6
+        var DATE_REGEXP = /^[1-9][0-9]{3}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])/;
+
+        return {
+            restrict: 'E',
+            replace: true,
+            scope: {
+                fieldName: '=',
+                isRequired: '=',
+                model: '=ngModel'
+            },
+            require: ['ngModel'],
+            templateUrl: 'src/directives/sofaDateField/sofa-date-field.tpl.html',
+            link: function ($scope, $element, attrs, controllers) {
+
+                var modelController = controllers[0];
+
+                // Give it a name so ngModelController can attach the date-field to a given formController
+                modelController.$name = $scope.fieldName;
+
+                // Create a custom field validation of type "sofa-date"
+                // TODO ng1.3: refactor to work with angular.js 1.3+
+                modelController.$parsers.unshift(function (viewValue) {
+                    if (DATE_REGEXP.test(viewValue)) {
+                        modelController.$setValidity('sofa-date', true);
+                        return viewValue;
+                    } else {
+                        // it is invalid, return undefined (no model update)
+                        modelController.$setValidity('sofa-date', false);
+                        return undefined;
+                    }
+                });
+
+                $scope.innerModel = {
+                    day: '',
+                    month: '',
+                    year: ''
+                };
+
+                $scope.ln = localeService.getTranslation('sofaDateField');
+
+                var getDateString = function (model) {
+                    return model.year + '-' + model.month + '-' + model.day;
+                };
+
+                var updateModel = function (newModel) {
+                    $scope.model = getDateString(newModel);
+                };
+
+                var updateFromController = function (newModel) {
+                    modelController.$setViewValue(getDateString(newModel));
+                };
+
+                $scope.$watch('innerModel', function (newVal, oldVal) {
+                    if (newVal && newVal !== oldVal) {
+                        updateModel(newVal);
+                        updateFromController(newVal);
+                    }
+                }, true);
+
+            }
+        };
+    }]);
+
 angular.module('sdk.directives.sofaFullPageView', ['src/directives/sofaFullPageView/sofa-full-page-view.tpl.html']);
 
 
