@@ -25,6 +25,7 @@ angular.module('sdk.directives', [
     'sdk.directives.ccImageZoom',
     'sdk.directives.ccPrice',
     'sdk.directives.ccSearchField',
+    'sdk.directives.sofaDateField',
     'sdk.directives.sofaRadioButton',
     'sdk.directives.sofaTouchSlider',
     'sdk.directives.sofaRangeSlider',
