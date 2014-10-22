@@ -44,7 +44,7 @@ angular.module('sdk.directives.ccLazyValidation')
                 };
 
                 var debouncedError = cc.Util.debounce(function (stop) {
-                    if (!stop && element[0].value.length > 0) {
+                    if (!stop && (element[0].value === undefined || element[0].value.length > 0)) {
                         setInvalid();
                     }
                 }, DEBOUNCE_MS);
