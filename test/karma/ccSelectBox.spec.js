@@ -10,10 +10,10 @@ describe('Unit: sofa-select-box', function () {
         valueElement;
 
     var getValueElement = function (element) {
-        return element.querySelector('.cc-select-box__value');
+        return element.querySelector('.sofa-select-box__value');
     };
     
-    beforeEach(module('sdk.directives.ccSelectBox'));
+    beforeEach(module('sdk.directives.sofaSelectBox'));
 
     describe('with model value of null and chooseText defined', function () {
 
@@ -534,7 +534,7 @@ describe('Unit: sofa-select-box', function () {
                 $scope.$digest();
 
                 element = $element[0];
-                valueElements = element.querySelectorAll('.cc-select-box .cc-select-box__display-value');
+                valueElements = element.querySelectorAll('.sofa-select-box .sofa-select-box__display-value');
                 selects = element.querySelectorAll('select');
             }));
 
