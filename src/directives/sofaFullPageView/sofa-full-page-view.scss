@@ -4,26 +4,22 @@
     top: 0;
     bottom: 0;
     right: 0;
-
     overflow: hidden;
     background: #fff;
     opacity: 0;
-
-    .sofa-full-page-view__close {
-        position: absolute;
-        top:0;
-        right:0;
-        line-height: 1;
-        font-size: 1.5rem;
-        min-height: 3rem;
-        min-width: 3rem;
-        z-index: 2;
-
-        @extend .fa;
-        @extend .fa-times;
-    }
-
 }
+
+.sofa-full-page-view__close {
+    position: absolute;
+    top:0;
+    right:0;
+    line-height: 1;
+    font-size: 1.5rem;
+    min-height: 3rem;
+    min-width: 3rem;
+    z-index: 2;
+}
+
 .sofa-full-page-view__content {
     // position: relative && percentage value of top require a parent container
     // with pixel height set
