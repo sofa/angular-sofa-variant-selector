@@ -2,27 +2,25 @@
 
 // Clearing
 
-%cc-clearfix {
-    content: "";
-    display: table;
-    clear: both;
+%sofa-clearfix {
+    @include sofa-clearfix;
 }
 
 // Text alignment
 
-%cc-text-left {
+%sofa-text-left {
     text-align: left;
 }
-%cc-text-right {
+%sofa-text-right {
     text-align: right;
 }
-%cc-text-center {
+%sofa-text-center {
     text-align: center;
 }
 
 // Scroll Container
 
-%cc-scrollable-vertical {
+%sofa-scrollable-vertical {
     overflow-y: auto;
     overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
@@ -30,7 +28,7 @@
 
 // Dimensions
 
-%cc-full-width-height {
+%sofa-full-width-height {
     width: 100%;
     height: 100%;
     position:relative;
@@ -38,7 +36,7 @@
 
 // Docking
 
-%cc-dock-all {
+%sofa-dock-all {
     position: absolute;
     top: 0;
     right: 0;
@@ -46,21 +44,28 @@
     left: 0;
 }
 
-%cc-dock-left {
+%sofa-dock-left {
     position: absolute;
     top: 0;
     left: 0;
     bottom: 0;
 }
 
-%cc-dock-right {
+%sofa-dock-right {
     position: absolute;
     top: 0;
     right: 0;
     bottom: 0;
 }
 
-%cc-dock-bottom {
+%sofa-dock-top {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+}
+
+%sofa-dock-bottom {
     position: absolute;
     left: 0;
     right: 0;
@@ -69,13 +74,13 @@
 
 // Centering Elements
 
-%cc-center-wrapper {
+%sofa-center-wrapper {
     width: 100%;
     height: 100%;
     display: table;
 }
 
-%cc-center-wrapper__child {
+%sofa-center-wrapper__child {
     display: table-cell;
     vertical-align: middle;
     text-align: center;
