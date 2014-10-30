@@ -19,7 +19,7 @@ angular.module('sdk.directives', [
     'sdk.directives.ccTemplateCode',
     'sdk.directives.sofaCategoryTreeView',
     'sdk.directives.ccGoUpButton',
-    'sdk.directives.ccGoUpControl',
+    'sdk.directives.sofaGoUpControl',
     'sdk.directives.ccGoBackButton',
     'sdk.directives.ccImageFullScreen',
     'sdk.directives.ccImageZoom',
