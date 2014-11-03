@@ -11,7 +11,7 @@ angular.module('sdk.directives', [
     'sdk.directives.ccThumbnailBar',
     'sdk.directives.ccScrollingShadow',
     'sdk.directives.ccScrollFix',
-    'sdk.directives.ccLoadingSpinner',
+    'sdk.directives.sofaLoadingSpinner',
     'sdk.directives.sofaInclude',
     'sdk.directives.ccIosInputFocusFix',
     'sdk.directives.sofaInject',
