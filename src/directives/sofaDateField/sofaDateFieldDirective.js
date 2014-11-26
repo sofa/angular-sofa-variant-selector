@@ -38,10 +38,27 @@ angular.module('sdk.directives.sofaDateField', [
                     }
                 });
 
+                var hasSuitableModel = function () {
+                    return $scope.model && $scope.model.match(DATE_REGEXP);
+                };
+
+                var splitModel = function () {
+                    var segments = $scope.model.split('-');
+                    $scope.innerModel.day = segments[2];
+                    $scope.innerModel.month = segments[1];
+                    $scope.innerModel.year = segments[0];
+                };
+
                 $scope.innerModel = {
                     day: '',
                     month: '',
                     year: ''
+                };
+
+                var updateInnerModel = function () {
+                    if (hasSuitableModel()) {
+                        splitModel();
+                    }
                 };
 
                 $scope.ln = localeService.getTranslation('sofaDateField');
@@ -54,17 +71,22 @@ angular.module('sdk.directives.sofaDateField', [
                     $scope.model = getDateString(newModel);
                 };
 
-                var updateFromController = function (newModel) {
+                var updateFormController = function (newModel) {
                     modelController.$setViewValue(getDateString(newModel));
                 };
 
                 $scope.$watch('innerModel', function (newVal, oldVal) {
                     if (newVal && newVal !== oldVal) {
                         updateModel(newVal);
-                        updateFromController(newVal);
+                        updateFormController(newVal);
                     }
                 }, true);
 
+                $scope.$watch('model', function (newVal) {
+                    if (newVal) {
+                        updateInnerModel();
+                    }
+                });
             }
         };
     }]);
