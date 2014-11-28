@@ -1,12 +1,7 @@
-angular.module('sdk.directives.sofaDateField', [
-        'src/directives/sofaDateField/sofa-date-field.tpl.html',
-        'sdk.services.localeService'
-    ]).directive('sofaDateField', ['localeService', function (localeService) {
+angular.module('sofa.dateField')
+    .directive('sofaDateField', ['sofaDateFieldService', function (sofaDateFieldService) {
 
         'use strict';
-
-        // Matches a full-date string (e.g., "1980-11-27") as in http://tools.ietf.org/html/rfc3339#page-6
-        var DATE_REGEXP = /^[1-9][0-9]{3}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])/;
 
         return {
             restrict: 'E',
@@ -16,75 +11,46 @@ angular.module('sdk.directives.sofaDateField', [
                 isRequired: '=',
                 model: '=ngModel'
             },
+            controller: 'sofaDateFieldController',
+            controllerAs: 'dateFieldCtrl',
+            bindToController: true,
             require: ['ngModel'],
             templateUrl: 'src/directives/sofaDateField/sofa-date-field.tpl.html',
-            link: function ($scope, $element, attrs, controllers) {
+            link: function (scope, element, attrs, controllers) {
 
                 var modelController = controllers[0];
-
                 // Give it a name so ngModelController can attach the date-field to a given formController
-                modelController.$name = $scope.fieldName;
+                modelController.$name = scope.fieldName;
 
                 // Create a custom field validation of type "sofa-date"
                 // TODO ng1.3: refactor to work with angular.js 1.3+
                 modelController.$parsers.unshift(function (viewValue) {
-                    if (DATE_REGEXP.test(viewValue)) {
-                        modelController.$setValidity('sofa-date', true);
+                    if (sofaDateFieldService.getDatRegEx().test(viewValue)) {
+                        modelController.$setValidity('sofaDate', true);
                         return viewValue;
                     } else {
                         // it is invalid, return undefined (no model update)
-                        modelController.$setValidity('sofa-date', false);
+                        modelController.$setValidity('sofaDate', false);
                         return undefined;
                     }
                 });
 
-                var hasSuitableModel = function () {
-                    return $scope.model && $scope.model.match(DATE_REGEXP);
-                };
-
-                var splitModel = function () {
-                    var segments = $scope.model.split('-');
-                    $scope.innerModel.day = segments[2];
-                    $scope.innerModel.month = segments[1];
-                    $scope.innerModel.year = segments[0];
-                };
-
-                $scope.innerModel = {
+                scope.innerModel = {
                     day: '',
                     month: '',
                     year: ''
                 };
 
-                var updateInnerModel = function () {
-                    if (hasSuitableModel()) {
-                        splitModel();
-                    }
-                };
-
-                $scope.ln = localeService.getTranslation('sofaDateField');
-
-                var getDateString = function (model) {
-                    return model.year + '-' + model.month + '-' + model.day;
-                };
-
-                var updateModel = function (newModel) {
-                    $scope.model = getDateString(newModel);
-                };
-
-                var updateFormController = function (newModel) {
-                    modelController.$setViewValue(getDateString(newModel));
-                };
-
-                $scope.$watch('innerModel', function (newVal, oldVal) {
+                scope.$watch('innerModel', function (newVal, oldVal) {
                     if (newVal && newVal !== oldVal) {
-                        updateModel(newVal);
-                        updateFormController(newVal);
+                       scope.model = sofaDateFieldService.getUpdatedModel(newVal);
+                       sofaDateFieldService.updateModelController(modelController, newVal);
                     }
                 }, true);
 
-                $scope.$watch('model', function (newVal) {
-                    if (newVal) {
-                        updateInnerModel();
+                scope.$watch('model', function (newVal) {
+                    if (newVal && sofaDateFieldService.isSuitableModel(newVal)) {
+                        scope.innerModel = sofaDateFieldService.splitModel(newVal);
                     }
                 });
             }

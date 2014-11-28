@@ -176,19 +176,19 @@ angular.module("src/directives/ccZippy/cc-zippy.tpl.html", []).run(["$templateCa
 angular.module("src/directives/sofaDateField/sofa-date-field.tpl.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("src/directives/sofaDateField/sofa-date-field.tpl.html",
     "<div class=\"sofa-date-field\">\n" +
-    "    <label for=\"{{fieldName}}_day\" ng-bind=\"ln.day\" class=\"sofa-hidden\"></label>\n" +
+    "    <label for=\"{{fieldName}}_day\" ng-bind=\"dateFieldCtrl.ln.day\" class=\"sofa-hidden\"></label>\n" +
     "    <input type=\"text\" id=\"{{fieldName}}_day\" ng-model=\"innerModel.day\"\n" +
-    "           class=\"sofa-date-field--day\" placeholder=\"{{ln.placeholder.day}}\"\n" +
+    "           class=\"sofa-date-field--day\" placeholder=\"{{dateFieldCtrl.ln.placeholder.day}}\"\n" +
     "           sofa-name=\"fieldName + '_day'\"\n" +
     "           ng-required=\"isRequired\" ng-pattern=\"/(^0[1-9]$)|(^[12][0-9]$)|(^3[01])/gm\" maxlength=\"2\"/>\n" +
-    "    <label for=\"{{fieldName}}_month\" ng-bind=\"ln.month\" class=\"sofa-hidden\"></label>\n" +
+    "    <label for=\"{{fieldName}}_month\" ng-bind=\"dateFieldCtrl.ln.month\" class=\"sofa-hidden\"></label>\n" +
     "    <input type=\"text\" id=\"{{fieldName}}_month\" ng-model=\"innerModel.month\"\n" +
-    "           class=\"sofa-date-field--month\" placeholder=\"{{ln.placeholder.month}}\"\n" +
+    "           class=\"sofa-date-field--month\" placeholder=\"{{dateFieldCtrl.ln.placeholder.month}}\"\n" +
     "           sofa-name=\"fieldName + '_month'\"\n" +
     "           ng-required=\"isRequired\" ng-pattern=\"/(^0[1-9]$)|(^1[0-2]$)/gm\" maxlength=\"2\" />\n" +
-    "    <label for=\"{{fieldName}}_year\" ng-bind=\"ln.year\" class=\"sofa-hidden\"></label>\n" +
+    "    <label for=\"{{fieldName}}_year\" ng-bind=\"dateFieldCtrl.ln.year\" class=\"sofa-hidden\"></label>\n" +
     "    <input type=\"text\" id=\"{{fieldName}}_year\" ng-model=\"innerModel.year\"\n" +
-    "           class=\"sofa-date-field--year\" placeholder=\"{{ln.placeholder.year}}\"\n" +
+    "           class=\"sofa-date-field--year\" placeholder=\"{{dateFieldCtrl.ln.placeholder.year}}\"\n" +
     "           sofa-name=\"fieldName + '_year'\"\n" +
     "           ng-required=\"isRequired\" maxlength=\"4\" />\n" +
     "</div>\n" +
@@ -2667,7 +2667,6 @@ angular.module('sdk.directives', [
     'sdk.directives.ccImageZoom',
     'sdk.directives.ccPrice',
     'sdk.directives.ccSearchField',
-    'sdk.directives.sofaDateField',
     'sdk.directives.sofaRadioButton',
     'sdk.directives.sofaTouchSlider',
     'sdk.directives.sofaRangeSlider',
@@ -2676,15 +2675,20 @@ angular.module('sdk.directives', [
     'sdk.directives.sofaImageAspectRatio'
 ]);
 
-angular.module('sdk.directives.sofaDateField', [
-        'src/directives/sofaDateField/sofa-date-field.tpl.html',
-        'sdk.services.localeService'
-    ]).directive('sofaDateField', ['localeService', function (localeService) {
+angular.module('sofa.dateField', [
+    'src/directives/sofaDateField/sofa-date-field.tpl.html',
+    'sdk.services.localeService'
+]);
+
+angular.module('sofa.dateField')
+    .controller('sofaDateFieldController', ['localeService', function sofaDateFieldController(localeService) {
+        this.ln = localeService.getTranslation('sofaDateField');
+    }]);
+
+angular.module('sofa.dateField')
+    .directive('sofaDateField', ['sofaDateFieldService', function (sofaDateFieldService) {
 
         'use strict';
-
-        // Matches a full-date string (e.g., "1980-11-27") as in http://tools.ietf.org/html/rfc3339#page-6
-        var DATE_REGEXP = /^[1-9][0-9]{3}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])/;
 
         return {
             restrict: 'E',
@@ -2694,58 +2698,92 @@ angular.module('sdk.directives.sofaDateField', [
                 isRequired: '=',
                 model: '=ngModel'
             },
+            controller: 'sofaDateFieldController',
+            controllerAs: 'dateFieldCtrl',
+            bindToController: true,
             require: ['ngModel'],
             templateUrl: 'src/directives/sofaDateField/sofa-date-field.tpl.html',
-            link: function ($scope, $element, attrs, controllers) {
+            link: function (scope, element, attrs, controllers) {
 
                 var modelController = controllers[0];
-
                 // Give it a name so ngModelController can attach the date-field to a given formController
-                modelController.$name = $scope.fieldName;
+                modelController.$name = scope.fieldName;
 
                 // Create a custom field validation of type "sofa-date"
                 // TODO ng1.3: refactor to work with angular.js 1.3+
                 modelController.$parsers.unshift(function (viewValue) {
-                    if (DATE_REGEXP.test(viewValue)) {
-                        modelController.$setValidity('sofa-date', true);
+                    if (sofaDateFieldService.getDatRegEx().test(viewValue)) {
+                        modelController.$setValidity('sofaDate', true);
                         return viewValue;
                     } else {
                         // it is invalid, return undefined (no model update)
-                        modelController.$setValidity('sofa-date', false);
+                        modelController.$setValidity('sofaDate', false);
                         return undefined;
                     }
                 });
 
-                $scope.innerModel = {
+                scope.innerModel = {
                     day: '',
                     month: '',
                     year: ''
                 };
 
-                $scope.ln = localeService.getTranslation('sofaDateField');
-
-                var getDateString = function (model) {
-                    return model.year + '-' + model.month + '-' + model.day;
-                };
-
-                var updateModel = function (newModel) {
-                    $scope.model = getDateString(newModel);
-                };
-
-                var updateFromController = function (newModel) {
-                    modelController.$setViewValue(getDateString(newModel));
-                };
-
-                $scope.$watch('innerModel', function (newVal, oldVal) {
+                scope.$watch('innerModel', function (newVal, oldVal) {
                     if (newVal && newVal !== oldVal) {
-                        updateModel(newVal);
-                        updateFromController(newVal);
+                       scope.model = sofaDateFieldService.getUpdatedModel(newVal);
+                       sofaDateFieldService.updateModelController(modelController, newVal);
                     }
                 }, true);
 
+                scope.$watch('model', function (newVal) {
+                    if (newVal && sofaDateFieldService.isSuitableModel(newVal)) {
+                        scope.innerModel = sofaDateFieldService.splitModel(newVal);
+                    }
+                });
             }
         };
     }]);
+
+angular.module('sofa.dateField')
+    .factory('sofaDateFieldService', function sofaDateFieldService() {
+
+        // Matches a full-date string (e.g., "1980-11-27") as in http://tools.ietf.org/html/rfc3339#page-6
+        var DATE_REGEXP = /^[1-9][0-9]{3}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])/;
+
+        var self = this;
+
+        self.getDatRegEx = function () {
+            return DATE_REGEXP;
+        };
+
+        self.splitModel = function (model) {
+            var segments = model.split('-');
+
+            return {
+                day: segments[2],
+                month: segments[1],
+                year: segments[0]
+            };
+        };
+
+        self.isSuitableModel = function (model) {
+            return model && model.match(DATE_REGEXP);
+        };
+
+        self.getDateString = function (model) {
+            return model.year + '-' + model.month + '-' + model.day;
+        };
+
+        self.getUpdatedModel = function (newModel) {
+            return self.getDateString(newModel);
+        };
+
+        self.updateModelController = function (controller, newModel) {
+            controller.$setViewValue(self.getDateString(newModel));
+        };
+
+        return self;
+    });
 
 angular.module('sdk.directives.sofaFullPageView', ['src/directives/sofaFullPageView/sofa-full-page-view.tpl.html']);
 

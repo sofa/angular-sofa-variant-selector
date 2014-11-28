@@ -174,19 +174,19 @@ angular.module("src/directives/ccZippy/cc-zippy.tpl.html", []).run(["$templateCa
 angular.module("src/directives/sofaDateField/sofa-date-field.tpl.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("src/directives/sofaDateField/sofa-date-field.tpl.html",
     "<div class=\"sofa-date-field\">\n" +
-    "    <label for=\"{{fieldName}}_day\" ng-bind=\"ln.day\" class=\"sofa-hidden\"></label>\n" +
+    "    <label for=\"{{fieldName}}_day\" ng-bind=\"dateFieldCtrl.ln.day\" class=\"sofa-hidden\"></label>\n" +
     "    <input type=\"text\" id=\"{{fieldName}}_day\" ng-model=\"innerModel.day\"\n" +
-    "           class=\"sofa-date-field--day\" placeholder=\"{{ln.placeholder.day}}\"\n" +
+    "           class=\"sofa-date-field--day\" placeholder=\"{{dateFieldCtrl.ln.placeholder.day}}\"\n" +
     "           sofa-name=\"fieldName + '_day'\"\n" +
     "           ng-required=\"isRequired\" ng-pattern=\"/(^0[1-9]$)|(^[12][0-9]$)|(^3[01])/gm\" maxlength=\"2\"/>\n" +
-    "    <label for=\"{{fieldName}}_month\" ng-bind=\"ln.month\" class=\"sofa-hidden\"></label>\n" +
+    "    <label for=\"{{fieldName}}_month\" ng-bind=\"dateFieldCtrl.ln.month\" class=\"sofa-hidden\"></label>\n" +
     "    <input type=\"text\" id=\"{{fieldName}}_month\" ng-model=\"innerModel.month\"\n" +
-    "           class=\"sofa-date-field--month\" placeholder=\"{{ln.placeholder.month}}\"\n" +
+    "           class=\"sofa-date-field--month\" placeholder=\"{{dateFieldCtrl.ln.placeholder.month}}\"\n" +
     "           sofa-name=\"fieldName + '_month'\"\n" +
     "           ng-required=\"isRequired\" ng-pattern=\"/(^0[1-9]$)|(^1[0-2]$)/gm\" maxlength=\"2\" />\n" +
-    "    <label for=\"{{fieldName}}_year\" ng-bind=\"ln.year\" class=\"sofa-hidden\"></label>\n" +
+    "    <label for=\"{{fieldName}}_year\" ng-bind=\"dateFieldCtrl.ln.year\" class=\"sofa-hidden\"></label>\n" +
     "    <input type=\"text\" id=\"{{fieldName}}_year\" ng-model=\"innerModel.year\"\n" +
-    "           class=\"sofa-date-field--year\" placeholder=\"{{ln.placeholder.year}}\"\n" +
+    "           class=\"sofa-date-field--year\" placeholder=\"{{dateFieldCtrl.ln.placeholder.year}}\"\n" +
     "           sofa-name=\"fieldName + '_year'\"\n" +
     "           ng-required=\"isRequired\" maxlength=\"4\" />\n" +
     "</div>\n" +
