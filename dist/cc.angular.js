@@ -1,19 +1,6 @@
 (function(window, cc, angular, undefined){
 
-angular.module('cc.angular.templates', ['src/directives/ccAddress/ccaddress.tpl.html', 'src/directives/ccBreadcrumbs/cc-breadcrumbs.tpl.html', 'src/directives/ccCategoryTreeView/cc-category-tree-view.tpl.html', 'src/directives/ccCheckBox/cc-checkbox.tpl.html', 'src/directives/ccFooterLinks/cc-footer-links.tpl.html', 'src/directives/ccGoBackButton/cc-go-back-button.tpl.html', 'src/directives/ccGoUpButton/cc-go-up-button.tpl.html', 'src/directives/ccGoUpControl/cc-go-up-control.tpl.html', 'src/directives/ccLoadingSpinner/ccloadingspinner.tpl.html', 'src/directives/ccPrice/cc-price.tpl.html', 'src/directives/ccSearchField/cc-search-field.tpl.html', 'src/directives/ccSelectBox/cc-select-box.tpl.html', 'src/directives/ccThumbnailBar/cc-thumbnail-bar.tpl.html', 'src/directives/ccVariantSelector/ccvariantselector.tpl.html', 'src/directives/ccZippy/cc-zippy.tpl.html', 'src/directives/sofaDateField/sofa-date-field.tpl.html', 'src/directives/sofaFullPageView/sofa-full-page-view.tpl.html', 'src/directives/sofaImageZoom/sofa-image-zoom.tpl.html', 'src/directives/sofaRadioButton/sofa-radio-button.tpl.html', 'src/directives/sofaRangeSlider/sofa-range-slider.tpl.html', 'src/directives/sofaTouchSlider/sofa-touch-slider-indicator.tpl.html', 'src/directives/sofaTouchSlider/sofa-touch-slider.tpl.html']);
-
-angular.module("src/directives/ccAddress/ccaddress.tpl.html", []).run(["$templateCache", function($templateCache) {
-  $templateCache.put("src/directives/ccAddress/ccaddress.tpl.html",
-    "<address>\n" +
-    "  <span>{{data.company}}</span>\n" +
-    "  <span>{{data.name}} {{data.surname}}</span>\n" +
-    "  <span>{{data.street}} {{data.streetnumber}}</span>\n" +
-    "  <span ng-if=\"data.streetextra\">{{data.streetextra}}</span>\n" +
-    "  <span>{{data.zip}} {{data.city}}</span>\n" +
-    "  <span>{{data.country.label}}</span>\n" +
-    "</address>\n" +
-    "");
-}]);
+angular.module('cc.angular.templates', ['src/directives/ccBreadcrumbs/cc-breadcrumbs.tpl.html', 'src/directives/ccCheckBox/cc-checkbox.tpl.html', 'src/directives/ccGoBackButton/cc-go-back-button.tpl.html', 'src/directives/ccGoUpButton/cc-go-up-button.tpl.html', 'src/directives/ccGoUpControl/cc-go-up-control.tpl.html', 'src/directives/ccThumbnailBar/cc-thumbnail-bar.tpl.html', 'src/directives/sofaAddress/sofa-address.tpl.html', 'src/directives/sofaCategoryTreeView/sofa-category-tree-view.tpl.html', 'src/directives/sofaDateField/sofa-date-field.tpl.html', 'src/directives/sofaFooterLinks/sofa-footer-links.tpl.html', 'src/directives/sofaForms/sofaCheckBox/sofa-check-box.tpl.html', 'src/directives/sofaForms/sofaRadioButton/sofa-radio-button.tpl.html', 'src/directives/sofaForms/sofaRangeSlider/sofa-range-slider.tpl.html', 'src/directives/sofaForms/sofaSearchField/sofa-search-field.tpl.html', 'src/directives/sofaForms/sofaSelectBox/sofa-select-box.tpl.html', 'src/directives/sofaFullPageView/sofa-full-page-view.tpl.html', 'src/directives/sofaGoBackControl/sofa-go-back-control.tpl.html', 'src/directives/sofaImageZoom/sofa-image-zoom.tpl.html', 'src/directives/sofaLoadingSpinner/sofa-loading-spinner.tpl.html', 'src/directives/sofaPrice/sofa-price.tpl.html', 'src/directives/sofaTouchSlider/sofa-touch-slider-indicator.tpl.html', 'src/directives/sofaTouchSlider/sofa-touch-slider.tpl.html', 'src/directives/sofaVariantSelector/sofa-variant-selector.tpl.html', 'src/directives/sofaZippy/sofa-zippy.tpl.html']);
 
 angular.module("src/directives/ccBreadcrumbs/cc-breadcrumbs.tpl.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("src/directives/ccBreadcrumbs/cc-breadcrumbs.tpl.html",
@@ -25,29 +12,6 @@ angular.module("src/directives/ccBreadcrumbs/cc-breadcrumbs.tpl.html", []).run([
     "</ul>");
 }]);
 
-angular.module("src/directives/ccCategoryTreeView/cc-category-tree-view.tpl.html", []).run(["$templateCache", function($templateCache) {
-  $templateCache.put("src/directives/ccCategoryTreeView/cc-category-tree-view.tpl.html",
-    "<div class=\"cc-category-tree-view\">\n" +
-    "    <ul ng-class=\"{ 'cc-category-tree-view__list--open': item._categoryTreeView.isVisible,\n" +
-    "                    'cc-category-tree-view__list--closed': !item._categoryTreeView.isVisible,\n" +
-    "                    'cc-category-tree-view__list--root': isRoot,\n" +
-    "                    'cc-category-tree-view__list--child': !isRoot }\" cc-template-code>\n" +
-    "       <li class=\"cc-category-tree-view__list-item\"\n" +
-    "           cc-nested-category-item ng-repeat=\"item in items\">\n" +
-    "           <a href=\"{{item.getOriginFullUrl()}}\" ng-click=\"doAction($event, item)\"\n" +
-    "                 ng-class=\"item._categoryTreeView.isActive ? 'cc-category-tree-view__category-entry--active' : 'cc-category-tree-view__category-entry'\">\n" +
-    "                 {{item.label}}\n" +
-    "                <i ng-class=\"item._categoryTreeView.isVisible ? 'fa-chevron-up' : 'fa-chevron-down'\"\n" +
-    "                   class=\"cc-category-tree-view__category-entry-icon fa\"\n" +
-    "                   ng-show=\"item.hasChildren\">\n" +
-    "               </i>\n" +
-    "            </a>\n" +
-    "       </li>\n" +
-    "    </ul>\n" +
-    "</div>\n" +
-    "");
-}]);
-
 angular.module("src/directives/ccCheckBox/cc-checkbox.tpl.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("src/directives/ccCheckBox/cc-checkbox.tpl.html",
     "<div class=\"cc-checkbox\">\n" +
@@ -55,15 +19,6 @@ angular.module("src/directives/ccCheckBox/cc-checkbox.tpl.html", []).run(["$temp
     "           sofa-name=\"propertyName\" ng-model=\"innerModel\" ng-required=\"{{isRequired}}\">\n" +
     "    <label for=\"cc-check-box-{{id}}\" class=\"cc-checkbox__label\" ng-bind-html=\"label\"></label>\n" +
     "</div>\n" +
-    "");
-}]);
-
-angular.module("src/directives/ccFooterLinks/cc-footer-links.tpl.html", []).run(["$templateCache", function($templateCache) {
-  $templateCache.put("src/directives/ccFooterLinks/cc-footer-links.tpl.html",
-    "\n" +
-    "<ul class=\"cc-footer-list\">\n" +
-    "    <li bindonce=\"item\" ng-repeat=\"item in items\" ng-click=\"goTo(item)\" bo-text=\"item.title\" class=\"cc-footer-list__item\"></li>\n" +
-    "</ul>\n" +
     "");
 }]);
 
@@ -86,55 +41,6 @@ angular.module("src/directives/ccGoUpControl/cc-go-up-control.tpl.html", []).run
     "    </cc-go-up-button>");
 }]);
 
-angular.module("src/directives/ccLoadingSpinner/ccloadingspinner.tpl.html", []).run(["$templateCache", function($templateCache) {
-  $templateCache.put("src/directives/ccLoadingSpinner/ccloadingspinner.tpl.html",
-    "<div class=\"cc-loading-spinner\">\n" +
-    "    <!-- generated and tweaked from http://cssload.net/ -->\n" +
-    "    <div class=\"cc-loading-spinner__circle--01\"></div>\n" +
-    "    <div class=\"cc-loading-spinner__circle--02\"></div>\n" +
-    "    <div class=\"cc-loading-spinner__circle--03\"></div>\n" +
-    "    <div class=\"cc-loading-spinner__circle--04\"></div>\n" +
-    "    <div class=\"cc-loading-spinner__circle--05\"></div>\n" +
-    "    <div class=\"cc-loading-spinner__circle--06\"></div>\n" +
-    "    <div class=\"cc-loading-spinner__circle--07\"></div>\n" +
-    "    <div class=\"cc-loading-spinner__circle--08\"></div>\n" +
-    "</div>");
-}]);
-
-angular.module("src/directives/ccPrice/cc-price.tpl.html", []).run(["$templateCache", function($templateCache) {
-  $templateCache.put("src/directives/ccPrice/cc-price.tpl.html",
-    "<span class=\"cc-price\" ng-class=\"product.hasOldPrice() ? 'cc-price--special' : 'cc-price--basic'\">\n" +
-    "    <span class=\"cc-price__price--old\" ng-if=\"product.hasOldPrice()\" ng-bind=\"priceOld | currency\"></span>\n" +
-    "    <span class=\"cc-price__price\" ng-bind=\"price | currency\"></span>\n" +
-    "</span>");
-}]);
-
-angular.module("src/directives/ccSearchField/cc-search-field.tpl.html", []).run(["$templateCache", function($templateCache) {
-  $templateCache.put("src/directives/ccSearchField/cc-search-field.tpl.html",
-    "<span class=\"cc-search-field\">\n" +
-    "    <i class=\"cc-search-field__icon--label\"></i>\n" +
-    "    <input type=\"text\" class=\"cc-search-field__input\" placeholder=\"{{ placeholderText }}\"\n" +
-    "           ng-model=\"_value\" />\n" +
-    "    <i class=\"cc-search-field__icon--clear\" ng-click=\"clearValue()\" ng-show=\"hasValue()\"></i>\n" +
-    "</span>\n" +
-    "");
-}]);
-
-angular.module("src/directives/ccSelectBox/cc-select-box.tpl.html", []).run(["$templateCache", function($templateCache) {
-  $templateCache.put("src/directives/ccSelectBox/cc-select-box.tpl.html",
-    "<div class=\"cc-select-box\">\n" +
-    "    <span class=\"cc-select-box__value\" ng-class=\"{'cc-select-box__value--choose': !model && chooseText}\" ng-bind=\"displayFn(model) || chooseText\"></span>\n" +
-    "    <i class=\"cc-select-box__icon\"></i>\n" +
-    "    <select sofa-name=\"propertyName\"\n" +
-    "            ng-required=\"{{required}}\"\n" +
-    "            class=\"cc-select-box__native\"\n" +
-    "            ng-model=\"model\"\n" +
-    "            ng-options=\"displayFn(val) for val in data\">\n" +
-    "        <option ng-if=\"chooseText\" value=\"\">-- {{chooseText}} --</option>\n" +
-    "    </select>\n" +
-    "</div>");
-}]);
-
 angular.module("src/directives/ccThumbnailBar/cc-thumbnail-bar.tpl.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("src/directives/ccThumbnailBar/cc-thumbnail-bar.tpl.html",
     "<ul class=\"cc-thumbnail-bar\">\n" +
@@ -147,29 +53,35 @@ angular.module("src/directives/ccThumbnailBar/cc-thumbnail-bar.tpl.html", []).ru
     "");
 }]);
 
-angular.module("src/directives/ccVariantSelector/ccvariantselector.tpl.html", []).run(["$templateCache", function($templateCache) {
-  $templateCache.put("src/directives/ccVariantSelector/ccvariantselector.tpl.html",
-    "<ul class=\"cc-variant-selector\" ng-if=\"variants.length\">\n" +
-    "    <li class=\"cc-variant-selector__item\" ng-repeat=\"property in properties\">\n" +
-    "        <label class=\"cc-variant-selector__label\" ng-bind=\"property.label\"></label>\n" +
-    "        <cc-select-box\n" +
-    "                model=\"selectedProperties[property.name]\"\n" +
-    "                data=\"data[property.name]\"\n" +
-    "                choose-text=\"property.label\"\n" +
-    "                property-name=\"variant_{{property.name}}\">\n" +
-    "        </cc-select-box>\n" +
-    "    </li>\n" +
-    "</ul>");
+angular.module("src/directives/sofaAddress/sofa-address.tpl.html", []).run(["$templateCache", function($templateCache) {
+  $templateCache.put("src/directives/sofaAddress/sofa-address.tpl.html",
+    "<address>\n" +
+    "  <span>{{data.company}}</span>\n" +
+    "  <span>{{data.name}} {{data.surname}}</span>\n" +
+    "  <span>{{data.street}} {{data.streetnumber}}</span>\n" +
+    "  <span ng-if=\"data.streetextra\">{{data.streetextra}}</span>\n" +
+    "  <span>{{data.zip}} {{data.city}}</span>\n" +
+    "  <span>{{data.country.label}}</span>\n" +
+    "</address>\n" +
+    "");
 }]);
 
-angular.module("src/directives/ccZippy/cc-zippy.tpl.html", []).run(["$templateCache", function($templateCache) {
-  $templateCache.put("src/directives/ccZippy/cc-zippy.tpl.html",
-    "<div class=\"cc-zippy\">\n" +
-    "    <div class=\"cc-zippy__caption\">\n" +
-    "        <span ng-bind=\"caption\"></span>\n" +
-    "        <i class=\"cc-zippy-icon\"></i>\n" +
-    "    </div>\n" +
-    "    <div class=\"cc-zippy__content\" ng-transclude></div>\n" +
+angular.module("src/directives/sofaCategoryTreeView/sofa-category-tree-view.tpl.html", []).run(["$templateCache", function($templateCache) {
+  $templateCache.put("src/directives/sofaCategoryTreeView/sofa-category-tree-view.tpl.html",
+    "<div class=\"sofa-category-tree-view\">\n" +
+    "    <ul ng-class=\"{ 'sofa-category-tree-view__list--open': item._categoryTreeView.isVisible,\n" +
+    "                    'sofa-category-tree-view__list--closed': !item._categoryTreeView.isVisible,\n" +
+    "                    'sofa-category-tree-view__list--root': isRoot,\n" +
+    "                    'sofa-category-tree-view__list--child': !isRoot }\" cc-template-code>\n" +
+    "       <li class=\"sofa-category-tree-view__list-item\" cc-nested-category-item ng-repeat=\"item in items\">\n" +
+    "           <a href=\"{{item.getOriginFullUrl()}}\" ng-click=\"doAction($event, item)\" class=\"sofa-category-tree-view__category-entry\"\n" +
+    "               ng-class=\"{ 'sofa-category-tree-view__category-entry--active': item._categoryTreeView.isActive,\n" +
+    "                           'sofa-category-tree-view__category-entry--icon': item.hasChildren,\n" +
+    "                           'sofa-category-tree-view__category-entry--icon--open': item.hasChildren && item._categoryTreeView.isVisible }\"\n" +
+    "               ng-bind=\"item.label\">\n" +
+    "            </a>\n" +
+    "       </li>\n" +
+    "    </ul>\n" +
     "</div>\n" +
     "");
 }]);
@@ -196,23 +108,26 @@ angular.module("src/directives/sofaDateField/sofa-date-field.tpl.html", []).run(
     "");
 }]);
 
-angular.module("src/directives/sofaFullPageView/sofa-full-page-view.tpl.html", []).run(["$templateCache", function($templateCache) {
-  $templateCache.put("src/directives/sofaFullPageView/sofa-full-page-view.tpl.html",
-    "<div class=\"sofa-full-page-view\" ng-class=\"{'sofa-full-page-view--active': active}\">\n" +
-    "    <button class=\"sofa-full-page-view__close\" ng-click=\"closeFullPageView($event)\"></button>\n" +
-    "    <div class=\"sofa-full-page-view__content\" ng-transclude></div>\n" +
-    "</div>");
+angular.module("src/directives/sofaFooterLinks/sofa-footer-links.tpl.html", []).run(["$templateCache", function($templateCache) {
+  $templateCache.put("src/directives/sofaFooterLinks/sofa-footer-links.tpl.html",
+    "\n" +
+    "<ul class=\"sofa-footer-list\">\n" +
+    "    <li bindonce=\"item\" ng-repeat=\"item in items\" ng-click=\"goTo(item)\" bo-text=\"item.title\" class=\"sofa-footer-list__item\"></li>\n" +
+    "</ul>\n" +
+    "");
 }]);
 
-angular.module("src/directives/sofaImageZoom/sofa-image-zoom.tpl.html", []).run(["$templateCache", function($templateCache) {
-  $templateCache.put("src/directives/sofaImageZoom/sofa-image-zoom.tpl.html",
-    "<div class=\"sofa-image-zoom\" ng-class=\"{'sofa-image-zoom--active': active}\">\n" +
-    "    <img class=\"sofa-image-zoom__image\" ng-src=\"{{imageSrc}}\">\n" +
-    "</div>");
+angular.module("src/directives/sofaForms/sofaCheckBox/sofa-check-box.tpl.html", []).run(["$templateCache", function($templateCache) {
+  $templateCache.put("src/directives/sofaForms/sofaCheckBox/sofa-check-box.tpl.html",
+    "<div class=\"sofa-checkbox\">\n" +
+    "    <input type=\"checkbox\" sofa-name=\"propertyName\" ng-model=\"innerModel\" id=\"sofa-check-box-{{id}}\" class=\"sofa-checkbox__input\">\n" +
+    "    <label for=\"sofa-check-box-{{id}}\" class=\"sofa-checkbox__label\" ng-bind-html=\"label\"></label>\n" +
+    "</div>\n" +
+    "");
 }]);
 
-angular.module("src/directives/sofaRadioButton/sofa-radio-button.tpl.html", []).run(["$templateCache", function($templateCache) {
-  $templateCache.put("src/directives/sofaRadioButton/sofa-radio-button.tpl.html",
+angular.module("src/directives/sofaForms/sofaRadioButton/sofa-radio-button.tpl.html", []).run(["$templateCache", function($templateCache) {
+  $templateCache.put("src/directives/sofaForms/sofaRadioButton/sofa-radio-button.tpl.html",
     "<div class=\"sofa-radio-button\" ng-class=\"{ 'sofa-radio-button--disabled': disabled }\">\n" +
     "    <input ng-disabled=\"disabled\" type=\"radio\" sofa-name=\"propertyName\" value=\"{{value}}\" ng-model=\"model\" id=\"sofa-radio-{{id}}\" class=\"sofa-radio-button__input\">\n" +
     "    <label for=\"sofa-radio-{{id}}\" class=\"sofa-radio-button__label\" bindonce bo-text=\"label\"></label>\n" +
@@ -220,8 +135,8 @@ angular.module("src/directives/sofaRadioButton/sofa-radio-button.tpl.html", []).
     "");
 }]);
 
-angular.module("src/directives/sofaRangeSlider/sofa-range-slider.tpl.html", []).run(["$templateCache", function($templateCache) {
-  $templateCache.put("src/directives/sofaRangeSlider/sofa-range-slider.tpl.html",
+angular.module("src/directives/sofaForms/sofaRangeSlider/sofa-range-slider.tpl.html", []).run(["$templateCache", function($templateCache) {
+  $templateCache.put("src/directives/sofaForms/sofaRangeSlider/sofa-range-slider.tpl.html",
     "<div class=\"sofa-range-slider-wrapper\">\n" +
     "    <span ng-bind=\"displayFn(rangeStart)\" class=\"sofa-range-slider-label--start\"></span>\n" +
     "    <span ng-bind=\"displayFn(rangeEnd)\" class=\"sofa-range-slider-label--end\"></span>\n" +
@@ -231,6 +146,67 @@ angular.module("src/directives/sofaRangeSlider/sofa-range-slider.tpl.html", []).
     "        <div class=\"sofa-range-slider__handle--end\"></div>\n" +
     "    </div>\n" +
     "</div>");
+}]);
+
+angular.module("src/directives/sofaForms/sofaSearchField/sofa-search-field.tpl.html", []).run(["$templateCache", function($templateCache) {
+  $templateCache.put("src/directives/sofaForms/sofaSearchField/sofa-search-field.tpl.html",
+    "<span class=\"sofa-search-field\">\n" +
+    "    <i class=\"sofa-search-field__icon--label\"></i>\n" +
+    "    <input type=\"text\" class=\"sofa-search-field__input\" placeholder=\"{{ placeholderText }}\"\n" +
+    "           ng-model=\"_value\" />\n" +
+    "    <i class=\"sofa-search-field__icon--clear\" ng-click=\"clearValue()\" ng-show=\"hasValue()\"></i>\n" +
+    "</span>\n" +
+    "");
+}]);
+
+angular.module("src/directives/sofaForms/sofaSelectBox/sofa-select-box.tpl.html", []).run(["$templateCache", function($templateCache) {
+  $templateCache.put("src/directives/sofaForms/sofaSelectBox/sofa-select-box.tpl.html",
+    "<div class=\"sofa-select-box\">\n" +
+    "    <span class=\"sofa-select-box__value\" ng-class=\"{'sofa-select-box__value--choose': !model && chooseText}\" ng-bind=\"displayFn(model) || chooseText\"></span>\n" +
+    "    <i class=\"sofa-select-box__icon\"></i>\n" +
+    "    <select sofa-name=\"propertyName\"\n" +
+    "            ng-required=\"{{required}}\"\n" +
+    "            class=\"sofa-select-box__native\"\n" +
+    "            ng-model=\"model\"\n" +
+    "            ng-options=\"displayFn(val) for val in data\">\n" +
+    "        <option ng-if=\"chooseText\" value=\"\">-- {{chooseText}} --</option>\n" +
+    "    </select>\n" +
+    "</div>");
+}]);
+
+angular.module("src/directives/sofaFullPageView/sofa-full-page-view.tpl.html", []).run(["$templateCache", function($templateCache) {
+  $templateCache.put("src/directives/sofaFullPageView/sofa-full-page-view.tpl.html",
+    "<div class=\"sofa-full-page-view\" ng-class=\"{'sofa-full-page-view--active': active}\">\n" +
+    "    <button class=\"sofa-full-page-view__close\" ng-click=\"closeFullPageView($event)\"></button>\n" +
+    "    <div class=\"sofa-full-page-view__content\" ng-transclude></div>\n" +
+    "</div>");
+}]);
+
+angular.module("src/directives/sofaGoBackControl/sofa-go-back-control.tpl.html", []).run(["$templateCache", function($templateCache) {
+  $templateCache.put("src/directives/sofaGoBackControl/sofa-go-back-control.tpl.html",
+    "<button class=\"sofa-go-back-control-button\" ng-click=\"goBack()\" ng-bind=\"buttonText\"></button>\n" +
+    "");
+}]);
+
+angular.module("src/directives/sofaImageZoom/sofa-image-zoom.tpl.html", []).run(["$templateCache", function($templateCache) {
+  $templateCache.put("src/directives/sofaImageZoom/sofa-image-zoom.tpl.html",
+    "<div class=\"sofa-image-zoom\" ng-class=\"{'sofa-image-zoom--active': active}\">\n" +
+    "    <img class=\"sofa-image-zoom__image\" ng-src=\"{{imageSrc}}\">\n" +
+    "</div>");
+}]);
+
+angular.module("src/directives/sofaLoadingSpinner/sofa-loading-spinner.tpl.html", []).run(["$templateCache", function($templateCache) {
+  $templateCache.put("src/directives/sofaLoadingSpinner/sofa-loading-spinner.tpl.html",
+    "<div class=\"sofa-loading-spinner\"></div>\n" +
+    "");
+}]);
+
+angular.module("src/directives/sofaPrice/sofa-price.tpl.html", []).run(["$templateCache", function($templateCache) {
+  $templateCache.put("src/directives/sofaPrice/sofa-price.tpl.html",
+    "<span class=\"sofa-price\" ng-class=\"product.hasOldPrice() ? 'sofa-price--special' : 'sofa-price--basic'\">\n" +
+    "    <span class=\"sofa-price__price--old\" ng-if=\"product.hasOldPrice()\" ng-bind=\"priceOld | currency\"></span>\n" +
+    "    <span class=\"sofa-price__price\" ng-bind=\"price | currency\"></span>\n" +
+    "</span>");
 }]);
 
 angular.module("src/directives/sofaTouchSlider/sofa-touch-slider-indicator.tpl.html", []).run(["$templateCache", function($templateCache) {
@@ -253,6 +229,33 @@ angular.module("src/directives/sofaTouchSlider/sofa-touch-slider.tpl.html", []).
     "</div>");
 }]);
 
+angular.module("src/directives/sofaVariantSelector/sofa-variant-selector.tpl.html", []).run(["$templateCache", function($templateCache) {
+  $templateCache.put("src/directives/sofaVariantSelector/sofa-variant-selector.tpl.html",
+    "<ul class=\"cc-variant-selector\" ng-if=\"variants.length\">\n" +
+    "    <li class=\"cc-variant-selector__item\" ng-repeat=\"property in properties\">\n" +
+    "        <label class=\"cc-variant-selector__label\" ng-bind=\"property.label\"></label>\n" +
+    "        <cc-select-box\n" +
+    "                model=\"selectedProperties[property.name]\"\n" +
+    "                data=\"data[property.name]\"\n" +
+    "                choose-text=\"property.label\"\n" +
+    "                property-name=\"variant_{{property.name}}\">\n" +
+    "        </cc-select-box>\n" +
+    "    </li>\n" +
+    "</ul>");
+}]);
+
+angular.module("src/directives/sofaZippy/sofa-zippy.tpl.html", []).run(["$templateCache", function($templateCache) {
+  $templateCache.put("src/directives/sofaZippy/sofa-zippy.tpl.html",
+    "<div class=\"sofa-zippy\">\n" +
+    "    <div class=\"sofa-zippy__caption\">\n" +
+    "        <span ng-bind=\"caption\"></span>\n" +
+    "        <i class=\"sofa-zippy-icon\"></i>\n" +
+    "    </div>\n" +
+    "    <div class=\"sofa-zippy__content\" ng-transclude></div>\n" +
+    "</div>\n" +
+    "");
+}]);
+
 angular.module('sdk.services.basketService', [
         // TODO: Investigate. I'm not sold this should be handled on this level. 
         store.enabled ? 'sdk.services.localStorageService' : 'sdk.services.memoryStorageService',
@@ -267,13 +270,21 @@ angular
 
 
 
-angular.module('sdk.services.checkoutService', ['sdk.services.basketService', 'sdk.services.loggingService']);
+angular.module('sdk.services.checkoutService', [
+    'sdk.services.basketService',
+    'sdk.services.loggingService',
+    store.enabled ? 'sdk.services.localStorageService' : 'sdk.services.memoryStorageService',
+    'sdk.services.userService'
+]);
 
 angular
     .module('sdk.services.checkoutService')
-    .factory('checkoutService', ['$http', '$q', 'basketService', 'loggingService', 'configService', function($http, $q, basketService, loggingService, configService){
-        return new cc.CheckoutService($http, $q, basketService, loggingService, configService);
-}]);
+    .factory('checkoutService', [
+        '$http', '$q', 'basketService', 'loggingService', 'configService', 'storageService', 'userService',
+        function ($http, $q, basketService, loggingService, configService, storageService, userService) {
+            return new cc.CheckoutService($http, $q, basketService, loggingService, configService, storageService, userService);
+        }
+    ]);
 
 
 
@@ -700,22 +711,6 @@ angular
         return self;
     }]);
 
-angular.module('sdk.directives.ccAddress', ['src/directives/ccAddress/ccaddress.tpl.html']);
-
-angular.module('sdk.directives.ccAddress')
-    .directive('ccAddress', function() {
-
-        'use strict';
-
-        return {
-            restrict: 'E',
-            replace: true,
-            scope: {
-                data: '=',
-            },
-            templateUrl: 'src/directives/ccAddress/ccaddress.tpl.html'
-        };
-    });
 
 angular.module('sdk.directives.ccBreadcrumbs', [
         'src/directives/ccBreadcrumbs/cc-breadcrumbs.tpl.html',
@@ -799,181 +794,6 @@ angular.module('sdk.directives.ccBreadcrumbs')
         };
     }]);
 
-angular.module('sdk.directives.ccCategoryTreeView', [
-        'sdk.directives.ccTemplateCode',
-        'src/directives/ccCategoryTreeView/cc-category-tree-view.tpl.html'
-    ]);
-angular.module('sdk.directives.ccCategoryTreeView')
-    .directive('ccCategoryTreeView', ['couchService', 'categoryTreeViewRemote', function(couchService, categoryTreeViewRemote) {
-
-        'use strict';
-
-        return {
-            restrict: 'EA',
-            scope:{},
-            replace: true,
-            templateUrl: 'src/directives/ccCategoryTreeView/cc-category-tree-view.tpl.html',
-            link: function($scope, $element, attributes, controller){
-                couchService
-                    .getCategory()
-                    .then(function(rootCategory){
-                        $scope.items = rootCategory && rootCategory.children ? rootCategory.children : [];
-                        $scope.item = rootCategory;
-                        $scope.isRoot = true;
-                        categoryTreeViewRemote.toggleVisibility(rootCategory);
-
-                        $scope.items.forEach(function(item){
-                            categoryTreeViewRemote.setItemLevel(item, 1);
-                        });
-
-                    });
-            }
-        };
-    }]);
-angular.module('sdk.directives.ccCategoryTreeView')
-    .factory('categoryTreeViewRemote', [function() {
-
-        'use strict';
-
-        var self = {};
-
-        var activeItem = null;
-
-        self.setActive = function(item){
-            asurePrivateStore(item);
-
-            if (activeItem){
-                activeItem._categoryTreeView.isActive = false;
-            }
-
-            item._categoryTreeView.isActive = true;
-            self.setVisibility(item, true, true);
-
-            activeItem = item;
-        };
-
-        self.setVisibility = function(item, visbility, upwardsRecursive){
-            asurePrivateStore(item);
-            item._categoryTreeView.isVisible = visbility;
-            if (item.parent && upwardsRecursive){
-                self.setVisibility(item.parent, visbility, upwardsRecursive);
-            }
-        };
-
-        self.toggleVisibility = function(item){
-            asurePrivateStore(item);
-            item._categoryTreeView.isVisible = !item._categoryTreeView.isVisible;
-        };
-
-        self.setItemLevel = function(item, level){
-            asurePrivateStore(item);
-            item._categoryTreeView.level = level;
-        };
-
-        var asurePrivateStore = function(item){
-            if (!item._categoryTreeView){
-                item._categoryTreeView = { isVisible: false };
-            }
-        };
-
-        return self;
-    }]);
-angular.module('sdk.directives.ccCategoryTreeView')
-    .directive('ccNestedCategoryItem', ['$compile', 'categoryTreeViewRemote', 'navigationService', 'snapRemote', function($compile, categoryTreeViewRemote, navigationService) {
-
-        'use strict';
-
-        return {
-            restrict: 'A',
-            require: '^ccTemplateCode',
-            link: function($scope, $element, attributes, controller){
-                $scope.isRoot = false;
-                if ($scope.item.children){
-                    $scope.items = $scope.item.children;
-                    var html = $compile(controller.templateCode)($scope);
-                    $element.append(html);
-                }
-                $scope.remoteControl = categoryTreeViewRemote;
-
-                $scope.doAction = function($event, item){
-                    $event.preventDefault();
-                    if (!item.hasChildren){
-                        categoryTreeViewRemote.setActive(item);
-                        navigationService.navigateToUrl(item.getOriginFullUrl());
-                    } else {
-                        categoryTreeViewRemote.toggleVisibility(item);
-                    }
-                };
-            }
-        };
-    }]);
-
-angular.module('sdk.directives.ccCheckBox', ['src/directives/ccCheckBox/cc-checkbox.tpl.html']);
-
-angular.module('sdk.directives.ccCheckBox')
-    .directive('ccCheckBox', function () {
-
-        'use strict';
-
-        var instanceCount = 0;
-
-        return {
-            restrict: 'E',
-            replace: true,
-            scope: {
-                model: '=',
-                label: '=',
-                value: '=',
-                isRequired: '=?',
-                disabled: '=?',
-                propertyName: '@'
-            },
-            templateUrl: 'src/directives/ccCheckBox/cc-checkbox.tpl.html',
-            controller: ['$scope', function ($scope) {
-                return {
-                    getId: function () {
-                        return $scope.id;
-                    }
-                };
-            }],
-            link: function (scope) {
-                instanceCount++;
-                scope.id = instanceCount;
-
-                var isArrayData = angular.isArray(scope.model);
-
-                scope.innerModel = isArrayData ? '' : scope.model;
-
-                // In case label comes in as a number, which doesn't work with the html parser
-                scope.label = scope.label + '';
-
-                if (isArrayData) {
-                    // Changing the innerModel should change the outer model
-                    scope.$watch('innerModel', function (nv, ov) {
-                        if (nv !== ov) {
-                            var i = scope.model.indexOf(scope.value);
-
-                            if (nv === true && i === -1) {
-                                scope.model.push(scope.value);
-                            } else if (!nv && i > -1) {
-                                scope.model.splice(i, 1);
-                            }
-                        }
-                    });
-                    // Changes in the outer model must be reflected in the innerModel
-                    scope.$watch('model', function (nv) {
-                        var i = nv.indexOf(scope.value);
-                        scope.innerModel = i > -1;
-                    }, true);
-                } else {
-                    scope.$watch('innerModel', function (nv) {
-                        scope.model = nv;
-                    });
-                }
-            }
-        };
-    });
-
 
 angular.module('sdk.directives.ccFixedToolbarsView', []);
 
@@ -995,40 +815,6 @@ angular.module('sdk.directives.ccFixedToolbarsView')
             templateUrl: 'src/directives/ccFixedToolbarsView/fixedtoolbarsview.html'
         };
     });
-angular.module('sdk.directives.ccFooterLinks', [
-    'src/directives/ccFooterLinks/cc-footer-links.tpl.html',
-    'sdk.services.configService'
-]);
-
-angular
-    .module('sdk.directives.ccFooterLinks')
-    .directive('ccFooterLinks', ['configService', 'navigationService', function(configService, navigationService) {
-
-        'use strict';
-
-        var defaultIfUndefined = function(scope, property, defaultVal){
-            scope[property] = scope[property] === undefined ? defaultVal : scope[property];
-        };
-
-        var ABOUT_PAGES = configService.get('aboutPages');
-
-        return {
-            restrict: 'EA',
-            replace: true,
-            transclude: true,
-            scope: {
-                items: '=?'
-            },
-            templateUrl: 'src/directives/ccFooterLinks/cc-footer-links.tpl.html',
-            link: function(scope, element, attrs){
-                defaultIfUndefined(scope, 'items', ABOUT_PAGES);
-
-                scope.goTo = function(item){
-                    navigationService.navigateToContentPage(item.id);
-                };
-            }
-        };
-    }]);
 angular.module('sdk.directives.ccGoBackButton', ['src/directives/ccGoBackButton/cc-go-back-button.tpl.html']);
 
 angular.module('sdk.directives.ccGoBackButton')
@@ -1922,64 +1708,6 @@ angular.module('sdk.directives.ccImageZoom')
     };
 });
 
-angular.module('sdk.directives.ccInclude', []);
-
-angular.module('sdk.directives.ccInclude')
-    .directive('ccInclude', ['$http', '$templateCache', '$compile', function($http, $templateCache, $compile) {
-
-        'use strict';
-
-        return {
-                restrict: 'A',
-                link: function (scope, element, attributes) {
-                    var templateUrl = scope.$eval(attributes.ccInclude);
-                    $http
-                        .get(templateUrl, {cache: $templateCache})
-                        .success(function (tplContent) {
-                            element.replaceWith($compile(tplContent.trim())(scope));
-                        });
-                }
-            };
-    }]);
-angular.module('sdk.directives.ccInject', []);
-
-angular
-    .module('sdk.directives.ccInject')
-    .directive('ccInject', ['$templateCache', '$http', '$compile', 'injectsService', 'deviceService', function($templateCache, $http, $compile, injectsService, deviceService) {
-
-        'use strict';
-
-        return {
-            restrict: 'EA',
-            replace: true,
-            scope: {
-                target: '@'
-            },
-            link: function(scope, element, attrs){
-                scope.injectsService = injectsService;
-                scope.deviceService = deviceService;
-
-                //if it's an inject on the product page, automatically expose
-                //the product to the inject
-                if (scope.$parent.product){
-                    scope.product = scope.$parent.product;
-                }
-
-                var templateUrl = injectsService.getTemplate(scope.target);
-
-                if (templateUrl === null){
-                    element.remove();
-                }
-                else{
-                    $http
-                        .get(templateUrl, {cache: $templateCache})
-                        .success(function (tplContent) {
-                            element.replaceWith($compile(tplContent)(scope));
-                        });
-                }
-            }
-        };
-    }]);
 angular.module('sdk.directives.ccIosInputFocusFix', []);
 // On iOS, when you focus an input and then rotate the screen, the layout
 // tends to mess up. To fix it we force a DOM refresh on orientation change.
@@ -2020,160 +1748,6 @@ angular
 
         return self;
 }]);
-angular.module('sdk.directives.ccLazyValidation', []);
-
-/**
- * Lazy validation extends the modelController with alternative valid and invalid properties,
- * which are set with a delay. This way, the user isn't disturbed by error messages while filling
- * out a field.
- * The new properties to use in your template are
- * - ccValid
- * - ccInvalid
- */
-
-angular.module('sdk.directives.ccLazyValidation')
-    .directive('ccLazyValidation', function () {
-
-        'use strict';
-
-        var DEBOUNCE_MS_DEFAULT = 2000;
-
-        return {
-            restrict: 'A',
-            require: 'ngModel',
-            link: function ($scope, element, attrs, controller) {
-
-                var DEBOUNCE_MS = DEBOUNCE_MS_DEFAULT,
-                    offCalled = false;
-
-                if (attrs.ccLazyValidation && typeof $scope.$eval(attrs.ccLazyValidation) === 'number') {
-                    DEBOUNCE_MS = $scope.$eval(attrs.ccLazyValidation);
-                }
-
-                var checkValidity = function () {
-                    // stop all remaining watches once the user starts interacting with the field
-                    if (!offCalled) {
-                        off();
-                        offCalled = true;
-                    }
-                    if (controller.$valid) {
-                        setValid();
-                    } else {
-                        if (controller.$dirty) {
-                            debouncedError();
-                        }
-                    }
-                };
-
-                var debouncedError = cc.Util.debounce(function (stop) {
-                    if (!stop && (element[0].value === undefined || element[0].value.length > 0)) {
-                        setInvalid();
-                    }
-                }, DEBOUNCE_MS);
-
-
-                var validate = function () {
-                    if (controller.$dirty) {
-                        if (controller.$valid) {
-                            setValid();
-                        } else {
-                            setInvalid();
-                        }
-                    }
-                };
-
-                var setValid = function () {
-                    debouncedError(true);
-                    $scope.$apply(function () {
-                        controller.ccValid = true;
-                        controller.ccInvalid = false;
-                    });
-                };
-
-                var setInvalid = function () {
-                    $scope.$apply(function () {
-                        controller.ccValid = false;
-                        controller.ccInvalid = true;
-                    });
-                };
-
-                element.bind('keyup keydown', checkValidity);
-                element.bind('blur', validate);
-
-                // In case there are values coming from a controller we need to watch for changes
-                var off = $scope.$watch(function () { return controller.$viewValue; }, function (newValue) {
-                    if (newValue && newValue.length) {
-                        controller.ccValid = controller.$valid;
-                        controller.ccInvalid = controller.$invalid;
-                        off();
-                        offCalled = true;
-                    }
-                });
-
-                // Initially set to be neither valid nor invalid
-                controller.ccValid = false;
-                controller.ccInvalid = false;
-            }
-        };
-    });
-
-
-angular.module('sdk.directives.ccLoadingSpinner', ['src/directives/ccLoadingSpinner/ccloadingspinner.tpl.html']);
-
-angular.module('sdk.directives.ccLoadingSpinner')
-    .directive('ccLoadingSpinner', function() {
-
-        'use strict';
-
-        return {
-            restrict: 'EA',
-            replace: true,
-            templateUrl: 'src/directives/ccLoadingSpinner/ccloadingspinner.tpl.html'
-        };
-    });
-angular.module('sdk.directives.ccPrice', ['src/directives/ccPrice/cc-price.tpl.html']);
-
-/**
- * Creates pricing markup for prices and special prices
- *
- *
- */
-angular.module('sdk.directives.ccPrice')
-    .directive('ccPrice', function() {
-
-        'use strict';
-
-        return {
-            restrict: 'E',
-            replace: true,
-            scope: {
-                product: '=',
-                selectedVariant: '=?'
-            },
-            templateUrl: 'src/directives/ccPrice/cc-price.tpl.html',
-            link: function ($scope) {
-
-                // We can't have the template directly bind to the product.price because
-                // that's leaving out the selected variant which changes dynamically
-                // outside of the product model.
-
-                // So what we need to do is to listen manually for changes on the product or
-                // the variant and then update the price on our isolated scope.
-                var updatePrices = function() {
-                    $scope.price = $scope.product.price;
-                    $scope.priceOld = $scope.product.priceOld;
-
-                    if ($scope.selectedVariant && $scope.selectedVariant.price !== undefined) {
-                        $scope.price = $scope.selectedVariant.price;
-                    }
-                };
-
-                $scope.$watch('product', updatePrices);
-                $scope.$watch('selectedVariant', updatePrices);
-            }
-        };
-    });
-
 angular.module('sdk.directives.ccScrollFix', []);
 
 angular.module('sdk.directives.ccScrollFix')
@@ -2265,157 +1839,6 @@ angular.module('sdk.directives.ccScrollingShadow')
         };
     });
 
-angular.module('sdk.directives.ccSearchField', ['src/directives/ccSearchField/cc-search-field.tpl.html']);
-
-/**
- * Creates a search field which offers some common usability features
- *
- * - shows a search-icon at the input field
- * - provides a clear-button for the input
- * - offers an interface to focus() the input field
- * - binds to a parent model
- * - optional placeholder-text
- *
-*/
-angular.module('sdk.directives.ccSearchField')
-    .directive('ccSearchField', function() {
-
-        'use strict';
-
-        return {
-            restrict: 'E',
-            replace: true,
-            scope: {
-                focus: '=',
-                placeholderText: '=',
-                _value: '=ngModel'
-            },
-            require: '?ngModel',
-            templateUrl: 'src/directives/ccSearchField/cc-search-field.tpl.html',
-            link: function (scope, element, attrs) {
-
-                var inputField  = element.find('input')[0];
-
-                if (!attrs.ngModel) {
-                    return;
-                }
-
-                scope.hasValue = function () {
-                    return scope._value.length > 0;
-                };
-
-                scope.focusField = function () {
-                    inputField.focus();
-                };
-
-                scope.clearValue = function () {
-                    scope._value = '';
-                    scope.focusField();
-                };
-
-                scope.$watch('focus', function (newValue) {
-                    if (newValue) {
-                        scope.focusField();
-                    }
-                });
-            }
-        };
-    });
-
-angular.module('sdk.directives.ccSelectBox', ['src/directives/ccSelectBox/cc-select-box.tpl.html', 'sdk.directives.sofaName']);
-
-/**
-* Creates a mobile friendly select box that delegates to the native picker
-* 
-* Options:
-* 
-*   -   `displayValueExp` optional expression that maps values to display values.
-*       Can either be a string (e.g. 'some.nested.property') or a function 
-*       (e.g. function(value){ return value.some.nested.property; })
-*/
-angular.module('sdk.directives.ccSelectBox')
-    .directive('ccSelectBox', function() {
-
-        'use strict';
-
-        // a) "ngModel compares by reference, not value. This is important when binding to an array of objects."
-        // b) Regardless of data type also check whether the given model exists within the options-data
-        var mapModelToData = function (scope) {
-            if (scope.model) {
-                var modelInData = false;
-
-                for(var i = 0; i < scope.data.length; i++) {
-                    if (angular.equals(scope.data[i], scope.model)) {
-                        scope.model = scope.data[i];
-                        modelInData = true;
-                        break;
-                    }
-                }
-
-                if (!modelInData) {
-                    scope.model = null;
-                }
-            }
-            if (!scope.model && !scope.chooseText && scope.data.length) {
-                scope.model = scope.data[0];
-            }
-        };
-
-        return {
-            restrict: 'E',
-            replace: true,
-            scope: {
-                model: '=',
-                data: '=',
-                propertyName: '@',
-                required: '=?',
-                chooseText: '=?',
-                displayValueExp: '&'
-            },
-            templateUrl: 'src/directives/ccSelectBox/cc-select-box.tpl.html',
-            link: function (scope) {
-
-                // Initial run to map any preselected model values
-                if (scope.data) {
-                    mapModelToData(scope);
-                }
-
-                // If by any reason the data object has changed, we have to map any existing model data to the new data
-                scope.$watchCollection('data', function (newData, oldData) {
-                    if (newData !== oldData) {
-                        mapModelToData(scope);
-                    }
-                });
-
-                var displayValueFormatter = scope.displayValueExp();
-
-                //default display function that will be used if no displayValueExp is given
-                scope.displayFn = function (value) {
-                    return value;
-                };
-
-                if (angular.isFunction(displayValueFormatter)) {
-                    scope.displayFn = displayValueFormatter;
-                } else if (angular.isString(displayValueFormatter)) {
-
-                    var properties = displayValueFormatter.split('.');
-
-                    scope.displayFn = function (value) {
-
-                        if (!value) {
-                            return value;
-                        }
-                        var tempValue = value;
-                        properties.forEach(function (node) {
-                            tempValue = tempValue[node];
-                        });
-                        return tempValue;
-                    };
-                }
-            }
-        };
-    });
-
 angular.module('sdk.directives.ccTemplateCode', []);
 
 angular.module('sdk.directives.ccTemplateCode')
@@ -2473,202 +1896,34 @@ angular.module('sdk.directives.ccThumbnailBar')
         };
     });
 
-angular.module('sdk.directives.ccVariantSelector', ['src/directives/ccVariantSelector/ccvariantselector.tpl.html', 'sdk.directives.ccSelectBox']);
-
-angular.module('sdk.directives.ccVariantSelector')
-    .filter('ccVariantFilter', ['$filter', function ($filter) {
-
-        'use strict';
-
-        // variants, selectedProperties, propertyKey
-        return function (values, selectedValues, key) {
-            var selected = {
-                properties: {}
-            },
-            applyFilters = false;
-
-            // reformat for built in filter and exclude current property
-            for (var property in selectedValues) {
-                if (key !== property && selectedValues[property] !== null && selectedValues[property] !== undefined) {
-                    selected.properties[property] = selectedValues[property];
-                    applyFilters = true;
-                }
-            }
-
-            var comparator = function (obj, text) {
-                if (obj && text && typeof obj === 'object' && typeof text === 'object') {
-                    for (var textKey in text) {
-                        if (obj[textKey] !== text[textKey]) {
-                            return false;
-                        }
-                    }
-                    return true;
-                }
-            };
-
-            // extract available variants
-            var variants = applyFilters ? $filter('filter')(values, selected, comparator) : values;
-
-            // extract flat values for the curent property
-            var result = [];
-            variants.forEach(function (variant) {
-                if (result.indexOf(variant.properties[key]) === -1 && variant.stock > 0) {
-                    result.push(variant.properties[key]);
-                }
-            });
-
-            return result;
-        };
-    }])
-
-    .directive('ccVariantSelector', ['$filter', 'localeService', function ($filter, localeService) {
-
-        'use strict';
-
-        return {
-            restrict: 'E',
-            replace: true,
-            scope: {
-                variants: '=',
-                variant: '=?',
-                selectedProperties: '=?',
-                chooseText: '=?'
-            },
-            templateUrl: 'src/directives/ccVariantSelector/ccvariantselector.tpl.html',
-            link: function (scope) {
-
-                // extract flat list of available properties
-                // maybe iterating on the first variant is enough ?
-                scope.properties = {};
-                scope.selectedProperties = scope.selectedProperties || {};
-                scope.data = {};
-
-                var getDataByProperty = function (property) {
-                    return $filter('ccVariantFilter')(scope.variants, scope.selectedProperties, property);
-                };
-
-                var setData = function () {
-                    angular.forEach(scope.properties, function (property) {
-                        scope.data[property.name] = getDataByProperty(property.name);
-                    });
-                };
-
-                var findVariant = function (variants, selectedProperties) {
-                    var filteredVariants = variants.filter(function (variant) {
-                        for (var property in variant.properties) {
-                            if (variant.properties[property] !== selectedProperties[property]) {
-                                return false;
-                            }
-                        }
-
-                        return true;
-                    });
-
-                    return filteredVariants.length ? filteredVariants[0] : null;
-                };
-
-                scope.variants.forEach(function (variant) {
-                    for (var property in variant.properties) {
-                        //create a placeholder value on the selectedProperties hash
-                        //for each available property. So we can later figure out
-                        //which are missing.
-                        scope.selectedProperties[property] = null;
-                        if (!scope.properties[property]) {
-                            scope.properties[property] = {
-                                name: property,
-                                label: localeService.getTranslation('variantSelector.' + property) || property
-                            };
-                        }
-                    }
-                });
-
-                scope.$watch('selectedProperties', function (newVal) {
-                    scope.variant = findVariant(scope.variants, newVal);
-                    setData();
-                }, true);
-            }
-        };
-    }]);
-
-
-angular.module('sdk.directives.ccZippy', ['src/directives/ccZippy/cc-zippy.tpl.html']);
-
-angular.module('sdk.directives.ccZippy')
-    .directive('ccZippy', function() {
-
-        'use strict';
-
-        var defaultIfUndefined = function(scope, property, defaultVal){
-            scope[property] = scope[property] === undefined ? defaultVal : scope[property];
-        };
-
-        return {
-            restrict: 'E',
-            replace: true,
-            transclude: true,
-            scope: {
-                caption: '=?',
-                opened: '=?'
-            },
-            templateUrl: 'src/directives/ccZippy/cc-zippy.tpl.html',
-            link: function(scope, $element, attrs){
-                var element = $element[0],
-                    $caption = angular.element(element.querySelectorAll('.cc-zippy__caption')[0]),
-                    $icon = angular.element(element.querySelectorAll('.cc-zippy-icon')[0]),
-                    openedIconClass = 'cc-zippy-icon--opened',
-                    closedIconClass = 'cc-zippy-icon--closed';
-
-                defaultIfUndefined(scope, 'caption', 'default');
-
-                scope.opened = attrs.initOpened === undefined ? false : (attrs.initOpened === "true");
-
-                var setOpen = function(opened){
-                    $element.removeClass(opened ? 'cc-zippy--closed' : 'cc-zippy--opened');
-                    $element.addClass(opened ? 'cc-zippy--opened' : 'cc-zippy--closed');
-                    $icon.removeClass(opened ? closedIconClass : openedIconClass);
-                    $icon.addClass(opened ? openedIconClass : closedIconClass);
-                };
-
-                var toggle = function(){
-                    scope.opened = !scope.opened;
-                    setOpen(scope.opened);
-                };
-
-                $caption.bind('click', toggle);
-
-                scope.$watch('opened', setOpen);
-
-                setOpen(scope.opened);
-            }
-        };
-    });
 angular.module('sdk.directives', [
     'sdk.directives.sofaName',
     'sdk.directives.ccFixedToolbarsView',
-    'sdk.directives.ccZippy',
-    'sdk.directives.ccFooterLinks',
-    'sdk.directives.ccSelectBox',
-    'sdk.directives.ccCheckBox',
-    'sdk.directives.ccAddress',
-    'sdk.directives.ccLazyValidation',
-    'sdk.directives.ccVariantSelector',
+    'sdk.directives.sofaZippy',
+    'sdk.directives.sofaFooterLinks',
+    'sdk.directives.sofaSelectBox',
+    'sdk.directives.sofaCheckBox',
+    'sdk.directives.sofaAddress',
+    'sdk.directives.sofaLazyValidation',
+    'sdk.directives.sofaVariantSelector',
     'sdk.directives.ccThumbnailBar',
     'sdk.directives.ccScrollingShadow',
     'sdk.directives.ccScrollFix',
-    'sdk.directives.ccLoadingSpinner',
-    'sdk.directives.ccInclude',
+    'sdk.directives.sofaLoadingSpinner',
+    'sdk.directives.sofaInclude',
     'sdk.directives.ccIosInputFocusFix',
-    'sdk.directives.ccInject',
+    'sdk.directives.sofaInject',
     'sdk.directives.ccBreadcrumbs',
     'sdk.directives.ccTemplateCode',
-    'sdk.directives.ccCategoryTreeView',
+    'sdk.directives.sofaCategoryTreeView',
     'sdk.directives.ccGoUpButton',
-    'sdk.directives.ccGoUpControl',
+    'sdk.directives.sofaGoUpControl',
     'sdk.directives.ccGoBackButton',
     'sdk.directives.ccImageFullScreen',
     'sdk.directives.ccImageZoom',
-    'sdk.directives.ccPrice',
-    'sdk.directives.ccSearchField',
+    'sdk.directives.sofaDateField',
+    'sdk.directives.sofaPrice',
+    'sdk.directives.sofaSearchField',
     'sdk.directives.sofaRadioButton',
     'sdk.directives.sofaTouchSlider',
     'sdk.directives.sofaRangeSlider',
@@ -2676,6 +1931,132 @@ angular.module('sdk.directives', [
     'sdk.directives.sofaImageZoom',
     'sdk.directives.sofaImageAspectRatio'
 ]);
+
+angular.module('sdk.directives.sofaAddress', ['src/directives/sofaAddress/sofa-address.tpl.html']);
+
+angular.module('sdk.directives.sofaAddress')
+    .directive('ccAddress', function() {
+
+        'use strict';
+
+        return {
+            restrict: 'E',
+            replace: true,
+            scope: {
+                data: '='
+            },
+            templateUrl: 'src/directives/sofaAddress/sofa-address.tpl.html'
+        };
+    });
+angular.module('sdk.directives.sofaCategoryTreeView', [
+        'sdk.directives.ccTemplateCode',
+        'src/directives/sofaCategoryTreeView/sofa-category-tree-view.tpl.html'
+    ]);
+angular.module('sdk.directives.sofaCategoryTreeView')
+    .directive('ccCategoryTreeView', ['couchService', 'categoryTreeViewRemote', function (couchService, categoryTreeViewRemote) {
+
+        'use strict';
+
+        return {
+            restrict: 'EA',
+            scope: {},
+            replace: true,
+            templateUrl: 'src/directives/sofaCategoryTreeView/sofa-category-tree-view.tpl.html',
+            link: function ($scope) {
+                couchService
+                    .getCategory()
+                    .then(function (rootCategory) {
+                        $scope.items = rootCategory && rootCategory.children ? rootCategory.children : [];
+                        $scope.item = rootCategory;
+                        $scope.isRoot = true;
+                        categoryTreeViewRemote.toggleVisibility(rootCategory);
+
+                        $scope.items.forEach(function (item) {
+                            categoryTreeViewRemote.setItemLevel(item, 1);
+                        });
+
+                    });
+            }
+        };
+    }]);
+angular.module('sdk.directives.sofaCategoryTreeView')
+    .factory('categoryTreeViewRemote', [function () {
+
+        'use strict';
+
+        var self = {};
+
+        var activeItem = null;
+
+        self.setActive = function (item) {
+            asurePrivateStore(item);
+
+            if (activeItem) {
+                activeItem._categoryTreeView.isActive = false;
+            }
+
+            item._categoryTreeView.isActive = true;
+            self.setVisibility(item, true, true);
+
+            activeItem = item;
+        };
+
+        self.setVisibility = function (item, visbility, upwardsRecursive) {
+            asurePrivateStore(item);
+            item._categoryTreeView.isVisible = visbility;
+            if (item.parent && upwardsRecursive) {
+                self.setVisibility(item.parent, visbility, upwardsRecursive);
+            }
+        };
+
+        self.toggleVisibility = function (item) {
+            asurePrivateStore(item);
+            item._categoryTreeView.isVisible = !item._categoryTreeView.isVisible;
+        };
+
+        self.setItemLevel = function (item, level) {
+            asurePrivateStore(item);
+            item._categoryTreeView.level = level;
+        };
+
+        var asurePrivateStore = function (item) {
+            if (!item._categoryTreeView) {
+                item._categoryTreeView = { isVisible: false };
+            }
+        };
+
+        return self;
+    }]);
+angular.module('sdk.directives.sofaCategoryTreeView')
+    .directive('ccNestedCategoryItem', ['$compile', 'categoryTreeViewRemote', 'navigationService',
+        function ($compile, categoryTreeViewRemote, navigationService) {
+
+            'use strict';
+
+            return {
+                restrict: 'A',
+                require: '^ccTemplateCode',
+                link: function ($scope, $element, attributes, controller) {
+                    $scope.isRoot = false;
+                    if ($scope.item.children) {
+                        $scope.items = $scope.item.children;
+                        var html = $compile(controller.templateCode)($scope);
+                        $element.append(html);
+                    }
+                    $scope.remoteControl = categoryTreeViewRemote;
+
+                    $scope.doAction = function ($event, item) {
+                        $event.preventDefault();
+                        if (!item.hasChildren) {
+                            categoryTreeViewRemote.setActive(item);
+                            navigationService.navigateToUrl(item.getOriginFullUrl());
+                        } else {
+                            categoryTreeViewRemote.toggleVisibility(item);
+                        }
+                    };
+                }
+            };
+        }]);
 
 angular.module('sofa.dateField', [
     'src/directives/sofaDateField/sofa-date-field.tpl.html',
@@ -2787,6 +2168,672 @@ angular.module('sofa.dateField')
         return self;
     });
 
+angular.module('sdk.directives.sofaFooterLinks', [
+    'src/directives/sofaFooterLinks/sofa-footer-links.tpl.html',
+    'sdk.services.configService'
+]);
+
+angular
+    .module('sdk.directives.sofaFooterLinks')
+    .directive('ccFooterLinks', ['configService', 'navigationService', function(configService, navigationService) {
+
+        'use strict';
+
+        var defaultIfUndefined = function(scope, property, defaultVal){
+            scope[property] = scope[property] === undefined ? defaultVal : scope[property];
+        };
+
+        var ABOUT_PAGES = configService.get('aboutPages');
+
+        return {
+            restrict: 'EA',
+            replace: true,
+            transclude: true,
+            scope: {
+                items: '=?'
+            },
+            templateUrl: 'src/directives/sofaFooterLinks/sofa-footer-links.tpl.html',
+            link: function(scope, element, attrs){
+                defaultIfUndefined(scope, 'items', ABOUT_PAGES);
+
+                scope.goTo = function(item){
+                    navigationService.navigateToContentPage(item.id);
+                };
+            }
+        };
+    }]);
+angular.module('sdk.directives.sofaCheckBox', ['src/directives/sofaForms/sofaCheckBox/sofa-check-box.tpl.html']);
+
+angular.module('sdk.directives.sofaCheckBox')
+    .directive('ccCheckBox', function () {
+
+        'use strict';
+
+        var instanceCount = 0;
+
+        return {
+            restrict: 'E',
+            replace: true,
+            scope: {
+                model: '=',
+                label: '=',
+                value: '=',
+                isRequired: '=?',
+                disabled: '=?',
+                propertyName: '@'
+            },
+            templateUrl: 'src/directives/sofaForms/sofaCheckBox/sofa-check-box.tpl.html',
+            controller: ['$scope', function ($scope) {
+                return {
+                    getId: function () {
+                        return $scope.id;
+                    }
+                };
+            }],
+            link: function (scope) {
+                instanceCount++;
+                scope.id = instanceCount;
+
+                var isArrayData = angular.isArray(scope.model);
+
+                scope.innerModel = isArrayData ? '' : scope.model;
+
+                // In case label comes in as a number, which doesn't work with the html parser
+                scope.label = scope.label + '';
+
+                if (isArrayData) {
+                    // Changing the innerModel should change the outer model
+                    scope.$watch('innerModel', function (nv, ov) {
+                        if (nv !== ov) {
+                            var i = scope.model.indexOf(scope.value);
+
+                            if (nv === true && i === -1) {
+                                scope.model.push(scope.value);
+                            } else if (!nv && i > -1) {
+                                scope.model.splice(i, 1);
+                            }
+                        }
+                    });
+                    // Changes in the outer model must be reflected in the innerModel
+                    scope.$watch('model', function (nv) {
+                        var i = nv.indexOf(scope.value);
+                        scope.innerModel = i > -1;
+                    }, true);
+                } else {
+                    scope.$watch('innerModel', function (nv) {
+                        scope.model = nv;
+                    });
+                }
+            }
+        };
+    });
+
+angular.module('sdk.directives.sofaForms', [
+    'sdk.directives.sofaCheckBox',
+    'sdk.directives.sofaLazyValidation',
+    'sdk.directives.sofaName',
+    'sdk.directives.sofaRadioButton',
+    'sdk.directives.sofaRangeSlider',
+    'sdk.directives.sofaSearchField',
+    'sdk.directives.sofaSelectBox'
+]);
+
+angular.module('sdk.directives.sofaLazyValidation', []);
+
+/**
+ * Lazy validation extends the modelController with alternative valid and invalid properties,
+ * which are set with a delay. This way, the user isn't disturbed by error messages while filling
+ * out a field.
+ * The new properties to use in your template are
+ * - ccValid
+ * - ccInvalid
+ */
+
+angular.module('sdk.directives.sofaLazyValidation')
+    .directive('ccLazyValidation', function () {
+
+        'use strict';
+
+        var DEBOUNCE_MS_DEFAULT = 2000;
+
+        return {
+            restrict: 'A',
+            require: 'ngModel',
+            link: function ($scope, element, attrs, controller) {
+
+                var DEBOUNCE_MS = DEBOUNCE_MS_DEFAULT,
+                    offCalled = false;
+
+                if (attrs.ccLazyValidation && typeof $scope.$eval(attrs.ccLazyValidation) === 'number') {
+                    DEBOUNCE_MS = $scope.$eval(attrs.ccLazyValidation);
+                }
+
+                var checkValidity = function () {
+                    // stop all remaining watches once the user starts interacting with the field
+                    if (!offCalled) {
+                        off();
+                        offCalled = true;
+                    }
+                    if (controller.$valid) {
+                        setValid();
+                    } else {
+                        if (controller.$dirty) {
+                            debouncedError();
+                        }
+                    }
+                };
+
+                var debouncedError = cc.Util.debounce(function (stop) {
+                    if (!stop && (element[0].value === undefined || element[0].value.length > 0)) {
+                        setInvalid();
+                    }
+                }, DEBOUNCE_MS);
+
+
+                var validate = function () {
+                    if (controller.$dirty) {
+                        if (controller.$valid) {
+                            setValid();
+                        } else {
+                            setInvalid();
+                        }
+                    }
+                };
+
+                var setValid = function () {
+                    debouncedError(true);
+                    $scope.$apply(function () {
+                        controller.ccValid = true;
+                        controller.ccInvalid = false;
+                    });
+                };
+
+                var setInvalid = function () {
+                    $scope.$apply(function () {
+                        controller.ccValid = false;
+                        controller.ccInvalid = true;
+                    });
+                };
+
+                element.bind('keyup keydown', checkValidity);
+                element.bind('blur', validate);
+
+                // In case there are values coming from a controller we need to watch for changes
+                var off = $scope.$watch(function () { return controller.$viewValue; }, function (newValue) {
+                    if (newValue && newValue.length) {
+                        controller.ccValid = controller.$valid;
+                        controller.ccInvalid = controller.$invalid;
+                        off();
+                        offCalled = true;
+                    }
+                });
+
+                // Initially set to be neither valid nor invalid
+                controller.ccValid = false;
+                controller.ccInvalid = false;
+            }
+        };
+    });
+
+// Taken from https://github.com/angular/angular.js/pull/6569
+// Credits to https://github.com/sjbarker
+angular.module('sdk.directives.sofaName', [])
+    .directive('sofaName', function () {
+
+        'use strict';
+
+        return {
+            priority: 100,
+            restrict: 'A',
+            require: 'ngModel',
+            link: {
+                pre: function sofaNameLinkFn(scope, elem, attrs, ctrl) {
+                    ctrl.$name = scope.$eval(attrs.sofaName);
+                    attrs.$set('name', ctrl.$name);
+                }
+            }
+        };
+    });
+
+angular.module('sdk.directives.sofaRadioButton', ['src/directives/sofaForms/sofaRadioButton/sofa-radio-button.tpl.html']);
+
+angular.module('sdk.directives.sofaRadioButton')
+    .directive('sofaRadioButton', function () {
+
+        'use strict';
+
+        var instanceCount = 0;
+
+        return {
+            restrict: 'E',
+            replace: true,
+            scope: {
+                model: '=',
+                label: '=',
+                value: '=',
+                disabled: '=?',
+                propertyName: '@'
+            },
+            templateUrl: 'src/directives/sofaForms/sofaRadioButton/sofa-radio-button.tpl.html',
+            link: function (scope) {
+                instanceCount++;
+                scope.id = instanceCount;
+            }
+        };
+    });
+
+/* global Hammer */
+
+/**
+ * Horizontal Range Slider Control.
+ * Dependencies: hammerjs (v.2.0)
+ */
+
+// TODO: check performance
+// TODO: code can be optimized at several places...
+// TODO: add disabled state (add "disabled: '=?'")
+// TODO: make it work with ngModel and sofa-name (add "propertyName: '@'")
+
+angular.module('sdk.directives.sofaRangeSlider', ['src/directives/sofaForms/sofaRangeSlider/sofa-range-slider.tpl.html']);
+
+angular.module('sdk.directives.sofaRangeSlider')
+    .directive('sofaRangeSlider', function () {
+
+        'use strict';
+
+        if (!angular.isFunction(Hammer)) {
+            throw new Error('Hammer.js is missing');
+        }
+
+        var TRANSFORM_PROPERTY = 'transform';
+
+        ['webkit', 'Moz', 'O', 'ms'].every(function (prefix) {
+            var e = prefix + 'Transform';
+            if (document.body.style[e] !== undefined) {
+                TRANSFORM_PROPERTY = e;
+                return false;
+            }
+            return true;
+        });
+
+        var isVisible = function (el) {
+            return el.offsetWidth > 0;
+        };
+
+        return {
+            restrict: 'E',
+            replace: true,
+            scope: {
+                model: '=',
+                minLimit: '=',
+                maxLimit: '=',
+                step: '=?',
+                displayValueExp: '&?'
+            },
+            templateUrl: 'src/directives/sofaForms/sofaRangeSlider/sofa-range-slider.tpl.html',
+            link: function ($scope, $element) {
+
+                var startHandle = $element[0].querySelector('.sofa-range-slider__handle--start');
+                var endHandle   = $element[0].querySelector('.sofa-range-slider__handle--end');
+                var slider      = $element[0].querySelector('.sofa-range-slider');
+                var range       = $element[0].querySelector('.sofa-range-slider__range');
+                var dimensions;
+
+                if (!$scope.model) {
+                    $scope.model = {
+                        min: $scope.minLimit,
+                        max: $scope.maxLimit
+                    };
+                }
+
+                $scope.rangeStart = $scope.model.min;
+                $scope.rangeEnd   = $scope.model.max;
+
+                var getDimensions = function () {
+                    return {
+                        totalWidth:  slider.getBoundingClientRect().width,
+                        handleWidth: startHandle.getBoundingClientRect().width
+                    };
+                };
+
+                dimensions = getDimensions();
+
+                // The slider might be loaded in a hidden state.
+                // If so, we're not having its dimensions until it's shown...
+                if (dimensions.totalWidth === 0) {
+                    var off = $scope.$watch(function () {
+                        return isVisible(slider);
+                    }, function (nv) {
+                        if (nv) {
+                            dimensions = getDimensions();
+                            setup();
+                            off();
+                        }
+                    });
+                }
+
+                var positionTracker = {
+                    min: 0,
+                    max: 0
+                };
+
+                var savePosition = function (type, position) {
+                    positionTracker[type] = position;
+                };
+
+                $scope.displayFn = function (value) {
+                    return angular.isFunction($scope.displayValueExp) ? $scope.displayValueExp({value: value}) : value;
+                };
+
+                var getInnerModel = function (totalWidth, model, min, max, step) {
+                    if (!model) {
+                        return false;
+                    }
+
+                    var modelStart = model.min;
+                    var modelEnd = model.max;
+                    var startPosition, endPosition, startPercentage, endPercentage, minLimit, maxLimit;
+
+                    startPercentage = modelStart * 100 / max;
+                    endPercentage = modelEnd * 100 / max;
+
+                    startPosition = parseInt(totalWidth / 100 * startPercentage, 10);
+                    endPosition = -(totalWidth - parseInt(totalWidth / 100 * endPercentage, 10));
+
+                    minLimit = parseInt(max / 100 * startPercentage, 10);
+                    maxLimit = parseInt(max / 100 * endPercentage, 10);
+
+                    if (step) {
+                        [startPosition, endPosition, minLimit, maxLimit].forEach(function (value) {
+                            value = Math.round(value * step) / step;
+                        });
+                    }
+
+                    startHandle.style[TRANSFORM_PROPERTY] = 'translateX(' + startPosition + 'px)';
+                    endHandle.style[TRANSFORM_PROPERTY] = 'translateX(' + endPosition + 'px)';
+
+                    savePosition('min', startPosition);
+                    savePosition('max', endPosition);
+
+                    return {
+                        startPosition: startPosition,
+                        endPosition: endPosition,
+                        minLimit: minLimit,
+                        maxLimit: maxLimit
+                    };
+                };
+
+                var setup = function () {
+                    var initialModel = getInnerModel(dimensions.totalWidth, $scope.model, $scope.minLimit, $scope.maxLimit, $scope.step);
+
+                    // Inner model (updates the labels while dragging a handle)
+                    $scope.rangeStart = initialModel ? initialModel.minLimit : $scope.minLimit;
+                    $scope.rangeEnd   = initialModel ? initialModel.maxLimit : $scope.maxLimit;
+
+                    range.style.left  = initialModel ? initialModel.startPosition + 'px' : '0';
+                    range.style.right = initialModel ? Math.abs(initialModel.endPosition) + 'px' : '0';
+                };
+
+                if (dimensions.totalWidth > 0) {
+                    setup();
+                }
+
+                var setSlider = function (type, value) {
+                    var percentage, newValue;
+                    if (type === 'min') {
+                        percentage = value * 100 / dimensions.totalWidth;
+                        newValue = parseInt($scope.maxLimit / 100 * percentage, 10);
+                        if ($scope.step) {
+                            newValue = Math.round(newValue / $scope.step) * $scope.step;
+                        }
+                        $scope.$apply(function () {
+                            $scope.rangeStart = newValue;
+                        });
+                        range.style.left  = value + 'px';
+                    } else {
+                        percentage = (dimensions.totalWidth + value) * 100 / dimensions.totalWidth;
+                        newValue = parseInt($scope.maxLimit / 100 * percentage, 10);
+                        if ($scope.step) {
+                            newValue = Math.round(newValue / $scope.step) * $scope.step;
+                        }
+                        $scope.$apply(function () {
+                            $scope.rangeEnd = newValue;
+                        });
+                        range.style.right = Math.abs(value) + 'px';
+                    }
+                };
+
+                // Updates the model after the range slider was moved by touch
+                var updateModel = function () {
+                    $scope.$apply(function () {
+                        $scope.model = {
+                            min: $scope.rangeStart,
+                            max: $scope.rangeEnd
+                        };
+                    });
+                };
+
+                // Watches for model changes from the outside
+                $scope.$watch('model', function (nv, ov) {
+                    if (nv !== ov) {
+                        setup();
+                    }
+                }, true);
+
+                var moveElement = function (type, el, delta, final) {
+                    var newPos, minPos, maxPos;
+
+                    if (type === 'min') {
+                        newPos = positionTracker.min + delta;
+                        minPos = 0;
+                        maxPos = dimensions.totalWidth - Math.abs(positionTracker.max) - (dimensions.handleWidth * 2);
+                        if (newPos < minPos) {
+                            newPos = minPos;
+                        } else if (newPos > maxPos) {
+                            newPos = maxPos;
+                        }
+                        // update inner start model
+                        setSlider(type, newPos);
+                    } else {
+                        newPos = positionTracker.max + delta;
+                        minPos = -(dimensions.totalWidth - positionTracker.min - (dimensions.handleWidth * 2));
+                        maxPos = 0;
+                        if (newPos < minPos) {
+                            newPos = minPos;
+                        } else if (newPos > maxPos) {
+                            newPos = maxPos;
+                        }
+                        // update inner end model
+                        setSlider(type, newPos);
+                    }
+                    el.style[TRANSFORM_PROPERTY] = 'translateX(' + newPos + 'px)';
+
+                    if (final) {
+                        savePosition(type, newPos);
+                        updateModel();
+                    }
+                };
+
+                // Touch stuff
+                var mcA = new Hammer.Manager(startHandle);
+                var mcB = new Hammer.Manager(endHandle);
+
+                var panConfig = {
+                    direction: Hammer.DIRECTION_HORIZONTAL,
+                    threshold: 10,
+                    touchAction: 'pan'
+                };
+
+                var horizontalA = new Hammer.Pan(panConfig);
+                var horizontalB = new Hammer.Pan(panConfig);
+
+                mcA.add(horizontalA);
+                mcB.add(horizontalB);
+
+                mcA.on('panmove panend', function (e) {
+                    e.preventDefault();
+                    moveElement('min', startHandle, parseInt(e.deltaX, 10), e.type === 'panend');
+                });
+
+                mcB.on('panmove panend', function (e) {
+                    e.preventDefault();
+                    moveElement('max', endHandle, parseInt(e.deltaX, 10), e.type === 'panend');
+                });
+            }
+        };
+    });
+
+angular.module('sdk.directives.sofaSearchField', ['src/directives/sofaForms/sofaSearchField/sofa-search-field.tpl.html']);
+
+/**
+ * Creates a search field which offers some common usability features
+ *
+ * - shows a search-icon at the input field
+ * - provides a clear-button for the input
+ * - offers an interface to focus() the input field
+ * - binds to a parent model
+ * - optional placeholder-text
+ *
+*/
+angular.module('sdk.directives.sofaSearchField')
+    .directive('ccSearchField', function() {
+
+        'use strict';
+
+        return {
+            restrict: 'E',
+            replace: true,
+            scope: {
+                focus: '=',
+                placeholderText: '=',
+                _value: '=ngModel'
+            },
+            require: '?ngModel',
+            templateUrl: 'src/directives/sofaForms/sofaSearchField/sofa-search-field.tpl.html',
+            link: function (scope, element, attrs) {
+
+                var inputField  = element.find('input')[0];
+
+                if (!attrs.ngModel) {
+                    return;
+                }
+
+                scope.hasValue = function () {
+                    return scope._value.length > 0;
+                };
+
+                scope.focusField = function () {
+                    inputField.focus();
+                };
+
+                scope.clearValue = function () {
+                    scope._value = '';
+                    scope.focusField();
+                };
+
+                scope.$watch('focus', function (newValue) {
+                    if (newValue) {
+                        scope.focusField();
+                    }
+                });
+            }
+        };
+    });
+
+angular.module('sdk.directives.sofaSelectBox', ['src/directives/sofaForms/sofaSelectBox/sofa-select-box.tpl.html', 'sdk.directives.sofaName']);
+
+/**
+* Creates a mobile friendly select box that delegates to the native picker
+* 
+* Options:
+* 
+*   -   `displayValueExp` optional expression that maps values to display values.
+*       Can either be a string (e.g. 'some.nested.property') or a function 
+*       (e.g. function(value){ return value.some.nested.property; })
+*/
+angular.module('sdk.directives.sofaSelectBox')
+    .directive('ccSelectBox', function() {
+
+        'use strict';
+
+        // a) "ngModel compares by reference, not value. This is important when binding to an array of objects."
+        // b) Regardless of data type also check whether the given model exists within the options-data
+        var mapModelToData = function (scope) {
+            if (scope.model) {
+                var modelInData = false;
+
+                for(var i = 0; i < scope.data.length; i++) {
+                    if (angular.equals(scope.data[i], scope.model)) {
+                        scope.model = scope.data[i];
+                        modelInData = true;
+                        break;
+                    }
+                }
+
+                if (!modelInData) {
+                    scope.model = null;
+                }
+            }
+            if (!scope.model && !scope.chooseText && scope.data.length) {
+                scope.model = scope.data[0];
+            }
+        };
+
+        return {
+            restrict: 'E',
+            replace: true,
+            scope: {
+                model: '=',
+                data: '=',
+                propertyName: '@',
+                required: '=?',
+                chooseText: '=?',
+                displayValueExp: '&'
+            },
+            templateUrl: 'src/directives/sofaForms/sofaSelectBox/sofa-select-box.tpl.html',
+            link: function (scope) {
+
+                // Initial run to map any preselected model values
+                if (scope.data) {
+                    mapModelToData(scope);
+                }
+
+                // If by any reason the data object has changed, we have to map any existing model data to the new data
+                scope.$watchCollection('data', function (newData, oldData) {
+                    if (newData !== oldData) {
+                        mapModelToData(scope);
+                    }
+                });
+
+                var displayValueFormatter = scope.displayValueExp();
+
+                //default display function that will be used if no displayValueExp is given
+                scope.displayFn = function (value) {
+                    return value;
+                };
+
+                if (angular.isFunction(displayValueFormatter)) {
+                    scope.displayFn = displayValueFormatter;
+                } else if (angular.isString(displayValueFormatter)) {
+
+                    var properties = displayValueFormatter.split('.');
+
+                    scope.displayFn = function (value) {
+
+                        if (!value) {
+                            return value;
+                        }
+                        var tempValue = value;
+                        properties.forEach(function (node) {
+                            tempValue = tempValue[node];
+                        });
+                        return tempValue;
+                    };
+                }
+            }
+        };
+    });
+
 angular.module('sdk.directives.sofaFullPageView', ['src/directives/sofaFullPageView/sofa-full-page-view.tpl.html']);
 
 
@@ -2856,6 +2903,47 @@ angular.module('sdk.directives.sofaFullPageView')
             }
         };
     });
+angular.module('sdk.directives.sofaGoBackControl', [
+    'src/directives/sofaGoBackControl/sofa-go-back-control.tpl.html'
+]);
+
+angular.module('sdk.directives.sofaGoBackControl')
+    .directive('sofaGoBackControl', [
+        '$window', 'navigationService',
+        function ($window, navigationService) {
+
+            'use strict';
+
+            return {
+                restrict: 'E',
+                replace: true,
+                templateUrl: 'src/directives/sofaGoBackControl/sofa-go-back-control.tpl.html',
+                scope: {
+                    category: '=?'
+                },
+                link: function ($scope, $element, attrs) {
+
+                    var fallbackText = attrs.buttonText || '';
+
+                    var getParentLabel = function () {
+                        return $scope.category.parent && !$scope.category.parent.isRoot ? $scope.category.parent.label :
+                            $scope.category.parent && $scope.category.parent.isRoot ? fallbackText : '';
+                    };
+
+                    $scope.buttonText = $scope.category ? getParentLabel() : fallbackText;
+
+                    $scope.goBack = function () {
+                        if ($scope.category) {
+                            navigationService.goUp();
+                        } else {
+                            $window.history.back();
+                        }
+                    };
+                }
+            };
+        }
+    ]);
+
 angular.module('sdk.directives.sofaImageAspectRatio', [])
     .directive('sofaImageAspectRatio', ['$window', '$rootScope', 'deviceService', function ($window, $rootScope, deviceService) {
 
@@ -3370,310 +3458,117 @@ angular.module('sdk.directives.sofaImageZoom')
 
     }]);
 
-// Taken from https://github.com/angular/angular.js/pull/6569
-// Credits to https://github.com/sjbarker
-angular.module('sdk.directives.sofaName', [])
-    .directive('sofaName', function () {
+angular.module('sdk.directives.sofaInclude', []);
+
+angular.module('sdk.directives.sofaInclude')
+    .directive('ccInclude', ['$http', '$templateCache', '$compile', function($http, $templateCache, $compile) {
 
         'use strict';
 
         return {
-            priority: 100,
-            restrict: 'A',
-            require: 'ngModel',
-            link: {
-                pre: function sofaNameLinkFn(scope, elem, attrs, ctrl) {
-                    ctrl.$name = scope.$eval(attrs.sofaName);
-                    attrs.$set('name', ctrl.$name);
+                restrict: 'A',
+                link: function (scope, element, attributes) {
+                    var templateUrl = scope.$eval(attributes.ccInclude);
+                    $http
+                        .get(templateUrl, {cache: $templateCache})
+                        .success(function (tplContent) {
+                            element.replaceWith($compile(tplContent.trim())(scope));
+                        });
                 }
-            }
-        };
-    });
+            };
+    }]);
+angular.module('sdk.directives.sofaInject', []);
 
-angular.module('sdk.directives.sofaRadioButton', ['src/directives/sofaRadioButton/sofa-radio-button.tpl.html']);
-
-angular.module('sdk.directives.sofaRadioButton')
-    .directive('sofaRadioButton', function () {
+angular
+    .module('sdk.directives.sofaInject')
+    .directive('ccInject', ['$templateCache', '$http', '$compile', 'injectsService', 'deviceService', function($templateCache, $http, $compile, injectsService, deviceService) {
 
         'use strict';
 
-        var instanceCount = 0;
+        return {
+            restrict: 'EA',
+            replace: true,
+            scope: {
+                target: '@'
+            },
+            link: function(scope, element, attrs){
+                scope.injectsService = injectsService;
+                scope.deviceService = deviceService;
+
+                //if it's an inject on the product page, automatically expose
+                //the product to the inject
+                if (scope.$parent.product){
+                    scope.product = scope.$parent.product;
+                }
+
+                var templateUrl = injectsService.getTemplate(scope.target);
+
+                if (templateUrl === null){
+                    element.remove();
+                }
+                else{
+                    $http
+                        .get(templateUrl, {cache: $templateCache})
+                        .success(function (tplContent) {
+                            element.replaceWith($compile(tplContent)(scope));
+                        });
+                }
+            }
+        };
+    }]);
+angular.module('sdk.directives.sofaLoadingSpinner', ['src/directives/sofaLoadingSpinner/sofa-loading-spinner.tpl.html']);
+
+angular.module('sdk.directives.sofaLoadingSpinner')
+    .directive('sofaLoadingSpinner', function () {
+
+        'use strict';
 
         return {
             restrict: 'E',
             replace: true,
-            scope: {
-                model: '=',
-                label: '=',
-                value: '=',
-                disabled: '=?',
-                propertyName: '@'
-            },
-            templateUrl: 'src/directives/sofaRadioButton/sofa-radio-button.tpl.html',
-            link: function (scope) {
-                instanceCount++;
-                scope.id = instanceCount;
-            }
+            templateUrl: 'src/directives/sofaLoadingSpinner/sofa-loading-spinner.tpl.html'
         };
     });
 
-/* global Hammer */
+angular.module('sdk.directives.sofaPrice', ['src/directives/sofaPrice/sofa-price.tpl.html']);
 
 /**
- * Horizontal Range Slider Control.
- * Dependencies: hammerjs (v.2.0)
+ * Creates pricing markup for prices and special prices
+ *
+ *
  */
-
-// TODO: check performance
-// TODO: code can be optimized at several places...
-// TODO: add disabled state (add "disabled: '=?'")
-// TODO: make it work with ngModel and sofa-name (add "propertyName: '@'")
-
-angular.module('sdk.directives.sofaRangeSlider', ['src/directives/sofaRangeSlider/sofa-range-slider.tpl.html']);
-
-angular.module('sdk.directives.sofaRangeSlider')
-    .directive('sofaRangeSlider', function () {
+angular.module('sdk.directives.sofaPrice')
+    .directive('ccPrice', function() {
 
         'use strict';
-
-        if (!angular.isFunction(Hammer)) {
-            throw new Error('Hammer.js is missing');
-        }
-
-        var TRANSFORM_PROPERTY = 'transform';
-
-        ['webkit', 'Moz', 'O', 'ms'].every(function (prefix) {
-            var e = prefix + 'Transform';
-            if (document.body.style[e] !== undefined) {
-                TRANSFORM_PROPERTY = e;
-                return false;
-            }
-            return true;
-        });
-
-        var isVisible = function (el) {
-            return el.offsetWidth > 0;
-        };
 
         return {
             restrict: 'E',
             replace: true,
             scope: {
-                model: '=',
-                minLimit: '=',
-                maxLimit: '=',
-                step: '=?',
-                displayValueExp: '&?'
+                product: '=',
+                selectedVariant: '=?'
             },
-            templateUrl: 'src/directives/sofaRangeSlider/sofa-range-slider.tpl.html',
-            link: function ($scope, $element) {
+            templateUrl: 'src/directives/sofaPrice/sofa-price.tpl.html',
+            link: function ($scope) {
 
-                var startHandle = $element[0].querySelector('.sofa-range-slider__handle--start');
-                var endHandle   = $element[0].querySelector('.sofa-range-slider__handle--end');
-                var slider      = $element[0].querySelector('.sofa-range-slider');
-                var range       = $element[0].querySelector('.sofa-range-slider__range');
-                var dimensions;
+                // We can't have the template directly bind to the product.price because
+                // that's leaving out the selected variant which changes dynamically
+                // outside of the product model.
 
-                if (!$scope.model) {
-                    $scope.model = {
-                        min: $scope.minLimit,
-                        max: $scope.maxLimit
-                    };
-                }
+                // So what we need to do is to listen manually for changes on the product or
+                // the variant and then update the price on our isolated scope.
+                var updatePrices = function() {
+                    $scope.price = $scope.product.price;
+                    $scope.priceOld = $scope.product.priceOld;
 
-                $scope.rangeStart = $scope.model.min;
-                $scope.rangeEnd   = $scope.model.max;
-
-                var getDimensions = function () {
-                    return {
-                        totalWidth:  slider.getBoundingClientRect().width,
-                        handleWidth: startHandle.getBoundingClientRect().width
-                    };
-                };
-
-                dimensions = getDimensions();
-
-                // The slider might be loaded in a hidden state.
-                // If so, we're not having its dimensions until it's shown...
-                if (dimensions.totalWidth === 0) {
-                    var off = $scope.$watch(function () {
-                        return isVisible(slider);
-                    }, function (nv) {
-                        if (nv) {
-                            dimensions = getDimensions();
-                            setup();
-                            off();
-                        }
-                    });
-                }
-
-                var positionTracker = {
-                    min: 0,
-                    max: 0
-                };
-
-                var savePosition = function (type, position) {
-                    positionTracker[type] = position;
-                };
-
-                $scope.displayFn = function (value) {
-                    return angular.isFunction($scope.displayValueExp) ? $scope.displayValueExp({value: value}) : value;
-                };
-
-                var getInnerModel = function (totalWidth, model, min, max, step) {
-                    if (!model) {
-                        return false;
-                    }
-
-                    var modelStart = model.min;
-                    var modelEnd = model.max;
-                    var startPosition, endPosition, startPercentage, endPercentage, minLimit, maxLimit;
-
-                    startPercentage = modelStart * 100 / max;
-                    endPercentage = modelEnd * 100 / max;
-
-                    startPosition = parseInt(totalWidth / 100 * startPercentage, 10);
-                    endPosition = -(totalWidth - parseInt(totalWidth / 100 * endPercentage, 10));
-
-                    minLimit = parseInt(max / 100 * startPercentage, 10);
-                    maxLimit = parseInt(max / 100 * endPercentage, 10);
-
-                    if (step) {
-                        [startPosition, endPosition, minLimit, maxLimit].forEach(function (value) {
-                            value = Math.round(value * step) / step;
-                        });
-                    }
-
-                    startHandle.style[TRANSFORM_PROPERTY] = 'translateX(' + startPosition + 'px)';
-                    endHandle.style[TRANSFORM_PROPERTY] = 'translateX(' + endPosition + 'px)';
-
-                    savePosition('min', startPosition);
-                    savePosition('max', endPosition);
-
-                    return {
-                        startPosition: startPosition,
-                        endPosition: endPosition,
-                        minLimit: minLimit,
-                        maxLimit: maxLimit
-                    };
-                };
-
-                var setup = function () {
-                    var initialModel = getInnerModel(dimensions.totalWidth, $scope.model, $scope.minLimit, $scope.maxLimit, $scope.step);
-
-                    // Inner model (updates the labels while dragging a handle)
-                    $scope.rangeStart = initialModel ? initialModel.minLimit : $scope.minLimit;
-                    $scope.rangeEnd   = initialModel ? initialModel.maxLimit : $scope.maxLimit;
-
-                    range.style.left  = initialModel ? initialModel.startPosition + 'px' : '0';
-                    range.style.right = initialModel ? Math.abs(initialModel.endPosition) + 'px' : '0';
-                };
-
-                if (dimensions.totalWidth > 0) {
-                    setup();
-                }
-
-                var setSlider = function (type, value) {
-                    var percentage, newValue;
-                    if (type === 'min') {
-                        percentage = value * 100 / dimensions.totalWidth;
-                        newValue = parseInt($scope.maxLimit / 100 * percentage, 10);
-                        if ($scope.step) {
-                            newValue = Math.round(newValue / $scope.step) * $scope.step;
-                        }
-                        $scope.$apply(function () {
-                            $scope.rangeStart = newValue;
-                        });
-                        range.style.left  = value + 'px';
-                    } else {
-                        percentage = (dimensions.totalWidth + value) * 100 / dimensions.totalWidth;
-                        newValue = parseInt($scope.maxLimit / 100 * percentage, 10);
-                        if ($scope.step) {
-                            newValue = Math.round(newValue / $scope.step) * $scope.step;
-                        }
-                        $scope.$apply(function () {
-                            $scope.rangeEnd = newValue;
-                        });
-                        range.style.right = Math.abs(value) + 'px';
+                    if ($scope.selectedVariant && $scope.selectedVariant.price !== undefined) {
+                        $scope.price = $scope.selectedVariant.price;
                     }
                 };
 
-                // Updates the model after the range slider was moved by touch
-                var updateModel = function () {
-                    $scope.$apply(function () {
-                        $scope.model = {
-                            min: $scope.rangeStart,
-                            max: $scope.rangeEnd
-                        };
-                    });
-                };
-
-                // Watches for model changes from the outside
-                $scope.$watch('model', function (nv, ov) {
-                    if (nv !== ov) {
-                        setup();
-                    }
-                }, true);
-
-                var moveElement = function (type, el, delta, final) {
-                    var newPos, minPos, maxPos;
-
-                    if (type === 'min') {
-                        newPos = positionTracker.min + delta;
-                        minPos = 0;
-                        maxPos = dimensions.totalWidth - Math.abs(positionTracker.max) - (dimensions.handleWidth * 2);
-                        if (newPos < minPos) {
-                            newPos = minPos;
-                        } else if (newPos > maxPos) {
-                            newPos = maxPos;
-                        }
-                        // update inner start model
-                        setSlider(type, newPos);
-                    } else {
-                        newPos = positionTracker.max + delta;
-                        minPos = -(dimensions.totalWidth - positionTracker.min - (dimensions.handleWidth * 2));
-                        maxPos = 0;
-                        if (newPos < minPos) {
-                            newPos = minPos;
-                        } else if (newPos > maxPos) {
-                            newPos = maxPos;
-                        }
-                        // update inner end model
-                        setSlider(type, newPos);
-                    }
-                    el.style[TRANSFORM_PROPERTY] = 'translateX(' + newPos + 'px)';
-
-                    if (final) {
-                        savePosition(type, newPos);
-                        updateModel();
-                    }
-                };
-
-                // Touch stuff
-                var mcA = new Hammer.Manager(startHandle);
-                var mcB = new Hammer.Manager(endHandle);
-
-                var panConfig = {
-                    direction: Hammer.DIRECTION_HORIZONTAL,
-                    threshold: 10,
-                    touchAction: 'pan'
-                };
-
-                var horizontalA = new Hammer.Pan(panConfig);
-                var horizontalB = new Hammer.Pan(panConfig);
-
-                mcA.add(horizontalA);
-                mcB.add(horizontalB);
-
-                mcA.on('panmove panend', function (e) {
-                    e.preventDefault();
-                    moveElement('min', startHandle, parseInt(e.deltaX, 10), e.type === 'panend');
-                });
-
-                mcB.on('panmove panend', function (e) {
-                    e.preventDefault();
-                    moveElement('max', endHandle, parseInt(e.deltaX, 10), e.type === 'panend');
-                });
+                $scope.$watch('product', updatePrices);
+                $scope.$watch('selectedVariant', updatePrices);
             }
         };
     });
@@ -4058,6 +3953,175 @@ angular.module('sdk.directives.sofaTouchSlider')
         };
     });
 
+angular.module('sdk.directives.sofaVariantSelector', ['src/directives/sofaVariantSelector/sofa-variant-selector.tpl.html', 'sdk.directives.sofaSelectBox']);
+
+angular.module('sdk.directives.sofaVariantSelector')
+    .filter('sofaVariantFilter', ['$filter', function ($filter) {
+
+        'use strict';
+
+        // variants, selectedProperties, propertyKey
+        return function (values, selectedValues, key) {
+            var selected = {
+                properties: {}
+            },
+            applyFilters = false;
+
+            // reformat for built in filter and exclude current property
+            for (var property in selectedValues) {
+                if (key !== property && selectedValues[property] !== null && selectedValues[property] !== undefined) {
+                    selected.properties[property] = selectedValues[property];
+                    applyFilters = true;
+                }
+            }
+
+            var comparator = function (obj, text) {
+                if (obj && text && typeof obj === 'object' && typeof text === 'object') {
+                    for (var textKey in text) {
+                        if (obj[textKey] !== text[textKey]) {
+                            return false;
+                        }
+                    }
+                    return true;
+                }
+            };
+
+            // extract available variants
+            var variants = applyFilters ? $filter('filter')(values, selected, comparator) : values;
+
+            // extract flat values for the curent property
+            var result = [];
+            variants.forEach(function (variant) {
+                if (result.indexOf(variant.properties[key]) === -1 && variant.stock > 0) {
+                    result.push(variant.properties[key]);
+                }
+            });
+
+            return result;
+        };
+    }])
+
+    .directive('ccVariantSelector', ['$filter', 'localeService', function ($filter, localeService) {
+
+        'use strict';
+
+        return {
+            restrict: 'E',
+            replace: true,
+            scope: {
+                variants: '=',
+                variant: '=?',
+                selectedProperties: '=?',
+                chooseText: '=?'
+            },
+            templateUrl: 'src/directives/sofaVariantSelector/sofa-variant-selector.tpl.html',
+            link: function (scope) {
+
+                // extract flat list of available properties
+                // maybe iterating on the first variant is enough ?
+                scope.properties = {};
+                scope.selectedProperties = scope.selectedProperties || {};
+                scope.data = {};
+
+                var getDataByProperty = function (property) {
+                    return $filter('sofaVariantFilter')(scope.variants, scope.selectedProperties, property);
+                };
+
+                var setData = function () {
+                    angular.forEach(scope.properties, function (property) {
+                        scope.data[property.name] = getDataByProperty(property.name);
+                    });
+                };
+
+                var findVariant = function (variants, selectedProperties) {
+                    var filteredVariants = variants.filter(function (variant) {
+                        for (var property in variant.properties) {
+                            if (variant.properties[property] !== selectedProperties[property]) {
+                                return false;
+                            }
+                        }
+
+                        return true;
+                    });
+
+                    return filteredVariants.length ? filteredVariants[0] : null;
+                };
+
+                scope.variants.forEach(function (variant) {
+                    for (var property in variant.properties) {
+                        //create a placeholder value on the selectedProperties hash
+                        //for each available property. So we can later figure out
+                        //which are missing.
+                        scope.selectedProperties[property] = null;
+                        if (!scope.properties[property]) {
+                            scope.properties[property] = {
+                                name: property,
+                                label: localeService.getTranslation('variantSelector.' + property) || property
+                            };
+                        }
+                    }
+                });
+
+                scope.$watch('selectedProperties', function (newVal) {
+                    scope.variant = findVariant(scope.variants, newVal);
+                    setData();
+                }, true);
+            }
+        };
+    }]);
+
+
+angular.module('sdk.directives.sofaZippy', ['src/directives/sofaZippy/sofa-zippy.tpl.html']);
+
+angular.module('sdk.directives.sofaZippy')
+    .directive('ccZippy', function() {
+
+        'use strict';
+
+        var defaultIfUndefined = function(scope, property, defaultVal){
+            scope[property] = scope[property] === undefined ? defaultVal : scope[property];
+        };
+
+        return {
+            restrict: 'E',
+            replace: true,
+            transclude: true,
+            scope: {
+                caption: '=?',
+                opened: '=?'
+            },
+            templateUrl: 'src/directives/sofaZippy/sofa-zippy.tpl.html',
+            link: function(scope, $element, attrs){
+                var element = $element[0],
+                    $caption = angular.element(element.querySelectorAll('.sofa-zippy__caption')[0]),
+                    $icon = angular.element(element.querySelectorAll('.sofa-zippy-icon')[0]),
+                    openedIconClass = 'sofa-zippy-icon--opened',
+                    closedIconClass = 'sofa-zippy-icon--closed';
+
+                defaultIfUndefined(scope, 'caption', 'default');
+
+                scope.opened = attrs.initOpened === undefined ? false : (attrs.initOpened === "true");
+
+                var setOpen = function(opened){
+                    $element.removeClass(opened ? 'sofa-zippy--closed' : 'sofa-zippy--opened');
+                    $element.addClass(opened ? 'sofa-zippy--opened' : 'sofa-zippy--closed');
+                    $icon.removeClass(opened ? closedIconClass : openedIconClass);
+                    $icon.addClass(opened ? openedIconClass : closedIconClass);
+                };
+
+                var toggle = function(){
+                    scope.opened = !scope.opened;
+                    setOpen(scope.opened);
+                };
+
+                $caption.bind('click', toggle);
+
+                scope.$watch('opened', setOpen);
+
+                setOpen(scope.opened);
+            }
+        };
+    });
 angular.module('sdk.decorators.$rootScope', []);
 
     angular
