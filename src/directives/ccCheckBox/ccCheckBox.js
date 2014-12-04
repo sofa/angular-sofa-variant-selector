@@ -14,6 +14,7 @@ angular.module('sdk.directives.ccCheckBox')
                 model: '=',
                 label: '=',
                 value: '=',
+                isRequired: '=?',
                 disabled: '=?',
                 propertyName: '@'
             },

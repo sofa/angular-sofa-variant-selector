@@ -51,7 +51,8 @@ angular.module("src/directives/ccCategoryTreeView/cc-category-tree-view.tpl.html
 angular.module("src/directives/ccCheckBox/cc-checkbox.tpl.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("src/directives/ccCheckBox/cc-checkbox.tpl.html",
     "<div class=\"cc-checkbox\">\n" +
-    "    <input type=\"checkbox\" sofa-name=\"propertyName\" ng-model=\"innerModel\" id=\"cc-check-box-{{id}}\" class=\"cc-checkbox__input\">\n" +
+    "    <input type=\"checkbox\" id=\"cc-check-box-{{id}}\" class=\"cc-checkbox__input\"\n" +
+    "           sofa-name=\"propertyName\" ng-model=\"innerModel\" ng-required=\"{{isRequired}}\">\n" +
     "    <label for=\"cc-check-box-{{id}}\" class=\"cc-checkbox__label\" ng-bind-html=\"label\"></label>\n" +
     "</div>\n" +
     "");
@@ -923,6 +924,7 @@ angular.module('sdk.directives.ccCheckBox')
                 model: '=',
                 label: '=',
                 value: '=',
+                isRequired: '=?',
                 disabled: '=?',
                 propertyName: '@'
             },
