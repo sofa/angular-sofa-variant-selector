@@ -1,28 +1,20 @@
-.sofa-category-tree-view__list--closed{
+.sofa-category-tree-view__list--closed {
     display: none;
 }
 
-.sofa-category-tree-view__category-entry {
-    padding:0 10px;
+.sofa-category-tree-view__link {
+    padding: 0 1rem;
     position: relative;
 }
 
-.sofa-category-tree-view__category-entry--active{
-    @extend .sofa-category-tree-view__category-entry;
-    background:red; /* you may want to override this */
+.sofa-category-tree-view__link--active {
+    @extend .sofa-category-tree-view__link;
 }
 
 .sofa-category-tree-view__list-item {
-    line-height:2;
+    line-height: 2;
 }
 
 .sofa-category-tree-view__list--child {
-    padding-left: 10px;
-}
-
-.sofa-category-tree-view__category-entry-icon{
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
+    padding-left: 1rem;
 }

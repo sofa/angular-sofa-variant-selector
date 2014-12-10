@@ -72,10 +72,10 @@ angular.module("src/directives/sofaCategoryTreeView/sofa-category-tree-view.tpl.
     "                    'sofa-category-tree-view__list--root': isRoot,\n" +
     "                    'sofa-category-tree-view__list--child': !isRoot }\" cc-template-code>\n" +
     "       <li class=\"sofa-category-tree-view__list-item\" cc-nested-category-item ng-repeat=\"item in items\">\n" +
-    "           <a href=\"{{item.getOriginFullUrl()}}\" ng-click=\"doAction($event, item)\" class=\"sofa-category-tree-view__category-entry\"\n" +
-    "               ng-class=\"{ 'sofa-category-tree-view__category-entry--active': item._categoryTreeView.isActive,\n" +
-    "                           'sofa-category-tree-view__category-entry--icon': item.hasChildren,\n" +
-    "                           'sofa-category-tree-view__category-entry--icon--open': item.hasChildren && item._categoryTreeView.isVisible }\"\n" +
+    "           <a href=\"{{item.getOriginFullUrl()}}\" ng-click=\"doAction($event, item)\" class=\"sofa-category-tree-view__link\"\n" +
+    "               ng-class=\"{ 'sofa-category-tree-view__link--active': item._categoryTreeView.isActive,\n" +
+    "                           'sofa-category-tree-view__link--has-children': item.hasChildren,\n" +
+    "                           'sofa-category-tree-view__link--open': item.hasChildren && item._categoryTreeView.isVisible }\"\n" +
     "               ng-bind=\"item.label\">\n" +
     "            </a>\n" +
     "       </li>\n" +
