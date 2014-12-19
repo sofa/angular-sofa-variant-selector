@@ -3655,7 +3655,6 @@ angular.module('sdk.directives.sofaTouchSlider')
                 displayItems: '=',
                 onItemClick: '&',
                 snap: '@?',
-                showIndicator: '@?',
                 slideIndex: '=?',
                 selectedIndex: '=?'
             },
@@ -3699,7 +3698,7 @@ angular.module('sdk.directives.sofaTouchSlider')
 
                 var initialize = function () {
 
-                    var $moveContainer    = $element.find('ul'),
+                    var $moveContainer    = angular.element($element[0].querySelector('.sofa-touch-slider')),
                         moveContainer     = $moveContainer[0],
                         moveContainerRect = moveContainer.getBoundingClientRect(),
                         containerWidth    = moveContainerRect.width,
@@ -3917,13 +3916,13 @@ angular.module('sdk.directives.sofaTouchSlider')
                     var off = $scope.$watch('items', function (newValue) {
                         if (newValue && newValue.length) {
                             api = initialize();
-                            $scope.showIndicator = $scope.showIndicator && $scope.items.length > 1;
+                            $scope.showIndicator = attrs.showIndicator && $scope.items.length > 1;
                             off();
                         }
                     });
                 } else {
                     api = initialize();
-                    $scope.showIndicator = $scope.showIndicator && $scope.items.length > 1;
+                    $scope.showIndicator = attrs.showIndicator && $scope.items.length > 1;
                 }
             }
         };
