@@ -229,9 +229,9 @@ angular.module("src/directives/sofaTouchSlider/sofa-touch-slider.tpl.html", []).
 
 angular.module("src/directives/sofaVariantSelector/sofa-variant-selector.tpl.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("src/directives/sofaVariantSelector/sofa-variant-selector.tpl.html",
-    "<ul class=\"cc-variant-selector\" ng-if=\"variants.length\">\n" +
-    "    <li class=\"cc-variant-selector__item\" ng-repeat=\"property in properties\">\n" +
-    "        <label class=\"cc-variant-selector__label\" ng-bind=\"property.label\"></label>\n" +
+    "<ul class=\"sofa-variant-selector\" ng-if=\"variants.length\">\n" +
+    "    <li class=\"sofa-variant-selector__item\" ng-repeat=\"property in properties\">\n" +
+    "        <label class=\"sofa-variant-selector__label\" ng-bind=\"property.label\"></label>\n" +
     "        <cc-select-box\n" +
     "                model=\"selectedProperties[property.name]\"\n" +
     "                data=\"data[property.name]\"\n" +
@@ -239,7 +239,8 @@ angular.module("src/directives/sofaVariantSelector/sofa-variant-selector.tpl.htm
     "                property-name=\"variant_{{property.name}}\">\n" +
     "        </cc-select-box>\n" +
     "    </li>\n" +
-    "</ul>");
+    "</ul>\n" +
+    "");
 }]);
 
 angular.module("src/directives/sofaZippy/sofa-zippy.tpl.html", []).run(["$templateCache", function($templateCache) {
