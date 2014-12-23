@@ -1,8 +1,8 @@
 {
   "name": "angular-sofa-variant-selector",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Sofa Web SDK Angular Variant Selector component.",
-  "main": "dist/sofaAddress.js",
+  "main": "dist/sofaVariantSelector.js",
   "homepage": "http://www.sofa.io",
   "scripts": {
     "test": "gulp build"
