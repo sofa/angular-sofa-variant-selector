@@ -1,0 +1,21 @@
+{
+    "name": "angular-sofa-variant-selector",
+    "version": "0.1.0",
+    "homepage": "http://www.sofa.io",
+    "authors": [
+        "Pascal Precht <pascal@couchcommerce.com>"
+    ],
+    "description": "Sofa Web SDK Angular Variant Selector component",
+    "main": "dist/sofaVariantSelectorjs.js",
+    "keywords": [
+        "sofa",
+        "sofa.io",
+        "web",
+        "sdk",
+        "directive"
+    ],
+    "license": "GPL",
+    "dependencies": {
+        "sofa-core": "~0.12.x"
+    }
+}
