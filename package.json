@@ -32,6 +32,7 @@
     "shared-sofa-component-tasks": "^0.3.1"
   },
   "dependencies": {
+    "angular-sofa-locale-service": "^0.1.0",
     "angular-sofa-name": "^0.1.0",
     "angular-sofa-select-box": "^0.1.0"
   }
