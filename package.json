@@ -29,7 +29,7 @@
   },
   "devDependencies": {
     "gulp": "^3.8.10",
-    "shared-sofa-component-tasks": "^0.3.1"
+    "shared-sofa-component-tasks": "^0.4.0"
   },
   "dependencies": {
     "angular-sofa-locale-service": "^0.1.0",
