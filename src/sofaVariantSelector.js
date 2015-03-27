@@ -23,7 +23,7 @@ angular.module('sofa.variantSelector')
             var comparator = function (obj, text) {
                 if (obj && text && typeof obj === 'object' && typeof text === 'object') {
                     for (var textKey in text) {
-                        if (obj[textKey] !== text[textKey]) {
+                        if (obj[textKey].value !== text[textKey]) {
                             return false;
                         }
                     }
@@ -38,7 +38,7 @@ angular.module('sofa.variantSelector')
             var result = [];
             variants.forEach(function (variant) {
                 if (result.indexOf(variant.properties[key]) === -1 && variant.stock > 0) {
-                    result.push(variant.properties[key]);
+                    result.push(variant.properties[key].value);
                 }
             });
 
@@ -81,7 +81,7 @@ angular.module('sofa.variantSelector')
                 var findVariant = function (variants, selectedProperties) {
                     var filteredVariants = variants.filter(function (variant) {
                         for (var property in variant.properties) {
-                            if (variant.properties[property] !== selectedProperties[property]) {
+                            if (variant.properties[property].value !== selectedProperties[property]) {
                                 return false;
                             }
                         }
@@ -101,7 +101,7 @@ angular.module('sofa.variantSelector')
                         if (!scope.properties[property]) {
                             scope.properties[property] = {
                                 name: property,
-                                label: localeService.getTranslation('variantSelector.' + property) || property
+                                label: localeService.getTranslation('variantSelector.' + property) || variant.properties[property].label
                             };
                         }
                     }
