@@ -37,7 +37,7 @@ angular.module('sofa.variantSelector')
             // extract flat values for the curent property
             var result = [];
             variants.forEach(function (variant) {
-                if (result.indexOf(variant.properties[key]) === -1 && variant.stock > 0) {
+                if (result.indexOf(variant.properties[key].value) === -1 && variant.stock > 0) {
                     result.push(variant.properties[key].value);
                 }
             });

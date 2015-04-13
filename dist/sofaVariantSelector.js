@@ -1,5 +1,5 @@
 /**
- * angular-sofa-variant-selector - v0.1.2 - Fri Mar 27 2015 18:58:51 GMT+0100 (CET)
+ * angular-sofa-variant-selector - v0.1.2 - Mon Apr 13 2015 16:20:09 GMT+0200 (CEST)
  * http://www.sofa.io
  *
  * Copyright (c) 2014 CouchCommerce GmbH (http://www.couchcommerce.com / http://www.sofa.io) and other contributors
@@ -62,7 +62,7 @@ angular.module('sofa.variantSelector')
             // extract flat values for the curent property
             var result = [];
             variants.forEach(function (variant) {
-                if (result.indexOf(variant.properties[key]) === -1 && variant.stock > 0) {
+                if (result.indexOf(variant.properties[key].value) === -1 && variant.stock > 0) {
                     result.push(variant.properties[key].value);
                 }
             });
