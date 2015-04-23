@@ -1,11 +1,52 @@
 <ul class="sofa-variant-selector" ng-if="variants.length">
     <li class="sofa-variant-selector__item" ng-repeat="property in properties">
         <label class="sofa-variant-selector__label" ng-bind="property.label"></label>
-        <cc-select-box
+
+        <!-- selection using a normal drop down -->
+        <!--
+
+        <cc-select-box ng-if="property.name !== 'color'"
                 model="selectedProperties[property.name]"
                 data="data[property.name]"
                 choose-text="property.label"
                 property-name="variant_{{property.name}}">
         </cc-select-box>
+-->
+
+        <!-- selection using a list of span item -->
+        <ul ng-if="property.name === 'shirt_size'" class="sofa-variant-selector__list-textes">
+            <li ng-repeat="size in data[property.name]" class="sofa-variant-selector__list-item">
+                <span
+                     title="{{size.value}}"
+                     class="sofa-variant-selector__list-text"
+                     ng-class="{'sofa-variant-selector__list-text--enabled': size.available, 'sofa-variant-selector__list-text--disabled': !size.available, 'sofa-variant-selector__list-text--selected': size.selected}"
+                     ng-click="selectProperty(property.name, size)">{{size.value}}</span>
+            </li>
+        </ul>
+
+
+        <!-- selection using small icons with background color -->
+        <ul ng-if="property.name === 'color' && !images[property.name]" class="sofa-variant-selector__list--swatches">
+            <li ng-repeat="color in data[property.name]" class="sofa-variant-selector__list-item">
+                    <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw%3D%3D%0A"
+                         title="{{color.value}}"
+                         style="background-color:{{color.value}}"
+                         ng-class="{'sofa-variant-selector__list-text--enabled': color.available, 'sofa-variant-selector__list-text--disabled': !color.available, 'sofa-variant-selector__list-text--selected': color.selected}"
+                         class="sofa-variant-selector__list-swatch"
+                         ng-click="selectProperty(property.name, color)"/>
+            </li>
+        </ul>
+
+        <!-- selection using thumbnails if attribute are available for all variants -->
+        <ul ng-if="property.name === 'color' && images[property.name]" class="sofa-variant-selector__list-images">
+            <li ng-repeat="color in data[property.name]" class="sofa-variant-selector__list-item">
+                <img ng-src="{{images[property.name][color.value].url}}"
+                     title="{{color.value}}"
+                     ng-class="{'sofa-variant-selector__list-text--enabled': color.available, 'sofa-variant-selector__list-text--disabled': !color.available, 'sofa-variant-selector__list-text--selected': color.selected}"
+                     class="sofa-variant-selector__list-image"
+                     ng-click="selectProperty(property.name, color)"/>
+
+            </li>
+        </ul>
     </li>
 </ul>
