@@ -31,14 +31,25 @@ angular.module('sofa.variantSelector')
                 }
             };
 
+            var contains = function (data,key) {
+                for (var i=0;i<data.length;i++) {
+                    if (data[i].value===key) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+
             // extract available variants
             var variants = applyFilters ? $filter('filter')(values, selected, comparator) : values;
 
             // extract flat values for the curent property
             var result = [];
             variants.forEach(function (variant) {
-                if (result.indexOf(variant.properties[key].value) === -1 && variant.stock > 0) {
-                    result.push(variant.properties[key].value);
+                if (!contains(result,variant.properties[key].value)  && variant.stock > 0) {
+                    result.push({value:variant.properties[key].value,
+                                 selected:false,
+                                 available: true});
                 }
             });
 
@@ -68,13 +79,45 @@ angular.module('sofa.variantSelector')
                 scope.selectedProperties = scope.selectedProperties || {};
                 scope.data = {};
 
+                scope.images = {};
+
+                scope.selectProperty = function(property, variant) {
+                    console.log('Selected '+property+':'+variant);
+                    if (!variant.available) {
+                        scope.selectedProperties = {};
+                    }
+                    scope.selectedProperties[property]=variant.value;
+                };
+
                 var getDataByProperty = function (property) {
-                    return $filter('sofaVariantFilter')(scope.variants, scope.selectedProperties, property);
+                    console.debug('Filtering for  '+JSON.stringify(property));
+                    var rawResult = $filter('sofaVariantFilter')(scope.variants, {}, property);
+                    var filteredResult = $filter('sofaVariantFilter')(scope.variants, scope.selectedProperties, property);
+
+                    // Apply selection
+                    var selection = scope.selectedProperties[property];
+                    for (var i=0;i<rawResult.length;i++) {
+                        if (rawResult[i].value===selection) {
+                            rawResult[i].selected=true;
+                        }
+                        rawResult[i].available=false;
+                        for (var j=0;j<filteredResult.length;j++) {
+                            if (rawResult[i].value===filteredResult[j].value) {
+                                rawResult[i].available=true;
+                            }
+                        }
+                    }
+
+
+                    console.debug('data '+JSON.stringify(rawResult));
+
+                    return rawResult;
                 };
 
                 var setData = function () {
                     angular.forEach(scope.properties, function (property) {
-                        scope.data[property.name] = getDataByProperty(property.name);
+                        var dataByProperty = getDataByProperty(property.name);
+                        scope.data[property.name] = dataByProperty;
                     });
                 };
 
@@ -92,6 +135,25 @@ angular.module('sofa.variantSelector')
                     return filteredVariants.length ? filteredVariants[0] : null;
                 };
 
+                var findImage = function(propertyGroup,property) {
+                    for (var i=0; i<scope.variants.length;i++) {
+                        var variant = scope.variants[i];
+                        variant.selectable=true;
+
+                        if (variant.images &&
+                            variant.images.length &&
+                            variant.properties[propertyGroup].value===property) {
+                            for (var j=0;j<variant.images.length;j++) {
+                                if (variant.images[j].main) {
+                                    console.log('Found image for '+propertyGroup+' with '+property+' in '+JSON.stringify(variant));
+                                    return variant.images[j];
+                                }
+                            }
+                        }
+                    }
+                    return null;
+                };
+
                 scope.variants.forEach(function (variant) {
                     for (var property in variant.properties) {
                         //create a placeholder value on the selectedProperties hash
@@ -102,10 +164,32 @@ angular.module('sofa.variantSelector')
                             scope.properties[property] = {
                                 name: property,
                                 label: localeService.getTranslation('variantSelector.' + property) || variant.properties[property].label
+
                             };
                         }
                     }
                 });
+
+
+                // Read images for all properties
+                setData();
+
+
+                // Check if an image is available for each property in each group
+                for (var propertyGroup in scope.properties) {
+                   scope.images[propertyGroup] = {};
+                   for (var i=0;i<scope.data[propertyGroup].length;i++) {
+                        var prop = scope.data[propertyGroup][i];
+                        var img = findImage(propertyGroup,prop);
+                        if (img === null) {
+                            // At least one image is missing for this property
+                            // we'll remove all images to indicating no proper data
+                            scope.images[propertyGroup] = null;
+                            break;
+                        }
+                        scope.images[propertyGroup][prop] = img;
+                   }
+                }
 
                 scope.$watch('selectedProperties', function (newVal) {
                     scope.variant = findVariant(scope.variants, newVal);
